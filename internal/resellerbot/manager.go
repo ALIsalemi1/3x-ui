@@ -84,7 +84,7 @@ func (m *Manager) Stop(ownerId int) {
 	}
 }
 
-// Reconcile drives the running set toward every enabled BotConfig row —
+// Reconcile drives the running set toward every enabled BotConfig row -
 // starting missing instances and stopping any that no longer have an
 // enabled config. Used at boot and by a periodic job to self-heal.
 func (m *Manager) Reconcile() {

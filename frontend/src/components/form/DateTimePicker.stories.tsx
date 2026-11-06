@@ -43,7 +43,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Calendar-aware date/time picker used for client and inbound expiry dates. Renders an AntD DatePicker by default and switches to a Persian (Jalali) calendar — with theme-matched colors and an overlaid clear button — when the panel datepicker setting is jalalian.',
+          'Calendar-aware date/time picker used for client and inbound expiry dates. Renders an AntD DatePicker by default and switches to a Persian (Jalali) calendar - with theme-matched colors and an overlaid clear button - when the panel datepicker setting is jalalian.',
       },
     },
   },

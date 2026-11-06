@@ -9,7 +9,7 @@ interface ClientLike {
 /**
  * Turns one Zod issue from the inbound-form schema into a human-readable line.
  * The schema validates the whole form at once, so a bad client field surfaces
- * as `settings.clients.<index>.<field>` — useless on its own when an inbound
+ * as `settings.clients.<index>.<field>` - useless on its own when an inbound
  * holds hundreds of clients. We resolve that index back to the client's email
  * so the operator can find the offending entry. The reason is translated when
  * it is a custom message key; Zod defaults like "Invalid input" pass through.

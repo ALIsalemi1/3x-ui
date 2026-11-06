@@ -18,7 +18,7 @@ export interface ClientTrafficCellProps {
 }
 
 // Every prop is a primitive and the component is pure, so the memo bails out
-// whenever a client's counters did not move — which is most of them on most
+// whenever a client's counters did not move - which is most of them on most
 // pushes. Each skipped instance is one antd Popover (rc-trigger), one Progress,
 // a useTranslation subscription and a theme context read, times up to 200 rows.
 const ClientTrafficCell = memo(function ClientTrafficCell({

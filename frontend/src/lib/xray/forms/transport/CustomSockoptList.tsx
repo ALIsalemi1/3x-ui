@@ -5,7 +5,7 @@ import type { NamePath } from 'antd/es/form/interface';
 
 import { activateOnKey } from '@/utils/a11y';
 
-// Editor for sockopt.customSockopt — a list of raw setsockopt() options. Each
+// Editor for sockopt.customSockopt - a list of raw setsockopt() options. Each
 // entry is rendered as a titled group of labeled fields (system / level / opt /
 // type / value) instead of one cramped inline row, so it reads like the rest of
 // the sockopt form. Shared by the inbound and outbound (and host) sockopt forms.

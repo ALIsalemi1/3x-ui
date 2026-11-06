@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { InboundSettingsSchema } from '@/schemas/protocols';
 
 // import.meta.glob (eager, default-import) gives us {path: parsedJson} at
-// compile time — no fs, no @types/node. Vitest inherits the vite/client
+// compile time - no fs, no @types/node. Vitest inherits the vite/client
 // shape so this stays typed.
 const inboundFixtures = import.meta.glob<unknown>('./golden/fixtures/inbound/*.json', {
   eager: true,

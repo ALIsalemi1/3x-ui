@@ -22,7 +22,7 @@ export default function SelectAllClearButtons<T extends string | number = number
 
   const optionValues = options.map((o) => o.value);
   // Treat as "all selected" when every option is chosen, rather than comparing
-  // lengths — this stays correct even if `value` holds ids outside `options`.
+  // lengths - this stays correct even if `value` holds ids outside `options`.
   const allSelected = options.length > 0 && optionValues.every((v) => value.includes(v));
 
   return (

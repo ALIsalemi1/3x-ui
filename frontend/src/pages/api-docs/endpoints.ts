@@ -233,14 +233,14 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/csrf-token',
         summary:
-          'Mint a CSRF token for the current session. The SPA replays it in the X-CSRF-Token header on unsafe requests. Bearer-token callers can skip this — the middleware short-circuits CSRF for authenticated API requests.',
+          'Mint a CSRF token for the current session. The SPA replays it in the X-CSRF-Token header on unsafe requests. Bearer-token callers can skip this - the middleware short-circuits CSRF for authenticated API requests.',
         response: '{\n  "success": true,\n  "obj": "csrf-token-string"\n}',
       },
       {
         method: 'POST',
         path: '/getTwoFactorEnable',
         summary:
-          'Returns whether 2FA is enabled on the panel — used by the login page to decide whether to show the OTP field.',
+          'Returns whether 2FA is enabled on the panel - used by the login page to decide whether to show the OTP field.',
         response: '{\n  "success": true,\n  "obj": false\n}',
       },
     ],
@@ -272,7 +272,7 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/panel/api/inbounds/options',
         summary:
-          'Lightweight picker projection of the authenticated user’s inbounds. Returns id, remark, tag, protocol, port, a server-computed tlsFlowCapable flag (true for VLESS on TCP with tls or reality, or on XHTTP with VLESS encryption / vlessenc enabled), and ssMethod (the Shadowsocks cipher, empty for non-Shadowsocks inbounds — used by the client UI to generate a valid Shadowsocks 2022 PSK). Use this for dropdowns and attach pickers — it skips settings, streamSettings, and clientStats so the payload stays small even on panels with thousands of clients.',
+          'Lightweight picker projection of the authenticated user’s inbounds. Returns id, remark, tag, protocol, port, a server-computed tlsFlowCapable flag (true for VLESS on TCP with tls or reality, or on XHTTP with VLESS encryption / vlessenc enabled), and ssMethod (the Shadowsocks cipher, empty for non-Shadowsocks inbounds - used by the client UI to generate a valid Shadowsocks 2022 PSK). Use this for dropdowns and attach pickers - it skips settings, streamSettings, and clientStats so the payload stays small even on panels with thousands of clients.',
         responseSchema: 'InboundOption',
         responseSchemaArray: true,
       },
@@ -281,7 +281,7 @@ export const sections: readonly Section[] = [
         path: '/panel/api/inbounds/allLinks',
         responseObjectSchema: { type: 'array', nullable: true, items: { type: 'string' } },
         summary:
-          'Return every protocol URL (vless://, vmess://, trojan://, ss://, hysteria://, mtproto) across all inbounds and all of their clients. Links are rendered through the subscription engine, so the configured remark template (name-only display part) is applied per client — the same output the client info/QR pages use. Protocols without a URL form (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing. Used by the panel’s "Export all inbound links" action.',
+          'Return every protocol URL (vless://, vmess://, trojan://, ss://, hysteria://, mtproto) across all inbounds and all of their clients. Links are rendered through the subscription engine, so the configured remark template (name-only display part) is applied per client - the same output the client info/QR pages use. Protocols without a URL form (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing. Used by the panel’s "Export all inbound links" action.',
         response:
           '{\n  "success": true,\n  "obj": [\n    "vless://uuid@host:443?security=reality&...#Germany-alice",\n    "vmess://eyJ2IjoyLC..."\n  ]\n}',
       },
@@ -357,7 +357,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/inbounds/resetAllTraffics',
         summary:
-          'Reset upload + download counters on every inbound. Destructive — accounting history is lost.',
+          'Reset upload + download counters on every inbound. Destructive - accounting history is lost.',
       },
       {
         method: 'POST',
@@ -377,7 +377,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/inbounds/pushClientTraffics',
         summary:
-          "Receive a master panel's aggregated per-client usage, keyed by the master's GUID. Stored in a side table used only for the UI display overlay and local quota enforcement — never folded into the local counters that masters poll, so delta accounting stays intact. Called panel-to-panel by the node traffic sync job.",
+          "Receive a master panel's aggregated per-client usage, keyed by the master's GUID. Stored in a side table used only for the UI display overlay and local quota enforcement - never folded into the local counters that masters poll, so delta accounting stays intact. Called panel-to-panel by the node traffic sync job.",
         params: [
           {
             name: 'masterGuid',
@@ -434,7 +434,7 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/panel/api/openapi.json',
         summary:
-          'Serve this API description as an OpenAPI 3 document — the same file that powers the API Docs page. Requires a session or Bearer token like the rest of /panel/api. Useful for generating clients or importing into API tooling.',
+          'Serve this API description as an OpenAPI 3 document - the same file that powers the API Docs page. Requires a session or Bearer token like the rest of /panel/api. Useful for generating clients or importing into API tooling.',
       },
       {
         method: 'GET',
@@ -456,7 +456,7 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/panel/api/server/cpuHistory/:bucket',
         summary:
-          'Legacy: aggregated CPU history. Use /history/cpu/:bucket instead — same data with a uniform {t, v} shape.',
+          'Legacy: aggregated CPU history. Use /history/cpu/:bucket instead - same data with a uniform {t, v} shape.',
         params: [
           {
             name: 'bucket',
@@ -492,7 +492,7 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/panel/api/server/xrayMetricsState',
         summary:
-          'Xray runtime metrics state — whether the xray config has a `metrics` block, which expvar keys are flowing, and the current snapshot values for each. Returns an empty state when metrics are not configured.',
+          'Xray runtime metrics state - whether the xray config has a `metrics` block, which expvar keys are flowing, and the current snapshot values for each. Returns an empty state when metrics are not configured.',
       },
       {
         method: 'GET',
@@ -518,7 +518,7 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/panel/api/server/xrayObservatory',
         summary:
-          'Latest snapshot from the Xray observatory — per-outbound latency, health status, and last-probe time. Only populated when the Xray config has an observatory configured.',
+          'Latest snapshot from the Xray observatory - per-outbound latency, health status, and last-probe time. Only populated when the Xray config has an observatory configured.',
       },
       {
         method: 'GET',
@@ -739,7 +739,7 @@ export const sections: readonly Section[] = [
             name: 'filter',
             in: 'body (form)',
             type: 'string',
-            desc: 'Keyword filter — only lines containing this string.',
+            desc: 'Keyword filter - only lines containing this string.',
             optional: true,
           },
           {
@@ -785,7 +785,7 @@ export const sections: readonly Section[] = [
             name: 'filter',
             in: 'body (form)',
             type: 'string',
-            desc: 'Keyword filter — only rows/lines containing this string.',
+            desc: 'Keyword filter - only rows/lines containing this string.',
             optional: true,
           },
         ],
@@ -1159,7 +1159,7 @@ export const sections: readonly Section[] = [
         summary:
           'Create a new client and attach it to one or more inbounds in a single call. Body is JSON. Per-protocol secrets are generated server-side when omitted, so callers can send only the universal fields.',
         description:
-          'Fields the server fills in when they are omitted — a valid value sent by the caller is never overwritten. Re-adding an email that already exists, with its stored `subId`, reuses the stored `id`, `password`, `auth` and `secret` instead of minting new ones, so the identity stays in sync across its inbounds.\n\n- **VLESS / VMess** — `id`, a fresh UUID\n- **Trojan** — `password`\n- **Shadowsocks** — `password`. On a `2022-blake3-*` inbound a supplied password that does not base64-decode to the key length of the cipher (16 or 32 bytes) is replaced by a generated key and the call still succeeds, so read the client back if you did not let the server pick. Legacy ciphers keep any non-empty password\n- **Hysteria** — `auth`\n- **mtproto** — `secret`, a FakeTLS secret derived from the fronting domain of the inbound, or from `www.cloudflare.com` when it has none\n- **WireGuard** — `privateKey` and `publicKey` when both are blank, or `publicKey` alone when only a `privateKey` was sent, plus `allowedIPs`: one free `/32` taken from the /24 the existing peers of that inbound already sit in, or from `10.0.0.0/24` when it has none\n\nAccepted on the same body but never generated: `preSharedKey` and `keepAlive` (WireGuard), `adTag` (mtproto).\n\nWireGuard is the only one of these that can fail. Allocation widens the search to the containing /16 before giving up with `inbound <id>: wireguard: no free address available in <scope>`, and an `allowedIPs` supplied by the caller is validated instead of allocated: `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of that same inbound holds, or `... used by a client on <inbound>` when the holder sits on another WireGuard or AmneziaWG inbound. Ranges are compared, not strings, so `10.0.0.9/24` collides with `10.0.0.5/32`; a `0.0.0.0/0` or `::/0` default route claims no address. Allocation likewise skips every address inside a prefix another client holds. The same validation runs on POST /panel/api/clients/{email}/attach, where a client that already carries an address brings it along.\n\nAn `inboundIds` entry that names no existing inbound rejects the whole call before anything is written. Past that, the inbounds are applied concurrently and independently: one that fails no longer stops the others, so a `success:false` response can still have created the client on the rest. Every error names the inbound it came from (`inbound 7: <message>`), and several failures are reported together, one per line. `limitHwid` is applied only when every inbound succeeded, so re-run the call after fixing the failure.',
+          'Fields the server fills in when they are omitted - a valid value sent by the caller is never overwritten. Re-adding an email that already exists, with its stored `subId`, reuses the stored `id`, `password`, `auth` and `secret` instead of minting new ones, so the identity stays in sync across its inbounds.\n\n- **VLESS / VMess** - `id`, a fresh UUID\n- **Trojan** - `password`\n- **Shadowsocks** - `password`. On a `2022-blake3-*` inbound a supplied password that does not base64-decode to the key length of the cipher (16 or 32 bytes) is replaced by a generated key and the call still succeeds, so read the client back if you did not let the server pick. Legacy ciphers keep any non-empty password\n- **Hysteria** - `auth`\n- **mtproto** - `secret`, a FakeTLS secret derived from the fronting domain of the inbound, or from `www.cloudflare.com` when it has none\n- **WireGuard** - `privateKey` and `publicKey` when both are blank, or `publicKey` alone when only a `privateKey` was sent, plus `allowedIPs`: one free `/32` taken from the /24 the existing peers of that inbound already sit in, or from `10.0.0.0/24` when it has none\n\nAccepted on the same body but never generated: `preSharedKey` and `keepAlive` (WireGuard), `adTag` (mtproto).\n\nWireGuard is the only one of these that can fail. Allocation widens the search to the containing /16 before giving up with `inbound <id>: wireguard: no free address available in <scope>`, and an `allowedIPs` supplied by the caller is validated instead of allocated: `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of that same inbound holds, or `... used by a client on <inbound>` when the holder sits on another WireGuard or AmneziaWG inbound. Ranges are compared, not strings, so `10.0.0.9/24` collides with `10.0.0.5/32`; a `0.0.0.0/0` or `::/0` default route claims no address. Allocation likewise skips every address inside a prefix another client holds. The same validation runs on POST /panel/api/clients/{email}/attach, where a client that already carries an address brings it along.\n\nAn `inboundIds` entry that names no existing inbound rejects the whole call before anything is written. Past that, the inbounds are applied concurrently and independently: one that fails no longer stops the others, so a `success:false` response can still have created the client on the rest. Every error names the inbound it came from (`inbound 7: <message>`), and several failures are reported together, one per line. `limitHwid` is applied only when every inbound succeeded, so re-run the call after fixing the failure.',
         params: [
           {
             name: 'client',
@@ -1227,7 +1227,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/clients/update/:email',
         summary:
-          'Update an existing client by email. Changes propagate to every attached inbound. Body is the JSON client payload — supply the full set of fields you want to keep (the server replaces the row, it does not patch).',
+          'Update an existing client by email. Changes propagate to every attached inbound. Body is the JSON client payload - supply the full set of fields you want to keep (the server replaces the row, it does not patch).',
         description:
           'The inbounds are applied concurrently and independently: one that fails no longer stops the others. Every inbound error names the inbound it came from (`inbound 7: <message>`), and several failures are reported together, one per line. So a `success:false` response can still have applied the edit to the remaining inbounds. The client record is written after the inbounds, so a failure there is reported without an `inbound <id>:` prefix and leaves the inbound edits in place.',
         params: [
@@ -1264,7 +1264,7 @@ export const sections: readonly Section[] = [
         path: '/panel/api/clients/:email/attach',
         summary: 'Attach an existing client to one or more additional inbounds. Body is JSON.',
         description:
-          'A WireGuard client brings its stored `allowedIPs` into the new inbound instead of being given a fresh address, so the call fails with `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of the target inbound holds. Free the address on that inbound first — see POST /panel/api/clients/add for the full rule. Inbounds are applied independently, so the remaining ones are still attached and a `success:false` response can be partial.',
+          'A WireGuard client brings its stored `allowedIPs` into the new inbound instead of being given a fresh address, so the call fails with `inbound <id>: wireguard: allowedIPs entry <entry> overlaps <address> used by another client` when its range overlaps an address or prefix a different client of the target inbound holds. Free the address on that inbound first - see POST /panel/api/clients/add for the full rule. Inbounds are applied independently, so the remaining ones are still attached and a `success:false` response can be partial.',
         params: [
           { name: 'email', in: 'path', type: 'string', desc: 'Client email (unique identifier).' },
           {
@@ -1337,7 +1337,7 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/panel/api/clients/export',
         summary:
-          'Return every client as a {client, inboundIds, traffic} array — the shape /import accepts — so the payload round-trips straight back through /import. traffic carries the usage counters (up, down, resetCount, lastOnline, lastSubFetch) and is omitted for a client with no traffic row; the quota itself stays in client.totalGB. Clients with no inbound attachment are included with an empty inboundIds list. The UI shows this in a CodeMirror viewer (copy / download); programmatic callers get the array in obj.',
+          'Return every client as a {client, inboundIds, traffic} array - the shape /import accepts - so the payload round-trips straight back through /import. traffic carries the usage counters (up, down, resetCount, lastOnline, lastSubFetch) and is omitted for a client with no traffic row; the quota itself stays in client.totalGB. Clients with no inbound attachment are included with an empty inboundIds list. The UI shows this in a CodeMirror viewer (copy / download); programmatic callers get the array in obj.',
         response:
           '{\n  "success": true,\n  "obj": [\n    {\n      "client": {\n        "email": "alice@example.com",\n        "id": "...",\n        "totalGB": 53687091200,\n        "expiryTime": 0,\n        "limitHwid": 2,\n        "enable": true,\n        "subId": "..."\n      },\n      "inboundIds": [7, 9],\n      "traffic": {\n        "up": 1048576,\n        "down": 2097152,\n        "resetCount": 0,\n        "lastOnline": 1735680000000\n      }\n    }\n  ]\n}',
       },
@@ -1345,7 +1345,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/clients/import',
         summary:
-          'Import clients from a JSON body { "data": "<json>" }, where data is a string-encoded array produced by /export ([{client, inboundIds, traffic}]). Items with inboundIds are created and attached to those inbounds; items with an empty inboundIds list are restored as unattached client records. An optional traffic object restores the usage counters, only for clients this import creates. Existing emails are never overwritten — they are returned in skipped, and their live counters are left untouched. Triggers a single Xray restart at the end if any target inbound was running; a failure while restoring counters still reports success=false after the clients were created.',
+          'Import clients from a JSON body { "data": "<json>" }, where data is a string-encoded array produced by /export ([{client, inboundIds, traffic}]). Items with inboundIds are created and attached to those inbounds; items with an empty inboundIds list are restored as unattached client records. An optional traffic object restores the usage counters, only for clients this import creates. Existing emails are never overwritten - they are returned in skipped, and their live counters are left untouched. Triggers a single Xray restart at the end if any target inbound was running; a failure while restoring counters still reports success=false after the clients were created.',
         body: '{\n  "data": "[{\\"client\\":{\\"email\\":\\"alice@example.com\\",\\"enable\\":true},\\"inboundIds\\":[7]}]"\n}',
         response:
           '{\n  "success": true,\n  "obj": {\n    "created": 2,\n    "skipped": [\n      { "email": "alice@example.com", "reason": "email already in use: alice@example.com" }\n    ]\n  }\n}',
@@ -1354,7 +1354,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/clients/bulkAdjust',
         summary:
-          'Shift expiry and/or traffic quota for many clients in one call. addDays/addBytes may be negative. Clients with unlimited expiry (expiryTime=0) or unlimited traffic (totalGB=0) are skipped for the corresponding field — bulk extend never converts unlimited to limited. A client that was auto-disabled solely because it was depleted (expired or over quota) is automatically re-enabled — locally and on its node — when the adjustment lifts it out of depletion; a manually-disabled or still-depleted client is left disabled. The optional flow directive sets the XTLS flow on every client: "none" clears it, "xtls-rprx-vision"/"xtls-rprx-vision-udp443" set it where the inbound supports it (omit or "" to leave it unchanged). The optional limitHwid sets maximum registered devices (0 = unlimited). The optional adTag sets MTProto Telegram sponsor channel ("none" clears). Returns the adjusted count and per-email skip reasons.',
+          'Shift expiry and/or traffic quota for many clients in one call. addDays/addBytes may be negative. Clients with unlimited expiry (expiryTime=0) or unlimited traffic (totalGB=0) are skipped for the corresponding field - bulk extend never converts unlimited to limited. A client that was auto-disabled solely because it was depleted (expired or over quota) is automatically re-enabled - locally and on its node - when the adjustment lifts it out of depletion; a manually-disabled or still-depleted client is left disabled. The optional flow directive sets the XTLS flow on every client: "none" clears it, "xtls-rprx-vision"/"xtls-rprx-vision-udp443" set it where the inbound supports it (omit or "" to leave it unchanged). The optional limitHwid sets maximum registered devices (0 = unlimited). The optional adTag sets MTProto Telegram sponsor channel ("none" clears). Returns the adjusted count and per-email skip reasons.',
         body: '{\n  "emails": ["alice", "bob"],\n  "addDays": 30,\n  "addBytes": 53687091200,\n  "flow": "xtls-rprx-vision",\n  "limitHwid": 2,\n  "adTag": "0123456789abcdef0123456789abcdef"\n}',
         response:
           '{\n  "success": true,\n  "obj": {\n    "adjusted": 2,\n    "skipped": [\n      { "email": "carol", "reason": "unlimited expiry" }\n    ]\n  }\n}',
@@ -1363,7 +1363,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/clients/bulkEnable',
         summary:
-          'Enable many clients in one call. Emails are grouped by inbound and applied with a single read-modify-write per inbound; the running Xray (local or remote node) is updated to add each user. Note that enabling a client whose quota is exhausted or whose expiry has passed only flips the flag — the traffic loop will disable it again on the next tick. Returns the changed count and per-email skip reasons.',
+          'Enable many clients in one call. Emails are grouped by inbound and applied with a single read-modify-write per inbound; the running Xray (local or remote node) is updated to add each user. Note that enabling a client whose quota is exhausted or whose expiry has passed only flips the flag - the traffic loop will disable it again on the next tick. Returns the changed count and per-email skip reasons.',
         body: '{\n  "emails": ["alice", "bob"]\n}',
         response:
           '{\n  "success": true,\n  "obj": {\n    "changed": 2,\n    "skipped": [\n      { "email": "carol", "reason": "client not found" }\n    ]\n  }\n}',
@@ -1381,7 +1381,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/clients/bulkDel',
         summary:
-          'Delete many clients in one call. The server processes the list sequentially so each delete sees the committed state of the previous one — avoids the race the per-email fan-out had on the panel side. Pass keepTraffic=true to retain the xray_client_traffic rows after deletion.',
+          'Delete many clients in one call. The server processes the list sequentially so each delete sees the committed state of the previous one - avoids the race the per-email fan-out had on the panel side. Pass keepTraffic=true to retain the xray_client_traffic rows after deletion.',
         body: '{\n  "emails": ["alice", "bob"],\n  "keepTraffic": false\n}',
         response:
           '{\n  "success": true,\n  "obj": {\n    "deleted": 2,\n    "skipped": [\n      { "email": "carol", "reason": "client not found" }\n    ]\n  }\n}',
@@ -1390,7 +1390,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/clients/bulkCreate',
         summary:
-          'Create many clients in one call. Body is a JSON array of {client, inboundIds} payloads — the same shape /add accepts. Items are processed sequentially; per-email skip reasons are returned for items that fail (e.g., duplicate email). Triggers a single Xray restart at the end if any inbound was running.',
+          'Create many clients in one call. Body is a JSON array of {client, inboundIds} payloads - the same shape /add accepts. Items are processed sequentially; per-email skip reasons are returned for items that fail (e.g., duplicate email). Triggers a single Xray restart at the end if any inbound was running.',
         body: '[\n  {\n    "client": {\n      "email": "alice@example.com",\n      "totalGB": 53687091200,\n      "expiryTime": 0,\n      "limitHwid": 2,\n      "enable": true\n    },\n    "inboundIds": [7]\n  },\n  {\n    "client": {\n      "email": "bob@example.com",\n      "totalGB": 53687091200,\n      "expiryTime": 0,\n      "limitHwid": 0,\n      "enable": true\n    },\n    "inboundIds": [7, 9]\n  }\n]',
         response:
           '{\n  "success": true,\n  "obj": {\n    "created": 2,\n    "skipped": [\n      { "email": "alice@example.com", "reason": "email already in use" }\n    ]\n  }\n}',
@@ -1407,7 +1407,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/clients/groups/bulkRemove',
         summary:
-          "Clear the group label on many clients in one call. Inverse of /groups/bulkAdd. Clients themselves are kept — only the group label is cleared from clients.group_name and from each owning inbound's settings JSON. Groups become empty if all their members are removed.",
+          "Clear the group label on many clients in one call. Inverse of /groups/bulkAdd. Clients themselves are kept - only the group label is cleared from clients.group_name and from each owning inbound's settings JSON. Groups become empty if all their members are removed.",
         body: '{\n  "emails": ["alice", "bob"]\n}',
         response: '{\n  "success": true,\n  "obj": {\n    "affected": 2\n  }\n}',
       },
@@ -1438,7 +1438,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/clients/bulkDetach',
         summary:
-          "Mirror of bulkAttach: detach many existing clients from many inbounds in one call. For each email, intersects the client's current inbounds with the requested set and detaches from those only; (email, inbound) pairs where the client is not currently attached are silently no-ops. Emails not attached to any of the requested inbounds are reported under skipped. Client records are kept even if they become orphaned — use bulkDel for full removal. Returns per-email detached/skipped/errors lists and triggers a single Xray restart if any target inbound was running.",
+          "Mirror of bulkAttach: detach many existing clients from many inbounds in one call. For each email, intersects the client's current inbounds with the requested set and detaches from those only; (email, inbound) pairs where the client is not currently attached are silently no-ops. Emails not attached to any of the requested inbounds are reported under skipped. Client records are kept even if they become orphaned - use bulkDel for full removal. Returns per-email detached/skipped/errors lists and triggers a single Xray restart if any target inbound was running.",
         params: [
           {
             name: 'emails',
@@ -1501,7 +1501,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/clients/groups/delete',
         summary:
-          'Remove a group. Deletes the client_groups row and clears the group label from every matching client (both clients.group_name and the inbound settings JSON). The clients themselves are NOT deleted — use /bulkDel after filtering by group for that. Returns the count of clients whose label was cleared.',
+          'Remove a group. Deletes the client_groups row and clears the group label from every matching client (both clients.group_name and the inbound settings JSON). The clients themselves are NOT deleted - use /bulkDel after filtering by group for that. Returns the count of clients whose label was cleared.',
         body: '{\n  "name": "customer-a"\n}',
         response: '{\n  "success": true,\n  "obj": {\n    "affected": 5\n  }\n}',
       },
@@ -1623,7 +1623,7 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/panel/api/clients/subLinks/:subId',
         summary:
-          'Return every protocol URL (vless://, vmess://, trojan://, ss://, hysteria://, hy2://) for clients matching the subscription ID. Same result set as the configured subPath endpoint, but as a JSON array — no base64. When an inbound has streamSettings.externalProxy set, one URL is emitted per external proxy. Empty array when the subId has no enabled clients.',
+          'Return every protocol URL (vless://, vmess://, trojan://, ss://, hysteria://, hy2://) for clients matching the subscription ID. Same result set as the configured subPath endpoint, but as a JSON array - no base64. When an inbound has streamSettings.externalProxy set, one URL is emitted per external proxy. Empty array when the subId has no enabled clients.',
         params: [
           {
             name: 'subId',
@@ -1781,7 +1781,7 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/panel/api/nodes/history/:id/:metric/:bucket',
         summary:
-          'Aggregated metric history for a node — same shape as /server/history, scoped to one node.',
+          'Aggregated metric history for a node - same shape as /server/history, scoped to one node.',
         params: [
           { name: 'id', in: 'path', type: 'number', desc: 'Node ID.' },
           { name: 'metric', in: 'path', type: 'string', desc: 'cpu | mem.' },
@@ -2003,7 +2003,7 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/panel/api/setting/apiTokens',
         summary:
-          'List every API token, enabled or not. The token value is never returned — only metadata.',
+          'List every API token, enabled or not. The token value is never returned - only metadata.',
         response:
           '{\n  "success": true,\n  "obj": [\n    {\n      "id": 1,\n      "name": "central-panel-a",\n      "enabled": true,\n      "createdAt": 1736000000,\n      "scope": "node-admin",\n      "expiresAt": 0\n    }\n  ]\n}',
       },
@@ -2140,7 +2140,7 @@ export const sections: readonly Section[] = [
             name: 'action',
             in: 'path',
             type: 'string',
-            desc: 'data — return Warp stats. del — delete Warp data. config — return current config. reg — register (sends keys). regMasque — register a separate device enrolled for MASQUE and return its warp key pair, addresses and endpoint. changeIp — rotate the endpoint. license — set a Warp+ key. interval — set automatic rotation in hours.',
+            desc: 'data - return Warp stats. del - delete Warp data. config - return current config. reg - register (sends keys). regMasque - register a separate device enrolled for MASQUE and return its warp key pair, addresses and endpoint. changeIp - rotate the endpoint. license - set a Warp+ key. interval - set automatic rotation in hours.',
           },
           {
             name: 'privateKey',
@@ -2181,7 +2181,7 @@ export const sections: readonly Section[] = [
             name: 'action',
             in: 'path',
             type: 'string',
-            desc: 'countries — list available countries. servers — list servers in a country (sends countryId). reg — get NordVPN credentials (sends token). setKey — store NordVPN API key (sends key). data — return current NordVPN connection data. del — delete NordVPN data.',
+            desc: 'countries - list available countries. servers - list servers in a country (sends countryId). reg - get NordVPN credentials (sends token). setKey - store NordVPN API key (sends key). data - return current NordVPN connection data. del - delete NordVPN data.',
           },
           {
             name: 'countryId',
@@ -2215,7 +2215,7 @@ export const sections: readonly Section[] = [
             name: 'action',
             in: 'path',
             type: 'string',
-            desc: 'countries — list available countries from the signed PIA server list. servers — list regions and WireGuard servers in a country (sends countryCode). reg — sign in with a PIA username and password (sends username, password). data — return the signed-in account hint. del — delete stored PIA credentials. addKey — register a WireGuard key with the selected server (sends hostname) and return fields to build the outbound.',
+            desc: 'countries - list available countries from the signed PIA server list. servers - list regions and WireGuard servers in a country (sends countryCode). reg - sign in with a PIA username and password (sends username, password). data - return the signed-in account hint. del - delete stored PIA credentials. addKey - register a WireGuard key with the selected server (sends hostname) and return fields to build the outbound.',
           },
           {
             name: 'username',
@@ -2277,7 +2277,7 @@ export const sections: readonly Section[] = [
             name: 'allOutbounds',
             in: 'body (form)',
             type: 'string',
-            desc: 'JSON array of all outbounds — used to resolve dialerProxy chains.',
+            desc: 'JSON array of all outbounds - used to resolve dialerProxy chains.',
             optional: true,
           },
           {
@@ -2306,7 +2306,7 @@ export const sections: readonly Section[] = [
             name: 'allOutbounds',
             in: 'body (form)',
             type: 'string',
-            desc: 'JSON array of all outbounds — used to resolve dialerProxy chains.',
+            desc: 'JSON array of all outbounds - used to resolve dialerProxy chains.',
             optional: true,
           },
           {
@@ -2449,7 +2449,7 @@ export const sections: readonly Section[] = [
             in: 'query',
             type: 'integer',
             optional: true,
-            desc: 'Rows to return, capped at 500. Omit it to return every category — the index is small and the panel filters it client-side.',
+            desc: 'Rows to return, capped at 500. Omit it to return every category - the index is small and the panel filters it client-side.',
           },
         ],
       },
@@ -2457,7 +2457,7 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/panel/api/xray/geodata/entries',
         summary:
-          'One page of the rules inside a category — domain rules typed as domain/full/keyword/regexp for geosite databases, CIDRs for geoip ones.',
+          'One page of the rules inside a category - domain rules typed as domain/full/keyword/regexp for geosite databases, CIDRs for geoip ones.',
         params: [
           {
             name: 'file',
@@ -2683,7 +2683,7 @@ export const sections: readonly Section[] = [
       { name: 'Announce', desc: 'Base64-encoded announcement string' },
       {
         name: 'Routing-Enable',
-        desc: '<code>true</code> or <code>false</code> — whether routing rules are included',
+        desc: '<code>true</code> or <code>false</code> - whether routing rules are included',
       },
       {
         name: 'Routing',
@@ -2719,7 +2719,7 @@ export const sections: readonly Section[] = [
         method: 'GET',
         path: '/{subPath}:subid/hwid-status',
         summary:
-          'Return aggregate HWID device-slot usage for the subscription: whether an HWID limit is active, the limit, how many devices are registered and how many slots remain. Read-only — it never registers a device, so asking does not consume a slot. Counters only: no HWID value, email or device metadata. The path prefix is configured by subPath.',
+          'Return aggregate HWID device-slot usage for the subscription: whether an HWID limit is active, the limit, how many devices are registered and how many slots remain. Read-only - it never registers a device, so asking does not consume a slot. Counters only: no HWID value, email or device metadata. The path prefix is configured by subPath.',
         description:
           'Responds with the bare HwidSlotStatus object, not the <code>{success,msg,obj}</code> panel envelope, like the other subscription-server routes. With no HWID limit configured, <code>active</code> is false and every counter is 0.',
         params: [{ name: 'subid', in: 'path', type: 'string', desc: 'Client subscription ID.' }],
@@ -2936,7 +2936,7 @@ export const sections: readonly Section[] = [
     id: 'telegram-bot',
     title: 'Telegram Sales Bot',
     description:
-      "Self-service configuration for a per-owner Telegram bot that sells plans to buyers, with manual payment review (card-to-card, crypto). Every endpoint is scoped to the authenticated caller's own bot — there is no admin-only variant. Available to logged-in users, including resellers, only after the main admin enables resellerBotEnable in Telegram settings. Disabled by default; endpoints return HTTP 503 while disabled.",
+      "Self-service configuration for a per-owner Telegram bot that sells plans to buyers, with manual payment review (card-to-card, crypto). Every endpoint is scoped to the authenticated caller's own bot - there is no admin-only variant. Available to logged-in users, including resellers, only after the main admin enables resellerBotEnable in Telegram settings. Disabled by default; endpoints return HTTP 503 while disabled.",
     endpoints: [
       {
         method: 'GET',
@@ -2950,7 +2950,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/bot/config',
         summary:
-          'Set or update the bot token, enabled state, welcome message, and wallet/referral/support settings. Starts or stops the bot instance to match. Omit token to leave the existing one unchanged.',
+          'Set or update the bot token, enabled state, welcome message, and wallet/referral/support settings. Starts or stops the bot instance to match. Omit token to leave the existing one unchanged. The optional presentation object controls shop identity, bilingual welcome text, announcement, menu layout/labels, visible menu items and https help links. Omit presentation to preserve existing customization.',
         params: [
           {
             name: 'token',
@@ -2961,6 +2961,13 @@ export const sections: readonly Section[] = [
           },
           { name: 'enabled', in: 'body', type: 'boolean' },
           { name: 'welcomeMessage', in: 'body', type: 'string', optional: true },
+          {
+            name: 'presentation',
+            in: 'body',
+            type: 'object',
+            optional: true,
+            desc: 'BotPresentation: brandName (80 chars), welcomeEN (2000), announcement (600), defaultLanguage (auto/fa/en), menuLayout (spacious/compact), hideTrial/hideSupport/hideTutorial, supportURL/tutorialURL (https), labels keyed by fa:buy or en:buy etc. Text is rendered literally in Telegram.',
+          },
           { name: 'walletEnabled', in: 'body', type: 'boolean' },
           { name: 'referralEnabled', in: 'body', type: 'boolean' },
           { name: 'referralKind', in: 'body', type: 'string', desc: '"flat" or "percent".' },
@@ -3187,7 +3194,7 @@ export const sections: readonly Section[] = [
         method: 'POST',
         path: '/panel/api/bot/customers/:id/adjust-wallet',
         summary:
-          "Manually credit or debit a customer's wallet balance (support use) — ledgered the same as every other balance change.",
+          "Manually credit or debit a customer's wallet balance (support use) - ledgered the same as every other balance change.",
         params: [
           { name: 'id', in: 'path', type: 'integer' },
           { name: 'deltaToman', in: 'body', type: 'integer', desc: 'Negative to debit.' },

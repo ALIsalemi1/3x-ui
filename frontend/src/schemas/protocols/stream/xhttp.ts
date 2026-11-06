@@ -7,7 +7,7 @@ export type XHttpMode = z.infer<typeof XHttpModeSchema>;
 
 // xHTTP (SplitHTTPConfig) is xray-core's modern stream-multiplexed transport.
 // The field set is large because the schema mirrors what the server-side
-// listener reads — plus a few client-only fields (`uplinkHTTPMethod`,
+// listener reads - plus a few client-only fields (`uplinkHTTPMethod`,
 // `headers`) the panel embeds into share-link `extra` blobs even though the
 // server ignores them at runtime. Outbound has additional fields (uplinkChunk
 // sizes, noGRPCHeader, scMinPostsIntervalMs, xmux, downloadSettings) which
@@ -17,7 +17,7 @@ export type XHttpMode = z.infer<typeof XHttpModeSchema>;
 // are strings because they accept dash-range values like '16-32'.
 // maxConcurrency and maxConnections are mutually exclusive strategies
 // (xray-core rejects a config that sets both), so the bare schema
-// default keeps only one of them non-zero — a non-zero maxConnections
+// default keeps only one of them non-zero - a non-zero maxConnections
 // default resurrected on load made every re-save silently delete the
 // user's maxConcurrency.
 export const XHttpXmuxSchema = z.object({
@@ -100,7 +100,7 @@ export const XHttpStreamSettingsSchema = z.preprocess(
     uplinkDataKey: z.string().default(''),
     // Empty default on purpose: xray-core already defaults to 1MB/30ms, and
     // baking the literal values into every config and share link gives DPI a
-    // stable fingerprint (#5141 — TSPU keys on scMinPostsIntervalMs=30).
+    // stable fingerprint (#5141 - TSPU keys on scMinPostsIntervalMs=30).
     scMaxEachPostBytes: z.string().default(''),
     noSSEHeader: z.boolean().default(false),
     scMaxBufferedPosts: z.number().int().min(0).default(30),
@@ -119,7 +119,7 @@ export const XHttpStreamSettingsSchema = z.preprocess(
     noGRPCHeader: z.boolean().default(false),
     xmux: XHttpXmuxSchema.optional(),
     // UI-only toggle controlling whether the XMUX sub-form is expanded.
-    // Never present on the wire — outbound modal strips it via the
+    // Never present on the wire - outbound modal strips it via the
     // form-to-wire adapter.
     enableXmux: z.boolean().default(false),
   }),

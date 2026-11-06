@@ -77,14 +77,14 @@ describe('OutboundFormModal', () => {
     const distinctShapes = new Set(Object.values(labelsByProto).map((l) => l.join('|')));
     expect(distinctShapes.size).toBeGreaterThan(1);
 
-    // vless carries an Encryption field; wireguard does not — proves real protocol switching.
+    // vless carries an Encryption field; wireguard does not - proves real protocol switching.
     if (labelsByProto.vless) {
       expect(labelsByProto.vless).toContain('Encryption');
     }
     if (labelsByProto.wireguard) {
       expect(labelsByProto.wireguard).not.toContain('Encryption');
     }
-  }, 30000); // iterates every protocol, re-rendering a heavy modal each time — slow on CI runners
+  }, 30000); // iterates every protocol, re-rendering a heavy modal each time - slow on CI runners
 
   // Freedom's card and the Transport tab's Sockopts block both write
   // sockopt.domainStrategy, so freedom must show only one control for it.

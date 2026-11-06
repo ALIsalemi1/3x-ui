@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { InboundSchema } from '@/schemas/api/inbound';
 
-// Full Inbound parse tests — exercises the intersection of network DU,
+// Full Inbound parse tests - exercises the intersection of network DU,
 // security DU, settings DU, and orthogonal extras in a single
 // round-trip. These fixtures are the input the link generators in
 // lib/xray/inbound-link.ts will consume once extracted.

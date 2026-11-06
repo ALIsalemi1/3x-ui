@@ -311,7 +311,7 @@ export default function NodeList({
         width: 80,
         render: (_value, record) =>
           record.transitive ? (
-            <span style={{ opacity: 0.4 }}>—</span>
+            <span style={{ opacity: 0.4 }}>-</span>
           ) : (
             <Switch
               checked={!!record.enable}

@@ -4,7 +4,7 @@ import { Form } from 'antd';
 import { FinalMaskForm } from '@/lib/xray/forms/transport';
 import type { FinalMaskStreamSettings } from '@/schemas/protocols/stream/finalmask';
 
-// Per-host Final Mask editor — same shape as the sub-JSON settings one
+// Per-host Final Mask editor - same shape as the sub-JSON settings one
 // (SubJsonFinalMaskForm) but reused for a host: reads/writes the host's
 // finalMask JSON string. The masks are merged into this host's JSON stream.
 

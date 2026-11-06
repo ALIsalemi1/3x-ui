@@ -63,7 +63,7 @@ function PopoverDemo() {
       >
         <Button>Insert variable</Button>
       </Popover>
-      <div style={{ marginTop: 12 }}>Last picked: {lastPicked || '—'}</div>
+      <div style={{ marginTop: 12 }}>Last picked: {lastPicked || '-'}</div>
     </>
   );
 }

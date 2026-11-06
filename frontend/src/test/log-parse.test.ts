@@ -6,7 +6,7 @@ import { parseLogLine } from '@/pages/index/logParse';
 // host (the SysLog view) plus the in-memory app-log format. Each journald entry
 // carries a "Mon DD HH:MM:SS host ident[pid]: " prefix that the viewer used to
 // mistake for the level, leaving only a bare timestamp on screen.
-describe('parseLogLine — SysLog (journalctl) formats', () => {
+describe('parseLogLine - SysLog (journalctl) formats', () => {
   it('x-ui go-logging line: keeps level, strips prefix, tags X-UI', () => {
     const r = parseLogLine(
       'Jun 08 23:57:28 ubuntu-4gb-fsn1-1 /usr/local/x-ui/x-ui[72297]: INFO - mtproto: started mtg for inbound 3 on 0.0.0.0:8443',
@@ -62,7 +62,7 @@ describe('parseLogLine — SysLog (journalctl) formats', () => {
   });
 });
 
-describe('parseLogLine — app-log format (SysLog off)', () => {
+describe('parseLogLine - app-log format (SysLog off)', () => {
   it('parses "YYYY/MM/DD HH:MM:SS LEVEL - body"', () => {
     const r = parseLogLine(
       '2026/06/09 00:35:09 INFO - mtproto: started mtg for inbound 3 on 0.0.0.0:8443',

@@ -36,7 +36,7 @@ interface FilterDrawerProps {
   protocols: string[];
   groups: string[];
   nodes: NodeRecord[];
-  // Admin only — empty for a reseller (the endpoint that backs this is
+  // Admin only - empty for a reseller (the endpoint that backs this is
   // admin-only, and a reseller only ever sees their own clients anyway).
   owners: OwnerOption[];
 }
@@ -81,7 +81,7 @@ export default function FilterDrawer({
 
   const groupOptions = useMemo(() => groups.map((g) => ({ value: g, label: g })), [groups]);
 
-  // 0 is the "local panel" sentinel (inbounds without a nodeId) — see
+  // 0 is the "local panel" sentinel (inbounds without a nodeId) - see
   // ClientFilters.nodeIds (#4997).
   const nodeOptions = useMemo(
     () => [

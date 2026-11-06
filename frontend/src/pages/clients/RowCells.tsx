@@ -25,7 +25,7 @@ interface ClientRowActionsProps {
 
 // Five Tooltip-wrapped buttons per row, none of which depend on traffic. Left
 // inline they re-ran rc-tooltip's alignment machinery for every visible row on
-// every traffic push — 125 Tooltips on a 25-row page, five seconds apart.
+// every traffic push - 125 Tooltips on a 25-row page, five seconds apart.
 // Keyed on the email rather than the row object, because a push replaces the row
 // object of every client whose counters moved; the page resolves the live row.
 export const ClientRowActions = memo(function ClientRowActions({
@@ -120,7 +120,7 @@ export const ClientInboundChips = memo(function ClientInboundChips({
   protocolColors,
   chipLimit,
 }: ClientInboundChipsProps) {
-  if (ids.length === 0) return <span className="cell-empty">—</span>;
+  if (ids.length === 0) return <span className="cell-empty">-</span>;
 
   const label = (id: number) => {
     const ib = inboundsById[id];

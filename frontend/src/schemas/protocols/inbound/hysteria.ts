@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // Hysteria inbound. Each client supplies an `auth` token instead of a
-// UUID/password. xray-core builds version 2 only — it answers anything else
+// UUID/password. xray-core builds version 2 only - it answers anything else
 // with "version != 2" and rejects the entire config, so a legacy row is
 // coerced rather than carried through.
 export const HysteriaClientSchema = z.object({

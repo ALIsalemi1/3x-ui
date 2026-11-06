@@ -46,8 +46,8 @@ import { WireguardInboundSettingsSchema } from '@/schemas/protocols/inbound/wire
 // Tests pass explicit seeds for every random field so the assertions don't
 // depend on window.crypto (the node test env has no crypto.randomUUID).
 // Each factory is verified two ways:
-//   1. snapshot — locks the exact shape
-//   2. Zod parse round-trip — confirms the factory output is a valid
+//   1. snapshot - locks the exact shape
+//   2. Zod parse round-trip - confirms the factory output is a valid
 //      member of the protocol's client schema (no missing defaults, no
 //      stray fields)
 

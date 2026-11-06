@@ -3,8 +3,8 @@ import type { AmneziawgServer } from '@/schemas/protocols/inbound/amneziawg';
 /*
  * Client-side AmneziaWG 3.1 obfuscation generator, mirroring the ranges and
  * constraints of the Go backend's amneziawg.GenerateObfuscation31
- * (internal/amneziawg/params.go). Exact parity isn't required — the user can
- * edit any field afterward and the backend validates on save — but the two
+ * (internal/amneziawg/params.go). Exact parity isn't required - the user can
+ * edit any field afterward and the backend validates on save - but the two
  * generators must stay range-compatible so a value produced here always
  * passes the Go-side ValidateObfuscation.
  */
@@ -56,7 +56,7 @@ export function effectiveMtu(configuredMtu: number | undefined, s4: number | und
 }
 
 /*
- * base64 of 32 crypto-grade random bytes — the exact HeaderProtectionKey
+ * base64 of 32 crypto-grade random bytes - the exact HeaderProtectionKey
  * shape amneziawg-tools parses and the Go backend validates.
  */
 const generateHeaderProtectionKey = (): string => {

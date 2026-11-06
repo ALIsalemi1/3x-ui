@@ -52,7 +52,7 @@ export default function RuleCardList({
   return (
     <div className="rule-list">
       {rows.length === 0 ? (
-        <div className="rule-empty">—</div>
+        <div className="rule-empty">-</div>
       ) : (
         rows.map((rule, index) => (
           <div
@@ -164,7 +164,7 @@ export default function RuleCardList({
                     <ClusterOutlined aria-hidden="true" /> {rule.balancerTag}
                   </Tag>
                 ) : (
-                  <span className="criterion-empty">—</span>
+                  <span className="criterion-empty">-</span>
                 )}
               </div>
             </div>

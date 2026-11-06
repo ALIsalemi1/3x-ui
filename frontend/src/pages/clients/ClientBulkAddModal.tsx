@@ -227,7 +227,7 @@ export default function ClientBulkAddModal({
       } else {
         messageApi.warning(
           firstError
-            ? `${t('pages.clients.toasts.bulkCreatedMixed', { ok, failed })} — ${firstError}`
+            ? `${t('pages.clients.toasts.bulkCreatedMixed', { ok, failed })} - ${firstError}`
             : t('pages.clients.toasts.bulkCreatedMixed', { ok, failed }),
         );
       }

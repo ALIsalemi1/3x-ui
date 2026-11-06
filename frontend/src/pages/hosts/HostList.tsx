@@ -202,7 +202,7 @@ export default function HostList(props: HostListProps) {
       key: 'inbound',
       render: (_, h) => {
         const ids = h.inboundIds || [];
-        if (ids.length === 0) return <span className="host-muted">—</span>;
+        if (ids.length === 0) return <span className="host-muted">-</span>;
         const visible = ids.slice(0, 1);
         const overflow = ids.slice(1);
         const chip = (id: number) => {
@@ -268,7 +268,7 @@ export default function HostList(props: HostListProps) {
             ))}
           </Space>
         ) : (
-          <span className="host-muted">—</span>
+          <span className="host-muted">-</span>
         ),
     },
   ];

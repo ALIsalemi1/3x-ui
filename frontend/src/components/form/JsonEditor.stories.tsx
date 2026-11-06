@@ -83,7 +83,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'CodeMirror-based JSON editor with syntax highlighting, live parse linting, and theme-aware styling. The panel uses it for raw xray config snippets — inbound settings, stream settings, and outbound JSON in the modals and settings pages.',
+          'CodeMirror-based JSON editor with syntax highlighting, live parse linting, and theme-aware styling. The panel uses it for raw xray config snippets - inbound settings, stream settings, and outbound JSON in the modals and settings pages.',
       },
     },
   },

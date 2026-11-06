@@ -12,7 +12,7 @@ import {
 import { formValuesToWirePayload, rawOutboundToFormValues } from '@/lib/xray/outbound-form-adapter';
 import { Base64 } from '@/utils';
 
-// Focused acceptance tests for the share-link parsers — one happy-path
+// Focused acceptance tests for the share-link parsers - one happy-path
 // case per protocol family, plus a few common edge cases. The parsers
 // produce wire-shape outbound rows; the modal hands them to
 // rawOutboundToFormValues to seed Form.useForm.
@@ -95,7 +95,7 @@ describe('parseVmessLink', () => {
   });
 });
 
-describe('parseVmessLink — XHTTP advanced fields', () => {
+describe('parseVmessLink - XHTTP advanced fields', () => {
   it('round-trips xhttp knobs from the vmess JSON', () => {
     const json = {
       v: '2',
@@ -174,7 +174,7 @@ describe('parseVmessLink — XHTTP advanced fields', () => {
   });
 });
 
-describe('parseVlessLink — XHTTP advanced fields', () => {
+describe('parseVlessLink - XHTTP advanced fields', () => {
   it('round-trips xhttp knobs from URL query params', () => {
     const link =
       'vless://uuid@srv.example:443' +
@@ -594,7 +594,7 @@ describe('parseHysteria2Link', () => {
     expect(out?.protocol).toBe('hysteria');
   });
 
-  it('parses alpn, fingerprint and the salamander UDP mask (fm) — #4760', () => {
+  it('parses alpn, fingerprint and the salamander UDP mask (fm) - #4760', () => {
     const link =
       'hysteria2://78e7795a209c4c099f896a816fc8448f@news.domain.org:8443?' +
       'alpn=h2%2Chttp%2F1.1&' +
@@ -766,7 +766,7 @@ describe('parseHysteria2Link', () => {
     expect(settings.packetSize).toBe('100-200');
   });
 
-  it('coerces string quicParams numerics under fm to integers — #5783', () => {
+  it('coerces string quicParams numerics under fm to integers - #5783', () => {
     const fm = encodeURIComponent(
       JSON.stringify({
         quicParams: {
@@ -793,7 +793,7 @@ describe('parseHysteria2Link', () => {
     expect(quic.brutalUp).toBe('100 mbps');
   });
 
-  it('clamps quicParams to the ranges xray accepts and drops junk — #5783', () => {
+  it('clamps quicParams to the ranges xray accepts and drops junk - #5783', () => {
     const fm = encodeURIComponent(
       JSON.stringify({
         quicParams: {
@@ -869,9 +869,9 @@ describe('parseHysteria2Link', () => {
   });
 });
 
-describe('parseVlessLink — extra / fm / x_padding_bytes (B20)', () => {
+describe('parseVlessLink - extra / fm / x_padding_bytes (B20)', () => {
   it('round-trips a real inbound-generated link with extra+fm+reality+xhttp', () => {
-    // Real user-reported link — bundled xhttp knobs via `extra` JSON,
+    // Real user-reported link - bundled xhttp knobs via `extra` JSON,
     // full finalmask via `fm` JSON, reality auth, snake_case
     // x_padding_bytes alias. All three parse-paths must combine.
     const link =
@@ -929,7 +929,7 @@ describe('parseVlessLink — extra / fm / x_padding_bytes (B20)', () => {
     expect(xhttp.xPaddingBytes).toBe('200-2000');
   });
 
-  it('extra takes precedence — camelCase wins over snake_case alias', () => {
+  it('extra takes precedence - camelCase wins over snake_case alias', () => {
     const link =
       'vless://u@h:1?type=xhttp&security=none&path=%2F&host=&mode=auto' +
       '&xPaddingBytes=900-9000&x_padding_bytes=100-1000#t';

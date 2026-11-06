@@ -2,11 +2,11 @@ import { z } from 'zod';
 
 // Hysteria stream transport. Per Xray docs (transports/hysteria.html), the
 // Xray implementation of Hysteria2's underlying QUIC transport keeps only
-// the essentials — version, auth, udpIdleTimeout, and masquerade. The
+// the essentials - version, auth, udpIdleTimeout, and masquerade. The
 // extended bandwidth/window/udphop knobs that earlier hysteria builds
 // exposed are not part of this transport's wire shape.
 
-// Inbound masquerade — Xray's hysteria inbound can disguise itself as an
+// Inbound masquerade - Xray's hysteria inbound can disguise itself as an
 // HTTP/3 server. `type` is the empty string by default (serves the default
 // 404 page), and per-type config keys are only honored when their type is
 // active.

@@ -58,7 +58,7 @@ export default function SubscriptionOutbounds({
   const identityCell = (record: OutboundRow) => (
     <div className="identity-cell">
       <Tooltip title={record.tag}>
-        <span className="tag-name">{record.tag || '—'}</span>
+        <span className="tag-name">{record.tag || '-'}</span>
       </Tooltip>
       <div className="protocol-line">
         <Tag color="green">{record.protocol}</Tag>
@@ -81,7 +81,7 @@ export default function SubscriptionOutbounds({
     return (
       <div className="address-list">
         {addrs.length === 0 ? (
-          <span className="empty">—</span>
+          <span className="empty">-</span>
         ) : (
           addrs.map((addr) => (
             <Tooltip key={addr} title={addr}>
@@ -111,7 +111,7 @@ export default function SubscriptionOutbounds({
       return isTesting(subscriptionTestStates, key) ? (
         <LoadingOutlined />
       ) : (
-        <span className="empty">—</span>
+        <span className="empty">-</span>
       );
     return <TestResultPopover result={r} />;
   };

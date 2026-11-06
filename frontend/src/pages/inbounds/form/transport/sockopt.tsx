@@ -71,7 +71,7 @@ export default function SockoptForm({
       return;
     }
 
-    /* proxy — clear trustedXForwardedFor so a lingering header can't override the
+    /* proxy - clear trustedXForwardedFor so a lingering header can't override the
        PROXY-recovered IP (xray reads the header last on ws/httpupgrade/xhttp/grpc). */
     setValue('streamSettings.sockopt.trustedXForwardedFor', []);
     setValue('streamSettings.sockopt.acceptProxyProtocol', true);

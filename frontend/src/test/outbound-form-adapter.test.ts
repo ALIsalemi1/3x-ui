@@ -4,7 +4,7 @@ import { formValuesToWirePayload, rawOutboundToFormValues } from '@/lib/xray/out
 
 // Round-trip parity: wire → form → wire should preserve the legacy
 // Outbound.fromJson(...).toJson() output shape for each protocol's quirks.
-// Spot-checking the cases the modal exercised in v0.x — vmess vnext flatten,
+// Spot-checking the cases the modal exercised in v0.x - vmess vnext flatten,
 // vless reverse-wrap, wireguard address csv ↔ array, freedom finalRules
 // emission, blackhole type wrap, dns rule normalization, mux gating.
 

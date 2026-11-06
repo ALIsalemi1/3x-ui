@@ -192,7 +192,7 @@ export function useOutboundColumns({
           return (
             <div className="address-list">
               {addrs.length === 0 ? (
-                <span className="empty">—</span>
+                <span className="empty">-</span>
               ) : (
                 addrs.map((addr) => (
                   <Tooltip key={addr} title={addr}>
@@ -243,7 +243,7 @@ export function useOutboundColumns({
           if (addresses.length === 0) {
             return (
               <Tooltip title={t('pages.xray.outbound.egressHint')}>
-                <span className="empty">—</span>
+                <span className="empty">-</span>
               </Tooltip>
             );
           }
@@ -277,7 +277,7 @@ export function useOutboundColumns({
           if (!egress?.country) {
             return (
               <Tooltip title={t('pages.xray.outbound.egressHint')}>
-                <span className="empty">—</span>
+                <span className="empty">-</span>
               </Tooltip>
             );
           }
@@ -319,7 +319,7 @@ export function useOutboundColumns({
             return isTesting(outboundTestStates, record.key) ? (
               <LoadingOutlined />
             ) : (
-              <span className="empty">—</span>
+              <span className="empty">-</span>
             );
           return <TestResultPopover result={r} />;
         },

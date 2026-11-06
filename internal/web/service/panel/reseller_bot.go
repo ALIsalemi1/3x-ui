@@ -30,7 +30,16 @@ func (s *BotService) GetConfig(ownerId int) (*model.BotConfig, error) {
 	cfg := &model.BotConfig{}
 	err := db.Where("owner_id = ?", ownerId).First(cfg).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return &model.BotConfig{OwnerId: ownerId}, nil
+		cfg, err = &model.BotConfig{OwnerId: ownerId}, nil
+	}
+	if cfg.Presentation.Labels == nil {
+		cfg.Presentation.Labels = map[string]string{}
+	}
+	if cfg.Presentation.MenuLayout == "" {
+		cfg.Presentation.MenuLayout = "spacious"
+	}
+	if cfg.Presentation.DefaultLanguage == "" {
+		cfg.Presentation.DefaultLanguage = "auto"
 	}
 	return cfg, err
 }
@@ -38,6 +47,7 @@ func (s *BotService) GetConfig(ownerId int) (*model.BotConfig, error) {
 // BotConfigInput carries the owner-editable Setup-tab fields, including the
 // wallet/referral knobs that make the referral system "fully configurable".
 type BotConfigInput struct {
+	Presentation    *model.BotPresentation
 	Token           string
 	Enabled         bool
 	WelcomeMessage  string
@@ -51,6 +61,11 @@ type BotConfigInput struct {
 }
 
 func (s *BotService) SaveConfig(ownerId int, in BotConfigInput) (*model.BotConfig, error) {
+	if in.Presentation != nil {
+		if err := validateBotPresentation(in.Presentation); err != nil {
+			return nil, err
+		}
+	}
 	db := database.GetDB()
 	cfg := &model.BotConfig{}
 	err := db.Where("owner_id = ?", ownerId).First(cfg).Error
@@ -84,6 +99,14 @@ func (s *BotService) SaveConfig(ownerId int, in BotConfigInput) (*model.BotConfi
 		"referral_trigger": in.ReferralTrigger,
 		"support_text":     in.SupportText,
 		"tutorial_text":    in.TutorialText,
+	}
+	if in.Presentation != nil {
+		cfg.Presentation = *in.Presentation
+		data, err := json.Marshal(cfg.Presentation)
+		if err != nil {
+			return nil, err
+		}
+		updates["presentation"] = string(data)
 	}
 	if in.Token != "" {
 		updates["token"] = in.Token

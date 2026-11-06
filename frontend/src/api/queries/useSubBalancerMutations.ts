@@ -5,7 +5,7 @@ import { keys } from '@/api/queryKeys';
 import type { SubBalancerFormValues } from '@/schemas/subBalancer';
 
 // Deliberately urlencoded: Go binds inboundIds from repeated form keys; weights
-// go as one JSON string — gin cannot bind bracket-keyed maps from form bodies.
+// go as one JSON string - gin cannot bind bracket-keyed maps from form bodies.
 function toWirePayload(values: SubBalancerFormValues): Record<string, unknown> {
   const { memberWeights, ...rest } = values;
   if (values.strategy === 'leastLoad' && memberWeights && Object.keys(memberWeights).length > 0) {

@@ -29,7 +29,7 @@ function asObject(value: unknown): Record<string, unknown> {
 }
 
 function SelectorTags({ tags }: { tags: string[] }) {
-  if (!tags || tags.length === 0) return <Tag>—</Tag>;
+  if (!tags || tags.length === 0) return <Tag>-</Tag>;
   return (
     <>
       {tags.map((sel) => (

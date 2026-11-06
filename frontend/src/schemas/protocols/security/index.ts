@@ -17,7 +17,7 @@ export type Security = z.infer<typeof SecuritySchema>;
 // serialization, so this DU faithfully describes what's on disk.
 //
 // Tunnel (dokodemo-door / TProxy) is transportless and may carry only
-// `sockopt` — its streamSettings has no `security` key at all. The
+// `sockopt` - its streamSettings has no `security` key at all. The
 // transportless branch accepts that shape, mirroring NetworkSettingsSchema's
 // `network: never().optional()` handling. A present-but-invalid security
 // still fails both branches so a typo can't slip through.

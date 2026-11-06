@@ -25,7 +25,7 @@ export function useOutboundTags(opts?: { excludeBlackhole?: boolean }) {
       for (const t of data?.subscriptionOutboundTags ?? []) {
         if (t) tags.add(t);
       }
-      // Balancers are valid routing targets too — injectMtprotoEgress emits a
+      // Balancers are valid routing targets too - injectMtprotoEgress emits a
       // balancerTag rule when the chosen tag names a balancer.
       const balancers = (
         data?.xraySetting?.routing as { balancers?: Array<{ tag?: string }> } | undefined

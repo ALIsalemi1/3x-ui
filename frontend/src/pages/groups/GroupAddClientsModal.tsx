@@ -82,7 +82,7 @@ export default function GroupAddClientsModal({
           g ? (
             <Tag color="geekblue">{g}</Tag>
           ) : (
-            <Typography.Text type="secondary">—</Typography.Text>
+            <Typography.Text type="secondary">-</Typography.Text>
           ),
       },
       {

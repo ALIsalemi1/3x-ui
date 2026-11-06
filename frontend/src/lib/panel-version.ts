@@ -1,6 +1,6 @@
 // Mirror of web/service/panel.go isNewerVersion: parse a vMAJOR.MINOR.PATCH tag
 // and report whether `latest` is ahead of `current`. When either side isn't a
-// clean three-part numeric tag, fall back to a normalized string inequality —
+// clean three-part numeric tag, fall back to a normalized string inequality -
 // the same heuristic the Go side uses so the node "update available" badge
 // agrees with what the server would decide.
 function parseVersionParts(version: string): [number, number, number] | null {
@@ -15,8 +15,8 @@ function parseVersionParts(version: string): [number, number, number] | null {
 }
 
 // Format a panel version for display. Dev builds report a "dev+<commit>"
-// identity (see config.GetPanelVersion); show those — and any other
-// non-numeric label — verbatim. Semantic versions get a single normalized "v"
+// identity (see config.GetPanelVersion); show those - and any other
+// non-numeric label - verbatim. Semantic versions get a single normalized "v"
 // prefix, so a raw "v3.4.0" tag and a bare "3.4.0" both render as "v3.4.0"
 // instead of doubling up to "vv3.4.0".
 export function formatPanelVersion(version: string | undefined | null): string {

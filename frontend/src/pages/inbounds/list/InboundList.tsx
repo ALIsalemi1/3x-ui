@@ -201,7 +201,7 @@ export default function InboundList({
             {
               key: 'subs',
               icon: <ExportOutlined />,
-              label: `${t('pages.inbounds.export')} — ${t('pages.settings.subSettings')}`,
+              label: `${t('pages.inbounds.export')} - ${t('pages.settings.subSettings')}`,
             },
           ]
         : []),

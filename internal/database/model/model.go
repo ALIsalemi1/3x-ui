@@ -1124,16 +1124,17 @@ type InboundMultiplier struct {
 
 // BotConfig is one owner's (reseller or admin) Telegram sales-bot registration.
 type BotConfig struct {
-	Id              int    `json:"id" gorm:"primaryKey;autoIncrement"`
-	OwnerId         int    `json:"ownerId" gorm:"uniqueIndex"`
-	Token           string `json:"-" gorm:"column:token"`
-	Enabled         bool   `json:"enabled" gorm:"default:false"`
-	BotUsername     string `json:"botUsername"`
-	LinkCode        string `json:"-" gorm:"column:link_code"`
-	OwnerChatId     int64  `json:"-" gorm:"column:owner_chat_id;default:0"`
-	WelcomeMessage  string `json:"welcomeMessage"`
-	WalletEnabled   bool   `json:"walletEnabled" gorm:"default:false"`
-	ReferralEnabled bool   `json:"referralEnabled" gorm:"default:false"`
+	Presentation    BotPresentation `json:"presentation" gorm:"serializer:json;type:text"`
+	Id              int             `json:"id" gorm:"primaryKey;autoIncrement"`
+	OwnerId         int             `json:"ownerId" gorm:"uniqueIndex"`
+	Token           string          `json:"-" gorm:"column:token"`
+	Enabled         bool            `json:"enabled" gorm:"default:false"`
+	BotUsername     string          `json:"botUsername"`
+	LinkCode        string          `json:"-" gorm:"column:link_code"`
+	OwnerChatId     int64           `json:"-" gorm:"column:owner_chat_id;default:0"`
+	WelcomeMessage  string          `json:"welcomeMessage"`
+	WalletEnabled   bool            `json:"walletEnabled" gorm:"default:false"`
+	ReferralEnabled bool            `json:"referralEnabled" gorm:"default:false"`
 	// ReferralKind: "flat" (ReferralValue Toman per qualifying referral) or
 	// "percent" (ReferralValue percent of the referred purchase).
 	ReferralKind  string `json:"referralKind" gorm:"default:flat" validate:"omitempty,oneof=flat percent"`

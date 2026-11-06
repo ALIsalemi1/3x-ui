@@ -15,7 +15,7 @@ import { upgradeLegacyXdnsMasks } from './xdns-mask';
 // present in either the JSON or URL params. xmux and downloadSettings
 // round-trip through the `extra` JSON blob. reality shortIds, padding
 // obfs key/header/placement, hysteria udphop are still left
-// to the user to fill in after import — the legacy Outbound.fromLink
+// to the user to fill in after import - the legacy Outbound.fromLink
 // was ~250 lines of dense edge-case handling we don't need to
 // replicate verbatim for the common phone-to-panel workflow.
 
@@ -88,7 +88,7 @@ function applyXhttpStringFromParams(xhttp: Raw, params: URLSearchParams): void {
         xhttp.headers = parsed.headers;
       }
     } catch {
-      // malformed extra — silently ignore, the panel can still operate
+      // malformed extra - silently ignore, the panel can still operate
       // on the rest of the link
     }
   }
@@ -286,7 +286,7 @@ function applyFinalMaskParam(stream: Raw, params: URLSearchParams): void {
         stream.finalmask = normalizeUdpHop(upgradeLegacyUdpHop(parsed).next).next;
       }
     } catch {
-      // malformed fm — leave streamSettings.finalmask absent
+      // malformed fm - leave streamSettings.finalmask absent
     }
   }
   applyMkcpLegacyFromShare(stream, params);
@@ -657,7 +657,7 @@ export function parseShadowsocksLink(link: string): Raw | null {
   //   modern:  ss://base64(method:password)@host:port#remark
   //   legacy:  ss://base64(method:password@host:port)#remark
   // Query may carry Xray-native stream params (type/security/sni/alpn/fp)
-  // emitted by the SS share-link generator — preserve them like trojan/vless.
+  // emitted by the SS share-link generator - preserve them like trojan/vless.
   // Try modern first; fall back to legacy decode of the whole userinfo+host.
   let userInfo: string;
   let host: string;
@@ -739,7 +739,7 @@ export function parseHysteria2Link(link: string): Raw | null {
   const url = parseUrlLink(link, 'hysteria2') ?? parseUrlLink(link, 'hy2');
   if (!url) return null;
   // hysteria2's auth rides as the URL userinfo. The streamSettings
-  // network branch is the dedicated 'hysteria' transport — the modal's
+  // network branch is the dedicated 'hysteria' transport - the modal's
   // newStreamSlice('hysteria') initializer fills in receive-window
   // defaults; we override the user-set fields here.
   const auth = url.username;
@@ -851,7 +851,7 @@ export function parseWireguardLink(link: string): Raw | null {
   };
 }
 
-// Dispatcher — first non-null parser wins. Returns null when no parser
+// Dispatcher - first non-null parser wins. Returns null when no parser
 // recognizes the link's protocol scheme.
 export function parseOutboundLink(link: string): Raw | null {
   const trimmed = link.trim();

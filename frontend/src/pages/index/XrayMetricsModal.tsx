@@ -122,7 +122,7 @@ function unitFormatter(unit: string): (v: number) => string {
 }
 
 function fmtTimestamp(unixSec: number): string {
-  if (!unixSec) return '—';
+  if (!unixSec) return '-';
   const d = new Date(unixSec * 1000);
   const hh = String(d.getHours()).padStart(2, '0');
   const mm = String(d.getMinutes()).padStart(2, '0');

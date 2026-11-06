@@ -71,7 +71,7 @@
 }
 
 /* ──────────────────────────────────────────────────────────────────
-   Dark mode — Swagger UI does not ship a dark theme, so every visual
+   Dark mode - Swagger UI does not ship a dark theme, so every visual
    surface needs an explicit override. Method-color chips (GET / POST /
    …) are left untouched because they carry meaning at a glance.
    ────────────────────────────────────────────────────────────────── */

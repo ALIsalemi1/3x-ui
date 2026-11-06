@@ -10,7 +10,7 @@
 .multiply-page,
 .reseller-page,
 .telegram-bot-page {
-  --bg-page: #e6e8ec;
+  --bg-page: #edf2f7;
   --bg-card: #ffffff;
   min-height: 100vh;
   background: var(--bg-page);
@@ -28,8 +28,8 @@
 .multiply-page.is-dark,
 .reseller-page.is-dark,
 .telegram-bot-page.is-dark {
-  --bg-page: #1a1b1f;
-  --bg-card: #23252b;
+  --bg-page: #17212b;
+  --bg-card: #202d3a;
 }
 
 .index-page.is-dark.is-ultra,
@@ -230,15 +230,15 @@ body.dark .ant-dropdown-menu-item-divider {
 /* Hosts page shares the standard panel page shell (background, transparent
    layout, content padding, summary-card padding). */
 .hosts-page {
-  --bg-page: #e6e8ec;
+  --bg-page: #edf2f7;
   --bg-card: #ffffff;
   min-height: 100vh;
   background: var(--bg-page);
 }
 
 .hosts-page.is-dark {
-  --bg-page: #1a1b1f;
-  --bg-card: #23252b;
+  --bg-page: #17212b;
+  --bg-card: #202d3a;
 }
 
 .hosts-page.is-dark.is-ultra {
@@ -270,15 +270,15 @@ body.dark .ant-dropdown-menu-item-divider {
 /* Telegram Bot page shares the standard panel page shell (background,
    transparent layout, content padding, summary-card padding). */
 .telegram-bot-page {
-  --bg-page: #e6e8ec;
+  --bg-page: #edf2f7;
   --bg-card: #ffffff;
   min-height: 100vh;
   background: var(--bg-page);
 }
 
 .telegram-bot-page.is-dark {
-  --bg-page: #1a1b1f;
-  --bg-card: #23252b;
+  --bg-page: #17212b;
+  --bg-card: #202d3a;
 }
 
 .telegram-bot-page.is-dark.is-ultra {

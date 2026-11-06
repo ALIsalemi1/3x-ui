@@ -42,7 +42,7 @@ export function settingsRequireBurstObservatory(t: XraySettingsValue | null): bo
 // syncObservatories keeps the (burst)observatory sections aligned with the
 // balancer strategies that actually require them. Observatories have no runtime
 // reload API in xray-core, so creating OR removing one forces a full process
-// restart — that's why an observer-less balancer never gets one and stays a
+// restart - that's why an observer-less balancer never gets one and stays a
 // live, routing-only change applied through the core API.
 //
 // xray-core binds the Observatory feature to a Random/RoundRobinStrategy only
@@ -55,7 +55,7 @@ export function settingsRequireBurstObservatory(t: XraySettingsValue | null): bo
 // to avoid xray-core resolving the earlier regular observatory feature instead.
 //
 // So each observer lives exactly as long as something requires it, and is
-// dropped the moment nothing does — clearing the last fallbackTag (or deleting
+// dropped the moment nothing does - clearing the last fallbackTag (or deleting
 // the last leastLoad) removes the burst observer again. A no-fallback
 // Random/RoundRobin balancer never expands the observer either, because those
 // strategies do not consume observer data.

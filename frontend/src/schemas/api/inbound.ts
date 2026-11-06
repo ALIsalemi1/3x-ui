@@ -10,7 +10,7 @@ import { NetworkSettingsSchema, StreamExtrasSchema } from '@/schemas/protocols/s
 //     union (11 protocols, tagged-wrapper {protocol, settings}).
 //   - StreamSettings as an intersection of the network DU (6 branches),
 //     security DU (3 branches), and the orthogonal extras (finalmask,
-//     sockopt, externalProxy). Zod 4 supports DU intersection — each
+//     sockopt, externalProxy). Zod 4 supports DU intersection - each
 //     branch validates its slice of the same input object.
 //
 // The id/up/down/total/expiryTime fields are int64 on the Go side but
@@ -54,7 +54,7 @@ export type InboundCore = z.infer<typeof InboundCoreSchema>;
 export const InboundSchema = InboundCoreSchema.and(InboundSettingsSchema);
 export type Inbound = z.infer<typeof InboundSchema>;
 
-// SlimInbound is the list-view projection — same shape minus settings
+// SlimInbound is the list-view projection - same shape minus settings
 // and streamSettings (the list endpoint omits both to keep payload
 // small). Used by InboundsPage list rendering.
 export const SlimInboundSchema = InboundCoreSchema.omit({

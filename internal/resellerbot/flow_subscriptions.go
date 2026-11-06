@@ -1,7 +1,6 @@
 package resellerbot
 
 import (
-	"fmt"
 	"html"
 	"strconv"
 	"time"
@@ -15,9 +14,9 @@ import (
 )
 
 // timeLeftLabel renders remaining time as "Xd Xh" ("∞" unlimited, "0" past
-// expiry) — a short local variant of internal/sub's richer formatter, not
+// expiry) - a short local variant of internal/sub's richer formatter, not
 // worth sharing across packages for this much logic.
-func timeLeftLabel(expiryMs int64) string {
+func timeLeftLabel(expiryMs int64, lang string) string {
 	if expiryMs == 0 {
 		return "∞"
 	}
@@ -34,9 +33,9 @@ func timeLeftLabel(expiryMs int64) string {
 	days := secs / 86400
 	hours := (secs % 86400) / 3600
 	if days > 0 {
-		return fmt.Sprintf("%dd %dh", days, hours)
+		return t(lang, "daysHours", days, hours)
 	}
-	return fmt.Sprintf("%dh", hours)
+	return t(lang, "hours", hours)
 }
 
 func (inst *botInstance) sendSubscriptionList(chatID, buyerTgID int64, buyerUsername, lang string) {
@@ -75,7 +74,7 @@ func clientStatusLabel(lang string, stats *panel.SubscriptionStats) string {
 }
 
 // subscriptionCard renders the full subscription-detail message (status,
-// username, usage, remaining time, sub link) and its action buttons —
+// username, usage, remaining time, sub link) and its action buttons -
 // shared by "my subscriptions" and the post-purchase/renewal delivery card.
 func subscriptionCard(sub *model.BotSubscription, lang string) (string, *telego.InlineKeyboardMarkup) {
 	stats, _ := botSvc.GetSubscriptionStats(sub.ClientEmail)
@@ -89,7 +88,7 @@ func subscriptionCard(sub *model.BotSubscription, lang string) (string, *telego.
 			remaining = common.FormatTraffic(stats.Total - stats.Up - stats.Down)
 		}
 		text += "\n" + t(lang, "subUsed", used) + "\n" + t(lang, "subRemainingQuota", remaining) +
-			"\n" + t(lang, "subRemaining", timeLeftLabel(stats.ExpiryTime))
+			"\n" + t(lang, "subRemaining", timeLeftLabel(stats.ExpiryTime, lang))
 	}
 	if subURL != "" {
 		text += "\n\n" + t(lang, "subLink", subURL)

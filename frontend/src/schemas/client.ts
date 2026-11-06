@@ -66,7 +66,7 @@ export const ClientRecordSchema = z
 // AmneziaWG's server block, used by the clients page to render a
 // downloadable per-client .conf without a second round trip. Unlike
 // WireGuard's flattened wgPublicKey/wgMtu/wgDns below, this stays a nested
-// object — AmneziaWG has many more fields (the obfuscation parameter set) and
+// object - AmneziaWG has many more fields (the obfuscation parameter set) and
 // buildAmneziaWGClientConfig (pages/clients/amneziawgConfig.ts) already
 // expects this exact nested shape. Mirrors the backend's
 // InboundOption.AwgServer (internal/web/service/inbound.go).

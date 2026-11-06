@@ -188,7 +188,7 @@ export function useRoutingColumns({
               />
             )}
             {!record.sourceIP && !record.sourcePort && !record.vlessRoute && (
-              <span className="criterion-empty">—</span>
+              <span className="criterion-empty">-</span>
             )}
           </div>
         ),
@@ -204,7 +204,7 @@ export function useRoutingColumns({
               <span className="rule-comment-cell">{record.comment}</span>
             </Tooltip>
           ) : (
-            <span className="criterion-empty">—</span>
+            <span className="criterion-empty">-</span>
           ),
       },
       {
@@ -232,7 +232,7 @@ export function useRoutingColumns({
               <CriterionRow label="Attrs" value={record.attrs} title={`Attrs: ${record.attrs}`} />
             )}
             {!record.network && !record.protocol && !record.attrs && (
-              <span className="criterion-empty">—</span>
+              <span className="criterion-empty">-</span>
             )}
           </div>
         ),
@@ -262,7 +262,7 @@ export function useRoutingColumns({
               />
             )}
             {!record.ip && !record.domain && !record.port && (
-              <span className="criterion-empty">—</span>
+              <span className="criterion-empty">-</span>
             )}
           </div>
         ),
@@ -287,7 +287,7 @@ export function useRoutingColumns({
                 <CriterionRow label="User" value={record.user} title={`User: ${record.user}`} />
               )}
               {inboundParts.length === 0 && !record.user && (
-                <span className="criterion-empty">—</span>
+                <span className="criterion-empty">-</span>
               )}
             </div>
           );
@@ -305,7 +305,7 @@ export function useRoutingColumns({
               <Tag color="green">{record.outboundTag}</Tag>
             </div>
           ) : (
-            <span className="criterion-empty">—</span>
+            <span className="criterion-empty">-</span>
           ),
       },
       {
@@ -321,7 +321,7 @@ export function useRoutingColumns({
               <Tag color="purple">{record.balancerTag}</Tag>
             </div>
           ) : (
-            <span className="criterion-empty">—</span>
+            <span className="criterion-empty">-</span>
           ),
       },
     ],

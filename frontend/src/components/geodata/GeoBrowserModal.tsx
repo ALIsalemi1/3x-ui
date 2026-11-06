@@ -125,7 +125,7 @@ export default function GeoBrowserModal({
   }, [entryQuery, entryFilter]);
 
   // Opening, picking the default database and seeding the selection are all
-  // render-time adjustments — an effect would paint the previous state first.
+  // render-time adjustments - an effect would paint the previous state first.
   const [wasOpen, setWasOpen] = useState(false);
   if (open !== wasOpen) {
     setWasOpen(open);
@@ -255,7 +255,7 @@ export default function GeoBrowserModal({
   const fileOptions = files.map((candidate) => ({
     value: candidate.name,
     label: candidate.error
-      ? `${candidate.name} — ${describeFileError(candidate.error, t)}`
+      ? `${candidate.name} - ${describeFileError(candidate.error, t)}`
       : candidate.name,
     disabled: !!candidate.error,
   }));

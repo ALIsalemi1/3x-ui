@@ -123,7 +123,7 @@ describe('rawInboundToFormValues', () => {
 
 // Regression: wireguard (UDP-only) and tunnel (dokodemo-door) have no
 // user-selectable transport, so the modal submits streamSettings WITHOUT a
-// `network` key — just `security`, plus `sockopt` for tunnel's TProxy. The
+// `network` key - just `security`, plus `sockopt` for tunnel's TProxy. The
 // network schema must accept that transportless shape; before the transportless
 // union branch landed it failed with "Invalid discriminator value. Expected
 // 'tcp' | ..." and blocked every wireguard/tunnel save.
@@ -379,7 +379,7 @@ describe('subSortIndex', () => {
 
   it('InboundDbFieldsSchema accepts integers including negatives and defaults to 1', () => {
     // Reject for the RIGHT reason: the issue must be about subSortIndex, not some
-    // unrelated field — otherwise a schema that rejects everything would pass.
+    // unrelated field - otherwise a schema that rejects everything would pass.
     const nonInt = InboundDbFieldsSchema.partial().safeParse({ subSortIndex: 1.5 });
     expect(nonInt.success).toBe(false);
     if (!nonInt.success) expect(nonInt.error.issues[0]?.path).toContain('subSortIndex');

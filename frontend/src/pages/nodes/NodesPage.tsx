@@ -223,7 +223,7 @@ export default function NodesPage() {
       } else {
         const firstError = results.find((r) => !r.ok)?.error ?? '';
         const base = t('pages.nodes.toasts.updateResult', { ok, failed });
-        messageApi.warning(firstError ? `${base} — ${firstError}` : base);
+        messageApi.warning(firstError ? `${base} - ${firstError}` : base);
       }
       setSelectedIds([]);
     },

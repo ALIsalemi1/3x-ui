@@ -80,7 +80,7 @@ export const NodeFormSchema = z
     pinnedCertSha256: z.string().optional().default(''),
     inboundSyncMode: z.enum(['all', 'selected']).optional().default('all'),
     // Unmounted when sync mode is "all" (absent from antd onFinish values) and
-    // serialized as null by the backend for a nil slice — tolerate both.
+    // serialized as null by the backend for a nil slice - tolerate both.
     inboundTags: z
       .array(z.string())
       .nullish()

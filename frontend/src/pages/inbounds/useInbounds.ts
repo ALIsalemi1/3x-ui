@@ -86,7 +86,7 @@ async function fetchOnlineClients(): Promise<string[]> {
 
 // Online emails grouped by the panelGuid of the node that physically hosts each
 // client, used to scope the per-inbound online rollup so a client online on one
-// node is not shown online on every node's inbounds — and a client on a
+// node is not shown online on every node's inbounds - and a client on a
 // sub-node is attributed to that sub-node, not the node it syncs through (#4983).
 async function fetchOnlineClientsByGuid(): Promise<Record<string, string[]>> {
   const msg = await HttpUtil.post('/panel/api/clients/onlinesByGuid', undefined, { silent: true });
@@ -99,7 +99,7 @@ async function fetchOnlineClientsByGuid(): Promise<Record<string, string[]>> {
 
 // Inbound tags that carried traffic recently, grouped by node (local = key 0).
 // Pairs with the per-node online map so a client attached to several inbounds
-// is only marked online on the ones that actually moved bytes — Xray's
+// is only marked online on the ones that actually moved bytes - Xray's
 // user-level stat can't attribute traffic to a single inbound on its own.
 async function fetchActiveInboundsByNode(): Promise<Record<string, string[]>> {
   const msg = await HttpUtil.post('/panel/api/clients/activeInbounds', undefined, { silent: true });
@@ -285,7 +285,7 @@ export function useInbounds() {
       const nodeOnline = onlineByGuid.get(guid);
       // A node absent from the active map reports no per-inbound activity, so
       // leave its inbounds ungated. When present, only mark a client online on
-      // this inbound if its tag actually carried traffic — that's what stops a
+      // this inbound if its tag actually carried traffic - that's what stops a
       // multi-inbound client lighting up every inbound it's attached to.
       const activeForNode = activeByGuid.get(guid);
       const inboundActive =
@@ -418,7 +418,7 @@ export function useInbounds() {
 
   // hydrateInbound fetches the full inbound (including settings.clients with
   // uuid/password/flow/etc.) and swaps it into the cached list. Use this
-  // before opening edit / info / qr / export / clone flows — refresh() loads
+  // before opening edit / info / qr / export / clone flows - refresh() loads
   // the slim list which doesn't carry per-client secrets.
   const hydrateInbound = useCallback(async (id: number) => {
     const msg = await HttpUtil.get(`/panel/api/inbounds/get/${id}`);
@@ -463,7 +463,7 @@ export function useInbounds() {
     // Speed arrives from two independent 5s polls: the local Xray poll sends
     // `traffics` (local inbounds) and the node sync sends `nodeTraffics` (node
     // inbounds). Each replaces speed only within its own scope so the two don't
-    // clobber each other; an idle in-scope inbound — absent from its payload —
+    // clobber each other; an idle in-scope inbound - absent from its payload -
     // clears instead of showing a stale value.
     const applyTraffics = (
       traffics: TrafficDelta[],

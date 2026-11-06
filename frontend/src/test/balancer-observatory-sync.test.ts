@@ -42,7 +42,7 @@ function expectObserver(
 // Observatory sections have no reload API in xray-core, so creating one turns
 // a balancer save from a live (hot-applied) routing change into a full
 // restart. These tests pin the rule: only strategies that genuinely need an
-// observer may create one — which, for random/roundRobin, means a fallbackTag
+// observer may create one - which, for random/roundRobin, means a fallbackTag
 // is set (xray-core then requires the Observatory feature; see #5605).
 describe('syncObservatories', () => {
   it.each([

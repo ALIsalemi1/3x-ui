@@ -47,7 +47,7 @@ function xhttpHostFallback(xhttp: XHttpStreamSettings | undefined): string {
 
 // Pull the bidirectional SplitHTTPConfig fields out of xhttp into a
 // compact extra payload. Server-only fields (noSSEHeader, scMaxBufferedPosts,
-// scStreamUpServerSecs, serverMaxHeaderBytes) are excluded — the client
+// scStreamUpServerSecs, serverMaxHeaderBytes) are excluded - the client
 // reading the share link wouldn't honor them.
 function buildXhttpExtra(xhttp: XHttpStreamSettings | undefined): Record<string, unknown> | null {
   if (!xhttp) return null;
@@ -85,7 +85,7 @@ function buildXhttpExtra(xhttp: XHttpStreamSettings | undefined): Record<string,
     'uplinkDataKey',
     'scMaxEachPostBytes',
   ] as const;
-  // Values matching xray-core's own defaults stay off the wire — old panels
+  // Values matching xray-core's own defaults stay off the wire - old panels
   // seeded them into every config and the literal values are a DPI
   // fingerprint (#5141). Mirrors the sub service's filter.
   const coreDefaults: Partial<Record<(typeof stringFields)[number], string>> = {
@@ -345,7 +345,7 @@ export function genVmessLink(input: GenVmessLinkInput): string {
 // Param-style helpers (vless/trojan/ss/hysteria links). These mirror the
 // legacy applyXhttpExtraToParams / applyFinalMaskToParams /
 // applyExternalProxyTLSParams but write to a URLSearchParams instance
-// directly. Number values get coerced via .toString() on set — same as
+// directly. Number values get coerced via .toString() on set - same as
 // what URLSearchParams does internally so the resulting URL bytes match.
 
 function applyXhttpExtraToParams(
@@ -768,7 +768,7 @@ export interface GenHysteriaLinkInput {
   externalProxy?: ExternalProxyEntry | null;
 }
 
-// Hysteria2's pinSHA256 must be a 64-char lowercase hex string — Xray-core
+// Hysteria2's pinSHA256 must be a 64-char lowercase hex string - Xray-core
 // clients hex-decode it and crash on a base64 value. The panel stores pins as
 // base64 (xray-core's native TLS format / the generate button) or hex, either
 // bare or colon-separated as `openssl x509 -fingerprint -sha256` emits it. Each
@@ -803,14 +803,14 @@ function udpHopPorts(stream: NonNullable<Inbound['streamSettings']>): string {
 }
 
 // Hysteria share link: hysteria2://<auth>@<host>:<port>?<query>#<remark>.
-// The scheme is always hysteria2 — xray-core builds version 2 only, so the
+// The scheme is always hysteria2 - xray-core builds version 2 only, so the
 // settings schema pins it there and the subscription server emits the same
 // scheme. Salamander obfuscation pulls its password from
 // finalmask.udp[type=salamander] when present; the broader finalmask payload
 // still rides under `fm` like the other links.
 //
 // Note: legacy genHysteriaLink reads stream.tls.settings.allowInsecure,
-// which isn't a field on TlsStreamSettings.Settings — the guard is always
+// which isn't a field on TlsStreamSettings.Settings - the guard is always
 // false. We omit the `insecure` param here to stay byte-stable.
 export function genHysteriaLink(input: GenHysteriaLinkInput): string {
   const {
@@ -978,7 +978,7 @@ export interface GenWireguardLinkInput {
 // Wireguard share link: wireguard://<peerPrivKey>@<host>:<port>
 //   ?publickey=<serverPub>&address=<peerAllowedIP>&mtu=<mtu>#<remark>
 // pubKey is derived from the server's secretKey via Wireguard.generateKeypair
-// at call time (Zod's schema stores secretKey only — pubKey isn't on the
+// at call time (Zod's schema stores secretKey only - pubKey isn't on the
 // wire). Returns '' when the peer index is out of bounds.
 export function genWireguardLink(input: GenWireguardLinkInput): string {
   const { settings, address, port, remark = '', peerIndex } = input;
@@ -1003,7 +1003,7 @@ export function genWireguardLink(input: GenWireguardLinkInput): string {
 }
 
 // Plain-text WireGuard client config (.conf format). Mirrors the legacy
-// getWireguardTxt — same DNS defaults (1.1.1.1, 1.0.0.1), MTU optional,
+// getWireguardTxt - same DNS defaults (1.1.1.1, 1.0.0.1), MTU optional,
 // presharedKey + keepAlive only emitted when present on the peer. The
 // final newline structure follows the legacy: no newline after Endpoint,
 // optional preSharedKey appended with leading \n, keepAlive appended
@@ -1038,7 +1038,7 @@ export function genWireguardConfig(input: GenWireguardLinkInput): string {
 }
 
 // Shared input shape for both the per-client vpn:// link and .conf
-// builders below — settings.clients (not a peers array; unlike WireGuard,
+// builders below - settings.clients (not a peers array; unlike WireGuard,
 // AmneziaWG was multi-client from day one, so there's no legacy format).
 export interface GenAmneziaWGLinkInput {
   settings: AmneziawgInboundSettings;
@@ -1052,7 +1052,7 @@ function amneziaWGHLine(key: string, value: string | undefined, fallback: string
   return `${key} = ${value && value.trim() !== '' ? value : fallback}`;
 }
 
-// Base64url (RFC 4648 §5), no padding — matches the real AmneziaVPN app's
+// Base64url (RFC 4648 §5), no padding - matches the real AmneziaVPN app's
 // own Qt::Base64UrlEncoding | Qt::OmitTrailingEquals framing for vpn:// links.
 function toBase64Url(text: string): string {
   const bytes = new TextEncoder().encode(text);
@@ -1066,7 +1066,7 @@ function toBase64Url(text: string): string {
 // decodes, best-effort qUncompresses (falls back to the raw bytes when the
 // input isn't qCompress-framed, which plain text never is), then parses the
 // result as a flat bag of "Key = Value" lines regardless of which
-// [Interface]/[Peer] section they came from — so wrapping the same .conf
+// [Interface]/[Peer] section they came from - so wrapping the same .conf
 // text genAmneziaWGConfig already produces is sufficient; no JSON schema or
 // compression needs replicating. Confirmed against the app's own source
 // (importController.cpp's checkConfigFormat/extractWireGuardConfig).
@@ -1087,7 +1087,7 @@ export function genAmneziaWGConfig(input: GenAmneziaWGLinkInput): string {
   const server = settings.server;
 
   // These land unescaped in the .conf; a newline would inject a config line
-  // (e.g. a rogue PostUp) — same guard as the panel's other two emitters.
+  // (e.g. a rogue PostUp) - same guard as the panel's other two emitters.
   for (const v of [
     client.privateKey ?? '',
     server.primaryDns ?? '',
@@ -1348,7 +1348,7 @@ export interface ShareHostFields {
 // resolveShareHost picks the host that goes into share/QR links, the browser-side
 // analog of the backend resolveInboundAddress. hostOverride is the hosting node's
 // address (empty for this panel's own inbounds); fallbackHostname is the
-// already-resolved panel/public host used as the last resort — kept verbatim when
+// already-resolved panel/public host used as the last resort - kept verbatim when
 // it fails normalization (e.g. an underscore intranet hostname) so the last
 // resort never degrades to an empty host.
 export function resolveShareHost(
@@ -1417,7 +1417,7 @@ type ClientShape = {
 };
 
 // Mirror of the Go subKey: the stable per-client identity spx derivation
-// keys on — subscription id first, unique email as the fallback.
+// keys on - subscription id first, unique email as the fallback.
 function clientSubKey(client: ClientShape): string {
   return client.subId || client.email || '';
 }

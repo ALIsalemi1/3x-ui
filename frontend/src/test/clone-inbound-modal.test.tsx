@@ -126,7 +126,7 @@ describe('CloneInboundModal', () => {
       Array.from(document.querySelectorAll('.ant-select-item-option')).find(
         (o) => (o.textContent ?? '').trim() === text,
       );
-    // Only `online` is selectable — `offline` and `unknown` (no heartbeat
+    // Only `online` is selectable - `offline` and `unknown` (no heartbeat
     // yet) are both shown but disabled.
     expect(option('arm3 (offline)')?.className).toContain('ant-select-item-option-disabled');
     expect(option('arm5 (unknown)')?.className).toContain('ant-select-item-option-disabled');
@@ -159,7 +159,7 @@ describe('CloneInboundModal', () => {
   it('keeps a cleared selection when the nodes list refetches mid-dialog', () => {
     // The page LazyMounts the modal once and keeps it mounted; heartbeats give
     // `nodes` a new array identity on every refetch. The reset effect must not
-    // refire on that — only on the open transition.
+    // refire on that - only on the open transition.
     const modal = (nodes: NodeRecord[], open = true) => (
       <ThemeProvider>
         <CloneInboundModal

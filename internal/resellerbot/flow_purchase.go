@@ -66,7 +66,7 @@ func (inst *botInstance) sendPlanList(chatID int64, lang string) {
 		if !p.Enabled || p.IsTrial {
 			continue
 		}
-		label := fmt.Sprintf("%s — %s / %dd — %d Toman", p.Name, common.FormatTraffic(p.TrafficGB*bytesPerGB), p.DurationDays, p.PriceToman)
+		label := t(lang, "planOption", p.Name, common.FormatTraffic(p.TrafficGB*bytesPerGB), p.DurationDays, p.PriceToman)
 		rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(label).WithCallbackData("buy:"+strconv.Itoa(p.Id))))
 	}
 	if len(rows) == 0 {
@@ -166,7 +166,7 @@ func (inst *botInstance) handleTrial(chatID, buyerTgID int64, buyerUsername, lan
 }
 
 // sendInvoiceCard renders an order as the multi-field invoice message the
-// reference design shows, with Pay/Apply-discount/Cancel buttons — reused
+// reference design shows, with Pay/Apply-discount/Cancel buttons - reused
 // for a freshly created order, "my invoices" list taps, and post-discount
 // re-renders.
 func (inst *botInstance) sendInvoiceCard(chatID int64, orderID int, lang string) {
@@ -183,7 +183,7 @@ func (inst *botInstance) sendInvoiceCard(chatID int64, orderID int, lang string)
 
 	discount := t(lang, "none")
 	if order.DiscountAmountToman > 0 {
-		discount = fmt.Sprintf("%d Toman", order.DiscountAmountToman)
+		discount = t(lang, "money", order.DiscountAmountToman)
 	}
 
 	lines := []string{
@@ -227,7 +227,7 @@ func (inst *botInstance) sendInvoiceCard(chatID int64, orderID int, lang string)
 }
 
 // sendInvoiceList shows the buyer's own invoices as tappable buttons (each
-// reopens the full invoice card via sendInvoiceCard) — the "My invoices" menu.
+// reopens the full invoice card via sendInvoiceCard) - the "My invoices" menu.
 func (inst *botInstance) sendInvoiceList(chatID, buyerTgID int64, buyerUsername, lang string) {
 	orders, err := botSvc.ListOrdersForBuyer(inst.ownerId, buyerTgID)
 	if err != nil || len(orders) == 0 {
@@ -236,7 +236,7 @@ func (inst *botInstance) sendInvoiceList(chatID, buyerTgID int64, buyerUsername,
 	}
 	var rows [][]telego.InlineKeyboardButton
 	for _, o := range orders {
-		label := fmt.Sprintf("#%s — %s", o.PublicToken, statusLabel(lang, o.Status))
+		label := fmt.Sprintf("#%s - %s", o.PublicToken, statusLabel(lang, o.Status))
 		rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(label).WithCallbackData("inv:view:"+strconv.Itoa(o.Id))))
 	}
 	inst.send(chatID, t(lang, "menuInvoices"), tu.InlineKeyboard(rows...))

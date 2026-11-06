@@ -2,7 +2,7 @@
 title: Telegram Sales Bot
 description: Self-service configuration for a per-owner Telegram bot that sells
   plans to buyers, with manual payment review (card-to-card, crypto). Every
-  endpoint is scoped to the authenticated caller's own bot — there is no
+  endpoint is scoped to the authenticated caller's own bot - there is no
   admin-only variant. Available to logged-in users, including resellers, only
   after the main admin enables resellerBotEnable in Telegram settings. Disabled
   by default; endpoints return HTTP 503 while disabled.
@@ -18,8 +18,11 @@ _openapi:
     - depth: 2
       title: Set or update the bot token, enabled state, welcome message, and
         wallet/referral/support settings. Starts or stops the bot instance to
-        match. Omit token to leave the existing one unchanged.
-      url: '#set-or-update-the-bot-token-enabled-state-welcome-message-and-walletreferralsupport-settings-starts-or-stops-the-bot-instance-to-match-omit-token-to-leave-the-existing-one-unchanged'
+        match. Omit token to leave the existing one unchanged. The optional
+        presentation object controls shop identity, bilingual welcome text,
+        announcement, menu layout/labels, visible menu items and https help
+        links. Omit presentation to preserve existing customization.
+      url: '#set-or-update-the-bot-token-enabled-state-welcome-message-and-walletreferralsupport-settings-starts-or-stops-the-bot-instance-to-match-omit-token-to-leave-the-existing-one-unchanged-the-optional-presentation-object-controls-shop-identity-bilingual-welcome-text-announcement-menu-layoutlabels-visible-menu-items-and-https-help-links-omit-presentation-to-preserve-existing-customization'
     - depth: 2
       title: Mint a one-time code. Send it to your own bot as "/link &lt;code&gt;" to
         register your chat as the order-review target.
@@ -85,9 +88,9 @@ _openapi:
         balance and referral standing.
       url: '#list-every-buyer-who-has-ever-contacted-the-callers-bot-with-wallet-balance-and-referral-standing'
     - depth: 2
-      title: Manually credit or debit a customer's wallet balance (support use) —
+      title: Manually credit or debit a customer's wallet balance (support use) -
         ledgered the same as every other balance change.
-      url: '#manually-credit-or-debit-a-customers-wallet-balance-support-use--ledgered-the-same-as-every-other-balance-change'
+      url: '#manually-credit-or-debit-a-customers-wallet-balance-support-use---ledgered-the-same-as-every-other-balance-change'
   structuredData:
     headings:
       - content: Get the caller's bot configuration. Never returns the token itself;
@@ -95,8 +98,11 @@ _openapi:
         id: get-the-callers-bot-configuration-never-returns-the-token-itself-hastoken-indicates-whether-one-is-set
       - content: Set or update the bot token, enabled state, welcome message, and
           wallet/referral/support settings. Starts or stops the bot instance to
-          match. Omit token to leave the existing one unchanged.
-        id: set-or-update-the-bot-token-enabled-state-welcome-message-and-walletreferralsupport-settings-starts-or-stops-the-bot-instance-to-match-omit-token-to-leave-the-existing-one-unchanged
+          match. Omit token to leave the existing one unchanged. The optional
+          presentation object controls shop identity, bilingual welcome text,
+          announcement, menu layout/labels, visible menu items and https help
+          links. Omit presentation to preserve existing customization.
+        id: set-or-update-the-bot-token-enabled-state-welcome-message-and-walletreferralsupport-settings-starts-or-stops-the-bot-instance-to-match-omit-token-to-leave-the-existing-one-unchanged-the-optional-presentation-object-controls-shop-identity-bilingual-welcome-text-announcement-menu-layoutlabels-visible-menu-items-and-https-help-links-omit-presentation-to-preserve-existing-customization
       - content: Mint a one-time code. Send it to your own bot as "/link &lt;code&gt;"
           to register your chat as the order-review target.
         id: mint-a-one-time-code-send-it-to-your-own-bot-as-link-ltcodegt-to-register-your-chat-as-the-order-review-target
@@ -143,9 +149,9 @@ _openapi:
       - content: List every buyer who has ever contacted the caller's bot, with wallet
           balance and referral standing.
         id: list-every-buyer-who-has-ever-contacted-the-callers-bot-with-wallet-balance-and-referral-standing
-      - content: Manually credit or debit a customer's wallet balance (support use) —
+      - content: Manually credit or debit a customer's wallet balance (support use) -
           ledgered the same as every other balance change.
-        id: manually-credit-or-debit-a-customers-wallet-balance-support-use--ledgered-the-same-as-every-other-balance-change
+        id: manually-credit-or-debit-a-customers-wallet-balance-support-use---ledgered-the-same-as-every-other-balance-change
     contents: []
 ---
 

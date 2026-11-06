@@ -12,7 +12,7 @@ export interface SniffingFieldsProps {
   // (loopback). All sub-fields hang off this path.
   name: (string | number)[];
   form: FormInstance;
-  // Label for the enable toggle — Enable / Reverse Sniffing / Sniffing differ
+  // Label for the enable toggle - Enable / Reverse Sniffing / Sniffing differ
   // per host.
   enableLabel: string;
 }

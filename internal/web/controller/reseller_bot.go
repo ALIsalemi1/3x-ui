@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"strconv"
@@ -75,6 +76,7 @@ func (a *ResellerBotController) getConfig(c *gin.Context) {
 		return
 	}
 	jsonObj(c, gin.H{
+		"presentation":    cfg.Presentation,
 		"enabled":         cfg.Enabled,
 		"botUsername":     cfg.BotUsername,
 		"welcomeMessage":  cfg.WelcomeMessage,
@@ -91,16 +93,37 @@ func (a *ResellerBotController) getConfig(c *gin.Context) {
 }
 
 type saveBotConfigForm struct {
-	Token           string `form:"token" json:"token"`
-	Enabled         bool   `form:"enabled" json:"enabled"`
-	WelcomeMessage  string `form:"welcomeMessage" json:"welcomeMessage"`
-	WalletEnabled   bool   `form:"walletEnabled" json:"walletEnabled"`
-	ReferralEnabled bool   `form:"referralEnabled" json:"referralEnabled"`
-	ReferralKind    string `form:"referralKind" json:"referralKind"`
-	ReferralValue   int64  `form:"referralValue" json:"referralValue"`
-	ReferralTrigger string `form:"referralTrigger" json:"referralTrigger"`
-	SupportText     string `form:"supportText" json:"supportText"`
-	TutorialText    string `form:"tutorialText" json:"tutorialText"`
+	Presentation    *model.BotPresentation `json:"presentation"`
+	Token           string                 `form:"token" json:"token"`
+	Enabled         bool                   `form:"enabled" json:"enabled"`
+	WelcomeMessage  string                 `form:"welcomeMessage" json:"welcomeMessage"`
+	WalletEnabled   bool                   `form:"walletEnabled" json:"walletEnabled"`
+	ReferralEnabled bool                   `form:"referralEnabled" json:"referralEnabled"`
+	ReferralKind    string                 `form:"referralKind" json:"referralKind"`
+	ReferralValue   int64                  `form:"referralValue" json:"referralValue"`
+	ReferralTrigger string                 `form:"referralTrigger" json:"referralTrigger"`
+	SupportText     string                 `form:"supportText" json:"supportText"`
+	TutorialText    string                 `form:"tutorialText" json:"tutorialText"`
+}
+
+func localizeBotConfigError(c *gin.Context, err error) error {
+	keys := map[string]string{
+		"brand name must be at most 80 characters":                             "pages.telegramBot.validation.brandLength",
+		"welcome must be at most 2000 characters and announcement at most 600": "pages.telegramBot.validation.messageLength",
+		"default language must be auto, fa or en":                              "pages.telegramBot.validation.language",
+		"menu layout must be spacious or compact":                              "pages.telegramBot.validation.layout",
+		"support URL must use https":                                           "pages.telegramBot.validation.supportURL",
+		"tutorial URL must use https":                                          "pages.telegramBot.validation.tutorialURL",
+		"invalid menu label key":                                               "pages.telegramBot.validation.labelKey",
+		"menu labels must be one line and at most 40 characters":               "pages.telegramBot.validation.labelLength",
+		"menu labels must be unique within each language":                      "pages.telegramBot.validation.labelUnique",
+	}
+	if key, ok := keys[err.Error()]; ok {
+		if text := I18nWeb(c, key); text != "" {
+			return errors.New(text)
+		}
+	}
+	return err
 }
 
 func (a *ResellerBotController) saveConfig(c *gin.Context) {
@@ -111,6 +134,7 @@ func (a *ResellerBotController) saveConfig(c *gin.Context) {
 		return
 	}
 	if _, err := a.botService.SaveConfig(user.Id, panel.BotConfigInput{
+		Presentation:    form.Presentation,
 		Token:           form.Token,
 		Enabled:         form.Enabled,
 		WelcomeMessage:  form.WelcomeMessage,
@@ -122,7 +146,7 @@ func (a *ResellerBotController) saveConfig(c *gin.Context) {
 		SupportText:     form.SupportText,
 		TutorialText:    form.TutorialText,
 	}); err != nil {
-		jsonMsg(c, I18nWeb(c, "somethingWentWrong"), err)
+		jsonMsg(c, I18nWeb(c, "somethingWentWrong"), localizeBotConfigError(c, err))
 		return
 	}
 	if err := resellerbot.GetManager().Ensure(user.Id); err != nil {

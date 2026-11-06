@@ -31,7 +31,7 @@ function savedFlow(save: ReturnType<typeof vi.fn>): unknown {
   return (save.mock.calls[0][0] as Record<string, unknown>).flow;
 }
 
-describe('ClientFormModal — Vision flow preservation', () => {
+describe('ClientFormModal - Vision flow preservation', () => {
   it('keeps xtls-rprx-vision with a stable Reality inbound', async () => {
     const qc = makeQC();
     const save = vi.fn().mockResolvedValue({ success: true });

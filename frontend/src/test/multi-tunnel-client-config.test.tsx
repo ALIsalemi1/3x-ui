@@ -185,7 +185,7 @@ describe('Multi-tunnel Client Modals', () => {
   });
 
   // The subscription beside these configs advertises the inbound's Hosts, so
-  // the panel-built configs must too — one per Host address.
+  // the panel-built configs must too - one per Host address.
   const edgeHosts: HostRecord[] = [
     {
       groupId: 'cdn',

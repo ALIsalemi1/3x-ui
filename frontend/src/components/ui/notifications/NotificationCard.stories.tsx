@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Small outlined card that groups a notification channel — an icon and title in the header, a control in the top-right `extra` slot (typically a toggle), and the channel settings as its body.',
+          'Small outlined card that groups a notification channel - an icon and title in the header, a control in the top-right `extra` slot (typically a toggle), and the channel settings as its body.',
       },
     },
   },
@@ -21,7 +21,7 @@ const meta = {
     icon: { description: 'Leading icon shown before the title.' },
     title: { description: 'Channel name shown in the header.' },
     extra: { description: 'Top-right slot, typically an enable/disable Switch.' },
-    children: { description: 'Card body — the channel settings.' },
+    children: { description: 'Card body - the channel settings.' },
   },
 } satisfies Meta<typeof NotificationCard>;
 

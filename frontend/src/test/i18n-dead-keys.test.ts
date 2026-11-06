@@ -7,7 +7,7 @@ import { describe, expect, it } from 'vitest';
 /*
  * Guards the 13-locale translation set two ways: every key in en-US must be
  * referenced somewhere in the frontend or Go sources (dead keys accumulate
- * silently — this test deleted over two hundred of them when it was
+ * silently - this test deleted over two hundred of them when it was
  * introduced), and every locale must carry exactly the en-US key set
  * (missing keys fall back to en-US at runtime, so nothing else fails the
  * build when a translation is forgotten).

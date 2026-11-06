@@ -27,7 +27,7 @@
 }
 
 /* card-toolbar is shared with the Clients/Inbounds list cards, but its rules
-   live in a lazily-loaded page stylesheet — re-declare here so the Hosts page
+   live in a lazily-loaded page stylesheet - re-declare here so the Hosts page
    renders correctly when opened directly. */
 .hosts-card .card-toolbar {
   display: flex;

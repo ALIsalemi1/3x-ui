@@ -708,7 +708,7 @@ export default function ClientFormModal({
     if (showWireguard || showAmneziawg) {
       // AmneziaWG peers are wire-identical to WireGuard peers (same
       // privateKey/publicKey/preSharedKey/allowedIPs fields on model.Client),
-      // so both protocols share this one field set — see wgPrivateKey etc.
+      // so both protocols share this one field set - see wgPrivateKey etc.
       // below and the AmneziaWG-labeled variants of the same inputs.
       clientPayload.privateKey = values.wgPrivateKey;
       clientPayload.keepAlive = values.wgKeepAlive;
@@ -736,7 +736,7 @@ export default function ClientFormModal({
       } else if (wgAllowedIPs.length > 0) {
         clientPayload.allowedIPs = wgAllowedIPs;
       }
-      // Port-forwarding has no WireGuard equivalent — Xray-native WireGuard
+      // Port-forwarding has no WireGuard equivalent - Xray-native WireGuard
       // has no host-level iptables layer to hang per-client DNAT off of.
       if (showAmneziawg) {
         clientPayload.forwardedPorts = values.awgForwardedPorts.trim();
@@ -1510,7 +1510,7 @@ export default function ClientFormModal({
 
       <Modal
         open={ipsModalOpen}
-        title={`${t('pages.clients.ipLog')}${client?.email ? ` — ${client.email}` : ''}`}
+        title={`${t('pages.clients.ipLog')}${client?.email ? ` - ${client.email}` : ''}`}
         width={440}
         zIndex={CLIENT_IP_LOG_MODAL_Z_INDEX}
         onCancel={() => setIpsModalOpen(false)}

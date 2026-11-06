@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { getHeaderValue, toHeaders, toV2Headers, type HeaderEntry } from '@/lib/xray/headers';
 
 // Pure-function tests for the header helpers. Snapshots were locked at
-// the close of the legacy class migration — at that point toHeaders and
+// the close of the legacy class migration - at that point toHeaders and
 // toV2Headers were verified byte-equal to the legacy XrayCommonClass
 // static methods. Drift past this baseline is a regression.
 

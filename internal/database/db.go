@@ -149,6 +149,10 @@ func initModels() error {
 			return err
 		}
 	}
+	// AutoMigrate adds presentation; normalize legacy NULLs for JSON serialization.
+	if err := db.Model(&model.BotConfig{}).Where("presentation IS NULL OR presentation = ?", "").Update("presentation", "{}").Error; err != nil {
+		return err
+	}
 	if err := dropLegacyInboundPortUnique(); err != nil {
 		return err
 	}

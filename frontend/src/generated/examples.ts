@@ -411,6 +411,19 @@ export const EXAMPLES: Record<string, unknown> = {
     "enabled": false,
     "id": 0,
     "ownerId": 0,
+    "presentation": {
+      "announcement": "",
+      "brandName": "",
+      "defaultLanguage": "",
+      "hideSupport": false,
+      "hideTrial": false,
+      "hideTutorial": false,
+      "labels": {},
+      "menuLayout": "",
+      "supportURL": "",
+      "tutorialURL": "",
+      "welcomeEN": ""
+    },
     "referralEnabled": false,
     "referralKind": "flat",
     "referralTrigger": "first_purchase",
@@ -496,6 +509,19 @@ export const EXAMPLES: Record<string, unknown> = {
     "priceToman": 0,
     "sortOrder": 0,
     "trafficGB": 0
+  },
+  "BotPresentation": {
+    "announcement": "",
+    "brandName": "",
+    "defaultLanguage": "",
+    "hideSupport": false,
+    "hideTrial": false,
+    "hideTutorial": false,
+    "labels": {},
+    "menuLayout": "",
+    "supportURL": "",
+    "tutorialURL": "",
+    "welcomeEN": ""
   },
   "BotRedeemCode": {
     "amountToman": 0,

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // AntD InputNumber emits null (not undefined) when the user clears it, and
-// the form store hands that null straight to safeParse on submit — a bare
+// the form store hands that null straight to safeParse on submit - a bare
 // .optional() would reject it and block the save.
 const optionalClearedInt = (schema: z.ZodNumber) =>
   z.preprocess((v) => (v == null ? undefined : v), schema.optional());
@@ -10,7 +10,7 @@ const optionalClearedInt = (schema: z.ZodNumber) =>
 // the server accepts; secretKey is the server-side private key and pubKey is
 // derived from it at runtime (not persisted on the wire). Inbound peers
 // optionally store the client's privateKey so the panel can render configs
-// for the user — outbound peers never have a privateKey.
+// for the user - outbound peers never have a privateKey.
 export const WireguardInboundPeerSchema = z.object({
   privateKey: z.string().optional(),
   publicKey: z.string().min(1),
@@ -27,7 +27,7 @@ export type WireguardInboundPeer = z.infer<typeof WireguardInboundPeerSchema>;
 // A WireGuard inbound client (multi-client model). Each client is one peer the
 // server accepts: the panel stores its keypair so it can render a full .conf/QR,
 // and allowedIPs is the client's unique tunnel address (allocated server-side
-// when left blank). Keys are optional on the wire — the backend generates them
+// when left blank). Keys are optional on the wire - the backend generates them
 // when absent.
 export const WireguardClientSchema = z.object({
   privateKey: z.string().optional(),
@@ -59,7 +59,7 @@ export const WireguardInboundSettingsSchema = z.object({
   peers: z.array(WireguardInboundPeerSchema).default([]),
   clients: z.array(WireguardClientSchema).default([]),
   noKernelTun: z.boolean().default(false),
-  // Admin-configurable base subnet new clients are auto-allocated from —
+  // Admin-configurable base subnet new clients are auto-allocated from -
   // mirrors AmneziaWG's settings.server.subnetIp/subnetCidr. Optional and
   // left blank by default: an inbound that never sets this keeps the
   // pre-existing behavior (infer from existing clients' own addresses, else

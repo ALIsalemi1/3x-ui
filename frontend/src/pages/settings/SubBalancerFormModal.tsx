@@ -97,7 +97,7 @@ export default function SubBalancerFormModal({
       );
       candidate.memberWeights = Object.keys(cleaned).length > 0 ? cleaned : undefined;
     }
-    // xray ignores costs on every strategy but leastLoad — never send them.
+    // xray ignores costs on every strategy but leastLoad - never send them.
     if (candidate.strategy !== 'leastLoad') {
       delete candidate.memberWeights;
     }

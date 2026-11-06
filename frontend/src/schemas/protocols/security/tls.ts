@@ -5,7 +5,7 @@ import { SockoptStreamSettingsSchema } from '@/schemas/protocols/stream/sockopt'
 export const TlsVersionSchema = z.enum(['1.0', '1.1', '1.2', '1.3']);
 export type TlsVersion = z.infer<typeof TlsVersionSchema>;
 
-// Xray's uTLS fingerprints — used both for TLS and Reality. Kept here (not
+// Xray's uTLS fingerprints - used both for TLS and Reality. Kept here (not
 // in primitives/) because the only consumer is security/tls.ts and
 // security/reality.ts via re-import.
 export const UtlsFingerprintSchema = z.enum([
@@ -33,7 +33,7 @@ export type Alpn = z.infer<typeof AlpnSchema>;
 export const TlsCertUsageSchema = z.enum(['encipherment', 'verify', 'issue']);
 export type TlsCertUsage = z.infer<typeof TlsCertUsageSchema>;
 
-// TLS certs on the wire come in two shapes — file-backed or inline. The
+// TLS certs on the wire come in two shapes - file-backed or inline. The
 // panel class collapses them into one with a `useFile` boolean; we model
 // the wire shape as a DU so saves round-trip without the boolean leaking.
 export const TlsCertFileSchema = z.object({

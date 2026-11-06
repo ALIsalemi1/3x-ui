@@ -113,7 +113,7 @@ export default function InboundsPage() {
 
   const { nodes: nodesList, fetched: nodesFetched } = useNodesQuery();
   // MTProto share links are generated from this list, so an empty one must mean
-  // "no hosts" and not "not loaded yet" — the gate below waits for it.
+  // "no hosts" and not "not loaded yet" - the gate below waits for it.
   const {
     hosts,
     fetched: hostsFetched,
@@ -528,7 +528,7 @@ export default function InboundsPage() {
                 ok,
                 failed: skipped.length,
               });
-              messageApi.warning(firstError ? `${base} — ${firstError}` : base);
+              messageApi.warning(firstError ? `${base} - ${firstError}` : base);
             }
             await refresh();
             resolve(true);
@@ -626,7 +626,7 @@ export default function InboundsPage() {
           });
           break;
         default:
-          messageApi.info(`General action "${key}" — coming in a later 5f subphase`);
+          messageApi.info(`General action "${key}" - coming in a later 5f subphase`);
       }
     },
     [modal, importInbound, exportAllLinks, exportAllSubs, refresh, messageApi, t],
@@ -699,7 +699,7 @@ export default function InboundsPage() {
           confirmClone(target);
           break;
         default:
-          messageApi.info(`Action "${key}" — coming in a later 5f subphase`);
+          messageApi.info(`Action "${key}" - coming in a later 5f subphase`);
       }
     },
     [

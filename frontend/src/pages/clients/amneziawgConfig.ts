@@ -6,7 +6,7 @@ import type { ClientRecord, InboundOption } from '@/hooks/useClients';
 
 // AmneziaWG clients are wire-identical to WireGuard clients (same
 // privateKey/publicKey/allowedIPs/preSharedKey/keepAlive fields on
-// model.Client — see wireguardConfig.ts's isWireguardClient), so this duck
+// model.Client - see wireguardConfig.ts's isWireguardClient), so this duck
 // type can't tell the two protocols apart on its own; findAmneziaWGInbounds's
 // protocol==='amneziawg' filter below is what actually disambiguates.
 export function isAmneziaWGClient(client: ClientRecord | null | undefined): boolean {
@@ -38,7 +38,7 @@ function hLine(key: string, value: string | undefined, fallback: string): string
 // addressOverride carries this inbound's own AllowedIPs (ClientHydrateSchema's
 // tunnelAllowedIPs). ClientRecord.allowedIPs is a single shared column, so for
 // an identity attached to both WireGuard and AmneziaWG it holds the WireGuard
-// address — writing that into the AmneziaWG .conf yields an unroutable peer.
+// address - writing that into the AmneziaWG .conf yields an unroutable peer.
 export function buildAmneziaWGClientConfig(
   client: ClientRecord,
   inbound: InboundOption | undefined,
@@ -70,7 +70,7 @@ export function buildAmneziaWGClientConfig(
   if (dnsParts.length > 0) lines.push(`DNS = ${dnsParts.join(', ')}`);
   lines.push(`MTU = ${effectiveMtu(server?.mtu, server?.s4)}`);
 
-  // AmneziaWG obfuscation parameters — must match the server's values.
+  // AmneziaWG obfuscation parameters - must match the server's values.
   lines.push(`Jc = ${server?.jc ?? 5}`);
   lines.push(`Jmin = ${server?.jmin ?? 10}`);
   lines.push(`Jmax = ${server?.jmax ?? 50}`);

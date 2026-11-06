@@ -143,7 +143,7 @@ export default function RouteTester({ inboundTags, isMobile }: RouteTesterProps)
             title={
               <Space wrap>
                 <span>{t('pages.xray.routeTesterMatchedOutbound')}:</span>
-                <Tag color="blue">{result.outboundTag || '—'}</Tag>
+                <Tag color="blue">{result.outboundTag || '-'}</Tag>
                 {(result.groupTags || []).length > 0 && (
                   <>
                     <span>{t('pages.xray.routeTesterViaBalancer')}:</span>

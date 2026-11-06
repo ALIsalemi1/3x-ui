@@ -10,7 +10,7 @@ import (
 	tu "github.com/mymmrac/telego/telegoutil"
 )
 
-// adminMenuKeyboard is the owner's own management menu — shown instead of
+// adminMenuKeyboard is the owner's own management menu - shown instead of
 // the buyer shop menu in the owner's linked chat, so managing the shop
 // doesn't require falling back to /orders and the web panel for everything.
 func adminMenuKeyboard() *telego.ReplyKeyboardMarkup {
@@ -79,7 +79,7 @@ func (inst *botInstance) sendCustomersSummary(chatID int64) {
 		if label == "" {
 			label = strconv.FormatInt(c.BuyerTgId, 10)
 		}
-		text += fmt.Sprintf("\n@%s — %d Toman", label, c.WalletBalanceToman)
+		text += fmt.Sprintf("\n@%s - %s", label, t(langFA, "money", c.WalletBalanceToman))
 	}
 	inst.send(chatID, text)
 }

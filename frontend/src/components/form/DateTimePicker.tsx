@@ -65,7 +65,7 @@ export default function DateTimePicker({
   // Bumped on clear: persian-calendar-suite reads `value` only on mount, so
   // remounting via key is the only way to reflect an externally cleared value.
   const [clearNonce, setClearNonce] = useState(0);
-  // Mounted without a value, persian-calendar-suite seeds today and emits it —
+  // Mounted without a value, persian-calendar-suite seeds today and emits it -
   // which would instantly undo a clear. Armed across every (re)mount.
   const suppressMountEmit = useRef(true);
 

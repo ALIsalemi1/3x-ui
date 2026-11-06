@@ -24,7 +24,7 @@ export type HostLinkInput = Pick<
 >;
 
 // hostToExternalProxyEntry projects a host onto the ExternalProxyEntry shape the
-// share-link preview generators already understand — the frontend mirror of the
+// share-link preview generators already understand - the frontend mirror of the
 // backend's hostToExternalProxyMap. security "reality"/"same" keep the inbound's
 // base TLS (forceTls "same"); the preview falls back to port 443 when the host
 // inherits the inbound port (port 0).

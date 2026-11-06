@@ -1670,6 +1670,9 @@ export const SCHEMAS: Record<string, unknown> = {
       "ownerId": {
         "type": "integer"
       },
+      "presentation": {
+        "$ref": "#/components/schemas/BotPresentation"
+      },
       "referralEnabled": {
         "type": "boolean"
       },
@@ -1711,6 +1714,7 @@ export const SCHEMAS: Record<string, unknown> = {
       "enabled",
       "id",
       "ownerId",
+      "presentation",
       "referralEnabled",
       "referralKind",
       "referralTrigger",
@@ -2042,6 +2046,61 @@ export const SCHEMAS: Record<string, unknown> = {
       "priceToman",
       "sortOrder",
       "trafficGB"
+    ],
+    "type": "object"
+  },
+  "BotPresentation": {
+    "description": "BotPresentation is the owner's buyer-facing shop identity and menu preferences.",
+    "properties": {
+      "announcement": {
+        "type": "string"
+      },
+      "brandName": {
+        "type": "string"
+      },
+      "defaultLanguage": {
+        "type": "string"
+      },
+      "hideSupport": {
+        "type": "boolean"
+      },
+      "hideTrial": {
+        "type": "boolean"
+      },
+      "hideTutorial": {
+        "type": "boolean"
+      },
+      "labels": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
+      "menuLayout": {
+        "type": "string"
+      },
+      "supportURL": {
+        "type": "string"
+      },
+      "tutorialURL": {
+        "type": "string"
+      },
+      "welcomeEN": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "announcement",
+      "brandName",
+      "defaultLanguage",
+      "hideSupport",
+      "hideTrial",
+      "hideTutorial",
+      "labels",
+      "menuLayout",
+      "supportURL",
+      "tutorialURL",
+      "welcomeEN"
     ],
     "type": "object"
   },

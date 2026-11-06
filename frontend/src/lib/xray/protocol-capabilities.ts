@@ -60,7 +60,7 @@ export function canEnableReality(values: CapabilityProtocolSlice): boolean {
 // a generated value (e.g. "mlkem768x25519plus.native.0rtt.<key>") rather than
 // the "none"/"" sentinel. The value is never the literal "vlessenc" (that is the
 // `xray vlessenc` subcommand). decryption is the server-side value; encryption is
-// stored for link generation — either being set means it is on.
+// stored for link generation - either being set means it is on.
 function hasVlessEncryption(settings: CapabilityProtocolSlice['settings']): boolean {
   const isSet = (v?: string) => v != null && v !== '' && v !== 'none';
   return isSet(settings?.encryption) || isSet(settings?.decryption);

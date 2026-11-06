@@ -430,6 +430,7 @@ export const BotConfigSchema = z.object({
   enabled: z.boolean(),
   id: z.number().int(),
   ownerId: z.number().int(),
+  presentation: z.lazy(() => BotPresentationSchema),
   referralEnabled: z.boolean(),
   referralKind: z.enum(['flat', 'percent']),
   referralTrigger: z.enum(['first_purchase', 'every_purchase']),
@@ -523,6 +524,21 @@ export const BotPlanSchema = z.object({
   trafficGB: z.number().int(),
 });
 export type BotPlan = z.infer<typeof BotPlanSchema>;
+
+export const BotPresentationSchema = z.object({
+  announcement: z.string(),
+  brandName: z.string(),
+  defaultLanguage: z.string(),
+  hideSupport: z.boolean(),
+  hideTrial: z.boolean(),
+  hideTutorial: z.boolean(),
+  labels: z.record(z.string(), z.string()),
+  menuLayout: z.string(),
+  supportURL: z.string(),
+  tutorialURL: z.string(),
+  welcomeEN: z.string(),
+});
+export type BotPresentation = z.infer<typeof BotPresentationSchema>;
 
 export const BotRedeemCodeSchema = z.object({
   amountToman: z.number().int(),

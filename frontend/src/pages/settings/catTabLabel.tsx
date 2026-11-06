@@ -2,7 +2,7 @@ import { cloneElement, isValidElement, type ReactElement, type ReactNode } from 
 import { Tooltip } from 'antd';
 
 /* Builds a settings category tab label: icon + text on desktop, and on
-   mobile just the icon with the text moved into a tooltip — mirroring the
+   mobile just the icon with the text moved into a tooltip - mirroring the
    old top tab bar's icons-only behaviour. */
 export function catTabLabel(icon: ReactNode, text: ReactNode, iconsOnly: boolean): ReactNode {
   if (iconsOnly) {

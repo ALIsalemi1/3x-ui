@@ -308,7 +308,7 @@ export default function ClientInfoModal({
         open={open}
         title={
           client
-            ? `${t('pages.clients.clientInfo')} — ${client.email}`
+            ? `${t('pages.clients.clientInfo')} - ${client.email}`
             : t('pages.clients.clientInfo')
         }
         footer={null}
@@ -549,7 +549,7 @@ export default function ClientInfoModal({
                   <td>
                     {(() => {
                       const ids = client.inboundIds || [];
-                      if (ids.length === 0) return <span className="hint">—</span>;
+                      if (ids.length === 0) return <span className="hint">-</span>;
                       const visible = ids.slice(0, INBOUND_CHIP_LIMIT);
                       const overflow = ids.slice(INBOUND_CHIP_LIMIT);
                       const inboundChip = (id: number) => {
@@ -631,7 +631,7 @@ export default function ClientInfoModal({
                       content={
                         <QrPanel
                           value={subLink}
-                          remark={`${client.email} — ${t('subscription.title')}`}
+                          remark={`${client.email} - ${t('subscription.title')}`}
                           size={220}
                         />
                       }
@@ -686,7 +686,7 @@ export default function ClientInfoModal({
                         content={
                           <QrPanel
                             value={subJsonLink}
-                            remark={`${client.email} — JSON`}
+                            remark={`${client.email} - JSON`}
                             size={220}
                           />
                         }
@@ -744,7 +744,7 @@ export default function ClientInfoModal({
                         content={
                           <QrPanel
                             value={subClashLink}
-                            remark={`${client.email} — Clash / Mihomo`}
+                            remark={`${client.email} - Clash / Mihomo`}
                             size={220}
                           />
                         }
@@ -867,7 +867,7 @@ export default function ClientInfoModal({
 
       <Modal
         open={ipsModalOpen}
-        title={`${t('pages.inbounds.IPLimitlog')}${client?.email ? ` — ${client.email}` : ''}`}
+        title={`${t('pages.inbounds.IPLimitlog')}${client?.email ? ` - ${client.email}` : ''}`}
         width={440}
         onCancel={() => setIpsModalOpen(false)}
         footer={[

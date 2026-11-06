@@ -320,7 +320,7 @@ export default function GroupsPage() {
             const firstError = skipped[0]?.reason ?? msg?.msg ?? '';
             messageApi.warning(
               firstError
-                ? `${t('pages.groups.deleteClientsMixed', { ok, failed })} — ${firstError}`
+                ? `${t('pages.groups.deleteClientsMixed', { ok, failed })} - ${firstError}`
                 : t('pages.groups.deleteClientsMixed', { ok, failed }),
             );
           }

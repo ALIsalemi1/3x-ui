@@ -11,7 +11,7 @@ import {
 } from '@/lib/xray/protocol-capabilities';
 
 // Pure-function tests for the capability predicates. Each fixture × stream
-// case is locked via snapshot — these were captured at the close of the
+// case is locked via snapshot - these were captured at the close of the
 // legacy class migration and verified byte-equal to the legacy Inbound
 // class instance methods. Drift past this baseline is a regression.
 

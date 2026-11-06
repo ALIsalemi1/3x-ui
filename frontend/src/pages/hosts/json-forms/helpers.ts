@@ -14,7 +14,7 @@ export function parseJsonObject(raw: string): Record<string, unknown> {
 }
 
 // Recursively drop '', null, undefined, and empty arrays/objects so an override
-// stays sparse — only the keys the operator actually set are emitted and merged
+// stays sparse - only the keys the operator actually set are emitted and merged
 // into the inbound stream. 0 and false are kept (meaningful sockopt/mux values).
 export function pruneEmptyDeep(value: unknown): unknown {
   if (Array.isArray(value)) {

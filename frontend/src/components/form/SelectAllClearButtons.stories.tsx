@@ -6,10 +6,10 @@ import { Select } from 'antd';
 import SelectAllClearButtons from './SelectAllClearButtons';
 
 const inboundOptions: Array<{ value: number; label: string }> = [
-  { value: 1, label: 'VLESS Reality — 443' },
-  { value: 2, label: 'VMess WS — 8443' },
-  { value: 3, label: 'Trojan TCP — 2053' },
-  { value: 4, label: 'Shadowsocks — 8388' },
+  { value: 1, label: 'VLESS Reality - 443' },
+  { value: 2, label: 'VMess WS - 8443' },
+  { value: 3, label: 'Trojan TCP - 2053' },
+  { value: 4, label: 'Shadowsocks - 8388' },
 ];
 
 const clientEmailOptions: Array<{ value: string; label: string }> = [

@@ -2,7 +2,7 @@
 // xray-core actually consumes. The panel's Zod defaults mirror the full
 // SplitHTTPConfig / SockoptObject schema, but many fields are mode-specific
 // (packet-up vs stream-one) or side-specific (inbound vs outbound). Emitting
-// them anyway bloats configs and — for sockopt — can inject doc-example
+// them anyway bloats configs and - for sockopt - can inject doc-example
 // values like tcpWindowClamp: 600 that throttle throughput.
 
 export type StreamWireSide = 'inbound' | 'outbound';
@@ -58,7 +58,7 @@ export function int32RangeUpper(v: unknown): number {
 
 // xray-core's XmuxConfig rejects a config that sets BOTH maxConnections
 // and maxConcurrency. A positive maxConnections is an explicit opt-in to
-// connection-pool mode — honor it and drop the leftover maxConcurrency
+// connection-pool mode - honor it and drop the leftover maxConcurrency
 // default that load-time hydration backfills onto older saved configs.
 function resolveXmuxExclusivity(xmux: Record<string, unknown>): Record<string, unknown> {
   if (int32RangeUpper(xmux.maxConnections) > 0 && int32RangeUpper(xmux.maxConcurrency) > 0) {
@@ -194,7 +194,7 @@ function normalizeTlsForWire(raw: Record<string, unknown>): Record<string, unkno
   const out: Record<string, unknown> = { ...raw };
   if (out.fingerprint === '') delete out.fingerprint;
 
-  // Empty server-side tuning fields mean "use xray-core's default" — never emit them.
+  // Empty server-side tuning fields mean "use xray-core's default" - never emit them.
   if (Array.isArray(out.curvePreferences) && out.curvePreferences.length === 0) {
     delete out.curvePreferences;
   }
@@ -232,7 +232,7 @@ export function normalizeXhttpForWire(
     if (!enableXmux) delete out.xmux;
     // scMinPostsIntervalMs is a client-only tuning knob that subscriptions
     // must propagate to clients. Only strip the xray-core default ("30")
-    // or empty values — the literal "30" is a known DPI fingerprint (#5141).
+    // or empty values - the literal "30" is a known DPI fingerprint (#5141).
     if (out.scMinPostsIntervalMs === '' || out.scMinPostsIntervalMs === '30') {
       delete out.scMinPostsIntervalMs;
     }
@@ -244,7 +244,7 @@ export function normalizeXhttpForWire(
   }
 
   dropEmptyStrings(out, PLACEMENT_STRING_FIELDS);
-  // Empty tuning fields mean "use xray-core's default" — never emit them.
+  // Empty tuning fields mean "use xray-core's default" - never emit them.
   dropEmptyStrings(out, ['scMaxEachPostBytes', 'scMinPostsIntervalMs', 'scStreamUpServerSecs']);
 
   if (!hasMeaningfulHeaders(out.headers)) {

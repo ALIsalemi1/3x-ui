@@ -71,7 +71,7 @@ export default function RealityTargetScannerModal({
       key: 'target',
       width: 200,
       render: (target: string, row) => (
-        <Tooltip title={row.ip ? `${target} — ${row.ip}` : target}>
+        <Tooltip title={row.ip ? `${target} - ${row.ip}` : target}>
           <div style={{ lineHeight: 1.25 }}>
             <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {target}
@@ -100,21 +100,21 @@ export default function RealityTargetScannerModal({
       dataIndex: 'tlsVersion',
       key: 'tlsVersion',
       width: 60,
-      render: (v: string) => v || '—',
+      render: (v: string) => v || '-',
     },
     {
       title: 'ALPN',
       dataIndex: 'alpn',
       key: 'alpn',
       width: 75,
-      render: (v: string) => v || '—',
+      render: (v: string) => v || '-',
     },
     {
       title: t('pages.inbounds.form.scanCurve'),
       dataIndex: 'curveID',
       key: 'curveID',
       width: 130,
-      render: (v: string) => v || '—',
+      render: (v: string) => v || '-',
     },
     {
       title: t('pages.inbounds.form.scanCert'),
@@ -125,7 +125,7 @@ export default function RealityTargetScannerModal({
       render: (_: string, row) =>
         row.certValid ? (
           <Tooltip title={`${row.certSubject} (${row.certIssuer})`}>
-            <span>{row.certSubject || '—'}</span>
+            <span>{row.certSubject || '-'}</span>
           </Tooltip>
         ) : (
           <Tag>{t('pages.inbounds.form.scanCertInvalid')}</Tag>
@@ -137,7 +137,7 @@ export default function RealityTargetScannerModal({
       key: 'certChainBytes',
       width: 100,
       render: (bytes: number) => {
-        if (!bytes) return '—';
+        if (!bytes) return '-';
         if (mldsa65Enabled && bytes < MLDSA65_MIN_CERT_CHAIN_BYTES) {
           return (
             <Tooltip
@@ -158,7 +158,7 @@ export default function RealityTargetScannerModal({
       dataIndex: 'latencyMs',
       key: 'latencyMs',
       width: 85,
-      render: (v: number) => (v > 0 ? `${v} ms` : '—'),
+      render: (v: number) => (v > 0 ? `${v} ms` : '-'),
     },
     {
       title: '',

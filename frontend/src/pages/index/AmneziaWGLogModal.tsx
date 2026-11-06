@@ -170,14 +170,14 @@ export default function AmneziaWGLogModal({ open, onClose }: AmneziaWGLogModalPr
             <div key={idx} className="log-card">
               <div className="log-card-head">
                 <span className="log-time" title={fullDate(peer.handshake)}>
-                  {shortTime(peer.handshake) || '—'}
+                  {shortTime(peer.handshake) || '-'}
                 </span>
                 <Tag color={peer.online ? 'green' : 'default'} className="log-event-tag">
                   {peer.online ? t('online') : t('pages.index.amneziawgIdle')}
                 </Tag>
               </div>
               <div className="log-route">
-                <span className="log-addr">{peer.endpoint || '—'}</span>
+                <span className="log-addr">{peer.endpoint || '-'}</span>
                 <span className="log-arrow">→</span>
                 <span className="log-addr">{peer.allowedIPs}</span>
               </div>
@@ -222,12 +222,12 @@ export default function AmneziaWGLogModal({ open, onClose }: AmneziaWGLogModalPr
               {peers.map((peer, idx) => (
                 <tr key={idx} className={peer.online ? undefined : 'log-row-offline'}>
                   <td>
-                    <b>{fullDate(peer.handshake) || '—'}</b>
+                    <b>{fullDate(peer.handshake) || '-'}</b>
                   </td>
                   <td>{peer.interface}</td>
                   <td>{peer.tag}</td>
                   <td>{peer.email}</td>
-                  <td>{peer.endpoint || '—'}</td>
+                  <td>{peer.endpoint || '-'}</td>
                   <td>{peer.allowedIPs}</td>
                   <td>{`${SizeFormatter.sizeFormat(peer.up ?? 0)} / ${SizeFormatter.sizeFormat(peer.down ?? 0)}`}</td>
                 </tr>

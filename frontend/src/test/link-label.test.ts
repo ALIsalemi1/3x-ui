@@ -6,7 +6,7 @@ import type { AmneziawgInboundSettings } from '@/schemas/protocols/inbound/amnez
 
 // The panel shows the subscription's remark verbatim. Per-client traffic/expiry
 // info is rendered only into the body a client app imports (backend, first link
-// only), so the panel's display links are already clean — nothing is stripped.
+// only), so the panel's display links are already clean - nothing is stripped.
 describe('link-label parseLinkParts', () => {
   const linkWith = (remark: string) =>
     `vless://uid@host.example.com:443?type=tcp&security=tls#${encodeURIComponent(remark)}`;

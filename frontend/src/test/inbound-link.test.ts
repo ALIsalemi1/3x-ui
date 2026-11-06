@@ -35,7 +35,7 @@ function fromBase64Url(value: string): string {
 }
 
 // Snapshot baseline for the share-link generators. Snapshots were locked
-// at the close of the legacy class migration — at that point each
+// at the close of the legacy class migration - at that point each
 // generator was verified byte-equal to the corresponding legacy Inbound
 // class method. Future drift past this baseline is a regression.
 
@@ -500,7 +500,7 @@ describe('genHysteriaLink', () => {
         dest: 'edge.example.com',
         port: 8443,
         remark: 'ep-pin',
-        // base64 SHA-256 — must come out hex-normalized for Hysteria.
+        // base64 SHA-256 - must come out hex-normalized for Hysteria.
         pinnedPeerCertSha256: ['yEfdI5XQl4wHgLggHEsomosoFZfUfCdfLXfT+W2N6cQ='],
       },
     });
@@ -639,7 +639,7 @@ describe('genAmneziaWGLink vpn:// scheme', () => {
     expect(decoded.endsWith('PersistentKeepalive = 25')).toBe(true);
   });
 
-  it('omits every unset 3.1 field — a lone HeaderProtectionKey line would break the handshake', () => {
+  it('omits every unset 3.1 field - a lone HeaderProtectionKey line would break the handshake', () => {
     const decoded = fromBase64Url(genAmneziaWGLink(input).slice('vpn://'.length));
     for (const absent of [
       'I2',

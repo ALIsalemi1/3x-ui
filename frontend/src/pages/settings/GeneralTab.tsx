@@ -41,7 +41,7 @@ export default function GeneralTab({ allSetting, updateSetting }: GeneralTabProp
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      // /options is the slim picker-shaped endpoint — it skips the heavy
+      // /options is the slim picker-shaped endpoint - it skips the heavy
       // per-client settings and clientStats payloads that /list ships.
       const msg = (await HttpUtil.get('/panel/api/inbounds/options')) as ApiMsg<
         {

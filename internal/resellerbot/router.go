@@ -26,7 +26,7 @@ func registerHandlers(h *th.BotHandler, inst *botInstance) {
 
 // customerLang resolves the buyer's chosen language, defaulting to Persian
 // for a brand-new contact (matches BotCustomer.Language's "" == unset
-// convention) — used by every buyer-facing callback/message handler.
+// convention) - used by every buyer-facing callback/message handler.
 func (inst *botInstance) customerLang(buyerTgID int64, buyerUsername string) string {
 	customer, err := botSvc.GetOrCreateCustomer(inst.ownerId, buyerTgID, buyerUsername)
 	if err != nil || customer.Language == "" {
@@ -66,7 +66,7 @@ func (inst *botInstance) handleOrdersCommand(_ *th.Context, message telego.Messa
 }
 
 // sendOrderReviewCard renders one pending_review order for the owner: plan,
-// buyer, proof (photo or text), and inline Approve/Reject buttons — used by
+// buyer, proof (photo or text), and inline Approve/Reject buttons - used by
 // both /orders and the pending-review push notification, so an owner never
 // has to run /orders manually just to see what they're approving.
 func (inst *botInstance) sendOrderReviewCard(chatID int64, o model.BotOrder) {
@@ -75,7 +75,7 @@ func (inst *botInstance) sendOrderReviewCard(chatID int64, o model.BotOrder) {
 	if plan != nil {
 		planName = plan.Name
 	}
-	summary := fmt.Sprintf("#%d — @%s\n%s\n%s\nProof: %s", o.Id, o.BuyerUsername, planName,
+	summary := fmt.Sprintf("#%d - @%s\n%s\n%s\nProof: %s", o.Id, o.BuyerUsername, planName,
 		t(langFA, "invoiceAmount", o.FinalAmountToman), orderProofSummary(o))
 	if o.TransactionRef != "" {
 		summary += "\n" + t(langFA, "invoiceTxRef", o.TransactionRef)

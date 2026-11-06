@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // WebSocket stream uses the flat V1-style header map (string values only,
-// not arrays — the panel calls toV2Headers with arr=false). `path` and
+// not arrays - the panel calls toV2Headers with arr=false). `path` and
 // `host` are the WS request line / Host header overrides. `heartbeatPeriod`
 // in seconds; 0 disables heartbeats.
 export const WsHeaderMapSchema = z.record(z.string(), z.string());

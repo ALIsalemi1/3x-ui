@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Selection summary for a notification group header — a `count/total` tag plus a tri-state master checkbox that selects or clears every event in the group. Rendered in the `extra` slot of the Telegram/email notification cards on the settings page.',
+          'Selection summary for a notification group header - a `count/total` tag plus a tri-state master checkbox that selects or clears every event in the group. Rendered in the `extra` slot of the Telegram/email notification cards on the settings page.',
       },
     },
   },

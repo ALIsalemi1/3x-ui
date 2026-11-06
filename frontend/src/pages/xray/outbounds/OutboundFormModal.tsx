@@ -160,7 +160,7 @@ export default function OutboundFormModal({
   useEffect(() => {
     if (!streamAllowed) return;
     /*
-     * Wireguard dials its own UDP — only finalmask/sockopt apply, never a
+     * Wireguard dials its own UDP - only finalmask/sockopt apply, never a
      * transport. Don't seed network 'tcp'; clear a leftover one (from a
      * protocol switch) so the transmission/security blocks stay hidden.
      */
@@ -446,7 +446,7 @@ export default function OutboundFormModal({
                         <Input placeholder={t('pages.xray.outboundForm.localIpPlaceholder')} />
                       </FormField>
 
-                      {/* Freedom's own card owns the strategy — the core migrates this
+                      {/* Freedom's own card owns the strategy - the core migrates this
                           root key into the same sockopt value, so two knobs would race. */}
                       {protocol !== 'freedom' && (
                         <FormField

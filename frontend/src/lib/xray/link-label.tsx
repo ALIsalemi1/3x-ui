@@ -54,7 +54,7 @@ const TRANSPORT_COLOR = 'gold';
 
 const TAG_STYLE = { marginInlineEnd: 0, fontWeight: 600, letterSpacing: '0.3px' };
 
-// Reverse of inbound-link.ts's own toBase64Url — base64url (RFC 4648 §5, no
+// Reverse of inbound-link.ts's own toBase64Url - base64url (RFC 4648 §5, no
 // padding) back to the original unicode text, needed to read the remark/
 // endpoint back out of a vpn:// link's opaque payload below.
 function fromBase64Url(value: string): string {
@@ -73,7 +73,7 @@ function fromBase64Url(value: string): string {
    payload can't be parsed, so callers fall back to "Link N".
 
    The remark is shown verbatim: the panel displays the subscription's clean
-   (name-only) remarks — the per-client traffic/expiry info is rendered only
+   (name-only) remarks - the per-client traffic/expiry info is rendered only
    into the body a client app imports, so there is nothing to strip here. */
 export function parseLinkParts(link: string): LinkParts | null {
   const trimmed = link.trim();
@@ -102,7 +102,7 @@ export function parseLinkParts(link: string): LinkParts | null {
   } else if (scheme === 'vpn') {
     /* AmneziaWG's vpn:// links are base64url of a plain .conf text (matching
        the real AmneziaVPN app's own share-link scheme), not a structured URL
-       — there's no query string or #hash to read a remark/port from without
+       - there's no query string or #hash to read a remark/port from without
        corrupting the payload the app itself needs to decode. The remark and
        endpoint are still in there as plain .conf lines, though, so pull them
        back out directly. */

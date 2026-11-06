@@ -125,7 +125,7 @@ export default function AttachExistingClientsModal({
           group ? (
             <Tag color="geekblue">{group}</Tag>
           ) : (
-            <Typography.Text type="secondary">—</Typography.Text>
+            <Typography.Text type="secondary">-</Typography.Text>
           ),
       },
       {

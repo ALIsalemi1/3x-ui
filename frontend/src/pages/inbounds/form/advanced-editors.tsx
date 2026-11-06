@@ -13,7 +13,7 @@ import {
  * Sub-editor for one slice of the form (settings, streamSettings, sniffing).
  * Holds a local text buffer so the user can type freely; on every keystroke
  * we try to JSON.parse and forward the result to form state. Invalid JSON
- * is held in the buffer until the next valid moment — no panic on partial
+ * is held in the buffer until the next valid moment - no panic on partial
  * input. The buffer seeds once on mount; the modal's destroyOnHidden makes
  * each open a fresh editor instance, so we don't need to re-sync on outer
  * form changes.

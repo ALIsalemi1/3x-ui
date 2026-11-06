@@ -1,0 +1,65 @@
+package panel
+
+import (
+	"strings"
+	"testing"
+
+	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+)
+
+func TestBotPresentationPersistsWithoutReplacingTokenOrOtherOwners(t *testing.T) {
+	setupBotTestDB(t)
+	svc := BotService{}
+	p := &model.BotPresentation{BrandName: "Salemi", WelcomeEN: "Welcome aboard", Announcement: "New plans", MenuLayout: "compact", DefaultLanguage: "en", SupportURL: "https://t.me/support", Labels: map[string]string{"en:buy": "Browse plans"}}
+	if _, err := svc.SaveConfig(1, BotConfigInput{Token: "saved-token", Presentation: p}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := svc.SaveConfig(2, BotConfigInput{Presentation: &model.BotPresentation{BrandName: "Other shop"}}); err != nil {
+		t.Fatal(err)
+	}
+	// Older callers omit presentation; updating their connection must retain branding.
+	if _, err := svc.SaveConfig(1, BotConfigInput{Enabled: true}); err != nil {
+		t.Fatal(err)
+	}
+	got, err := svc.GetConfig(1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.Presentation.BrandName != "Salemi" || got.Presentation.Labels["en:buy"] != "Browse plans" || got.Token != "saved-token" {
+		t.Fatalf("lost saved configuration: %+v", got.Presentation)
+	}
+	other, err := svc.GetConfig(2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if other.Presentation.BrandName != "Other shop" {
+		t.Fatal("modified another owner's shop")
+	}
+}
+
+func TestBotPresentationRejectsInvalidInputBeforeSaving(t *testing.T) {
+	setupBotTestDB(t)
+	svc := BotService{}
+	for _, tc := range []struct {
+		p       model.BotPresentation
+		message string
+	}{
+		{model.BotPresentation{SupportURL: "javascript:alert(1)"}, "support URL must use https"},
+		{model.BotPresentation{MenuLayout: "invalid"}, "menu layout must be spacious or compact"},
+		{model.BotPresentation{DefaultLanguage: "zz"}, "default language must be auto, fa or en"},
+		{model.BotPresentation{BrandName: strings.Repeat("a", 81)}, "brand name must be at most 80 characters"},
+		{model.BotPresentation{Labels: map[string]string{"en:buy": "Same", "en:subs": "Same"}}, "menu labels must be unique within each language"},
+	} {
+		_, err := svc.SaveConfig(1, BotConfigInput{Presentation: &tc.p})
+		if err == nil || err.Error() != tc.message {
+			t.Fatalf("got %v, want %s", err, tc.message)
+		}
+	}
+	cfg, err := svc.GetConfig(1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cfg.Id != 0 {
+		t.Fatal("invalid presentation created a config row")
+	}
+}

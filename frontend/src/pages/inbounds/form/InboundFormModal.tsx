@@ -267,7 +267,7 @@ export default function InboundFormModal({
   const isNodeEligible = !!NODE_ELIGIBLE_PROTOCOLS[protocol];
   /*
    * The `node` share-address strategy only means something when the inbound can
-   * actually live on a node — otherwise the node address it would resolve to is
+   * actually live on a node - otherwise the node address it would resolve to is
    * always empty. Offer it only then; `listen`/`custom` work for local inbounds.
    */
   const nodeShareOptionAvailable = selectableNodes.length > 0 && isNodeEligible;
@@ -284,7 +284,7 @@ export default function InboundFormModal({
   const sniffingSupported = canEnableSniffing({ protocol });
   /*
    * Wireguard (always a UDP listener) and Tunnel (dokodemo-door) expose no
-   * user-selectable transport — their stream tab is just sockopt, which is all
+   * user-selectable transport - their stream tab is just sockopt, which is all
    * Tunnel's TProxy/redirect mode needs (sockopt.tproxy). Hysteria carries its
    * own dedicated transport form. For all of these the RAW/mKCP/WS/... network
    * picker and the per-network sub-forms are hidden.
@@ -367,7 +367,7 @@ export default function InboundFormModal({
   };
 
   // AmneziaWG uses the same Curve25519 keys as WireGuard, just nested under
-  // settings.server instead of flat on settings — see amneziawg.ts. Unlike
+  // settings.server instead of flat on settings - see amneziawg.ts. Unlike
   // WireGuard's Xray-native inbound (which re-derives its public key at
   // runtime and never stores one), AmneziaWG's server.publicKey is a real,
   // persisted field the Go backend reads directly, so it must be kept in
@@ -524,7 +524,7 @@ export default function InboundFormModal({
   }, [open, availableNodesFetched, protocol, nodeShareOptionAvailable, shareAddrStrategy]);
 
   /*
-   * Protocol picker reset cascades through the form — clearing the settings DU
+   * Protocol picker reset cascades through the form - clearing the settings DU
    * branch and dropping a nodeId that no longer applies. Only a real user
    * change (type === 'change') triggers it; programmatic setValue (advanced
    * JSON edits, open reset) must not, matching the legacy onValuesChange.
@@ -618,7 +618,7 @@ export default function InboundFormModal({
 
   /*
    * Field errors render inline, but every tab is force-rendered, so an error on
-   * a hidden tab looks like a dead Save button — jump to it and say what broke.
+   * a hidden tab looks like a dead Save button - jump to it and say what broke.
    */
   const submit = methods.handleSubmit(saveValues, (errors) => {
     const issue = firstRhfValidationIssue(errors);

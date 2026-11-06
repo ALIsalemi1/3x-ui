@@ -18,7 +18,7 @@ interface ClientHwidListModalProps {
   onClose: () => void;
 }
 
-// The single place the HWID device list is rendered — the edit form and the
+// The single place the HWID device list is rendered - the edit form and the
 // info card share it so date format and row layout can't drift apart again.
 export default function ClientHwidListModal({
   open,
@@ -39,7 +39,7 @@ export default function ClientHwidListModal({
   return (
     <Modal
       open={open}
-      title={`${t('pages.clients.hwidLog')}${email ? ` — ${email}` : ''}`}
+      title={`${t('pages.clients.hwidLog')}${email ? ` - ${email}` : ''}`}
       width={520}
       zIndex={zIndex}
       onCancel={onClose}

@@ -8,11 +8,11 @@ _openapi:
     - ./public/openapi.json
   toc:
     - depth: 2
-      title: Serve this API description as an OpenAPI 3 document — the same file that
+      title: Serve this API description as an OpenAPI 3 document - the same file that
         powers the API Docs page. Requires a session or Bearer token like the
         rest of /panel/api. Useful for generating clients or importing into API
         tooling.
-      url: '#serve-this-api-description-as-an-openapi-3-document--the-same-file-that-powers-the-api-docs-page-requires-a-session-or-bearer-token-like-the-rest-of-panelapi-useful-for-generating-clients-or-importing-into-api-tooling'
+      url: '#serve-this-api-description-as-an-openapi-3-document---the-same-file-that-powers-the-api-docs-page-requires-a-session-or-bearer-token-like-the-rest-of-panelapi-useful-for-generating-clients-or-importing-into-api-tooling'
     - depth: 2
       title: 'Real-time machine snapshot: CPU, memory, swap, disk, network IO, load
         averages, open connections, Xray state. Cached and refreshed every 2
@@ -24,27 +24,27 @@ _openapi:
         Fail2ban being installed.
       url: '#reports-whether-per-client-ip-limits-can-be-enforced-on-this-host-the-panel-uses-it-to-gate-the-ip-limit-field-since-enforcement-depends-on-fail2ban-being-installed'
     - depth: 2
-      title: 'Legacy: aggregated CPU history. Use /history/cpu/:bucket instead — same
+      title: 'Legacy: aggregated CPU history. Use /history/cpu/:bucket instead - same
         data with a uniform {t, v} shape.'
-      url: '#legacy-aggregated-cpu-history-use-historycpubucket-instead--same-data-with-a-uniform-t-v-shape'
+      url: '#legacy-aggregated-cpu-history-use-historycpubucket-instead---same-data-with-a-uniform-t-v-shape'
     - depth: 2
       title: Aggregated time-series for one metric. Returns an array of {t, v} samples
         covering the last ~6 hours.
       url: '#aggregated-time-series-for-one-metric-returns-an-array-of-t-v-samples-covering-the-last-6-hours'
     - depth: 2
-      title: Xray runtime metrics state — whether the xray config has a `metrics`
+      title: Xray runtime metrics state - whether the xray config has a `metrics`
         block, which expvar keys are flowing, and the current snapshot values
         for each. Returns an empty state when metrics are not configured.
-      url: '#xray-runtime-metrics-state--whether-the-xray-config-has-a-metrics-block-which-expvar-keys-are-flowing-and-the-current-snapshot-values-for-each-returns-an-empty-state-when-metrics-are-not-configured'
+      url: '#xray-runtime-metrics-state---whether-the-xray-config-has-a-metrics-block-which-expvar-keys-are-flowing-and-the-current-snapshot-values-for-each-returns-an-empty-state-when-metrics-are-not-configured'
     - depth: 2
       title: Time-series history for one Xray runtime metric over the last ~6 hours.
         Same {t, v} shape as /history/:metric/:bucket.
       url: '#time-series-history-for-one-xray-runtime-metric-over-the-last-6-hours-same-t-v-shape-as-historymetricbucket'
     - depth: 2
-      title: Latest snapshot from the Xray observatory — per-outbound latency, health
+      title: Latest snapshot from the Xray observatory - per-outbound latency, health
         status, and last-probe time. Only populated when the Xray config has an
         observatory configured.
-      url: '#latest-snapshot-from-the-xray-observatory--per-outbound-latency-health-status-and-last-probe-time-only-populated-when-the-xray-config-has-an-observatory-configured'
+      url: '#latest-snapshot-from-the-xray-observatory---per-outbound-latency-health-status-and-last-probe-time-only-populated-when-the-xray-config-has-an-observatory-configured'
     - depth: 2
       title: Time-series of observatory probe results for one outbound tag. Same {t,
         v} shape as the other history endpoints.
@@ -182,11 +182,11 @@ _openapi:
       url: '#submit-a-list-of-recently-active-ip-timestamps-the-panel-merges-them-with-the-existing-database-to-maintain-a-unified-global-ip-limit-view'
   structuredData:
     headings:
-      - content: Serve this API description as an OpenAPI 3 document — the same file
+      - content: Serve this API description as an OpenAPI 3 document - the same file
           that powers the API Docs page. Requires a session or Bearer token like
           the rest of /panel/api. Useful for generating clients or importing
           into API tooling.
-        id: serve-this-api-description-as-an-openapi-3-document--the-same-file-that-powers-the-api-docs-page-requires-a-session-or-bearer-token-like-the-rest-of-panelapi-useful-for-generating-clients-or-importing-into-api-tooling
+        id: serve-this-api-description-as-an-openapi-3-document---the-same-file-that-powers-the-api-docs-page-requires-a-session-or-bearer-token-like-the-rest-of-panelapi-useful-for-generating-clients-or-importing-into-api-tooling
       - content: 'Real-time machine snapshot: CPU, memory, swap, disk, network IO, load
           averages, open connections, Xray state. Cached and refreshed every 2
           seconds in the background.'
@@ -195,23 +195,23 @@ _openapi:
           panel uses it to gate the "IP Limit" field, since enforcement depends
           on Fail2ban being installed.
         id: reports-whether-per-client-ip-limits-can-be-enforced-on-this-host-the-panel-uses-it-to-gate-the-ip-limit-field-since-enforcement-depends-on-fail2ban-being-installed
-      - content: 'Legacy: aggregated CPU history. Use /history/cpu/:bucket instead —
+      - content: 'Legacy: aggregated CPU history. Use /history/cpu/:bucket instead -
           same data with a uniform {t, v} shape.'
-        id: legacy-aggregated-cpu-history-use-historycpubucket-instead--same-data-with-a-uniform-t-v-shape
+        id: legacy-aggregated-cpu-history-use-historycpubucket-instead---same-data-with-a-uniform-t-v-shape
       - content: Aggregated time-series for one metric. Returns an array of {t, v}
           samples covering the last ~6 hours.
         id: aggregated-time-series-for-one-metric-returns-an-array-of-t-v-samples-covering-the-last-6-hours
-      - content: Xray runtime metrics state — whether the xray config has a `metrics`
+      - content: Xray runtime metrics state - whether the xray config has a `metrics`
           block, which expvar keys are flowing, and the current snapshot values
           for each. Returns an empty state when metrics are not configured.
-        id: xray-runtime-metrics-state--whether-the-xray-config-has-a-metrics-block-which-expvar-keys-are-flowing-and-the-current-snapshot-values-for-each-returns-an-empty-state-when-metrics-are-not-configured
+        id: xray-runtime-metrics-state---whether-the-xray-config-has-a-metrics-block-which-expvar-keys-are-flowing-and-the-current-snapshot-values-for-each-returns-an-empty-state-when-metrics-are-not-configured
       - content: Time-series history for one Xray runtime metric over the last ~6 hours.
           Same {t, v} shape as /history/:metric/:bucket.
         id: time-series-history-for-one-xray-runtime-metric-over-the-last-6-hours-same-t-v-shape-as-historymetricbucket
-      - content: Latest snapshot from the Xray observatory — per-outbound latency,
+      - content: Latest snapshot from the Xray observatory - per-outbound latency,
           health status, and last-probe time. Only populated when the Xray
           config has an observatory configured.
-        id: latest-snapshot-from-the-xray-observatory--per-outbound-latency-health-status-and-last-probe-time-only-populated-when-the-xray-config-has-an-observatory-configured
+        id: latest-snapshot-from-the-xray-observatory---per-outbound-latency-health-status-and-last-probe-time-only-populated-when-the-xray-config-has-an-observatory-configured
       - content: Time-series of observatory probe results for one outbound tag. Same {t,
           v} shape as the other history endpoints.
         id: time-series-of-observatory-probe-results-for-one-outbound-tag-same-t-v-shape-as-the-other-history-endpoints

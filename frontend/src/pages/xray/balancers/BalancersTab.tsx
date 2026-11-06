@@ -404,7 +404,7 @@ export default function BalancersTab({
         if (!live?.running) {
           return (
             <Tooltip title={t('pages.xray.balancerNotRunning')}>
-              <Tag>—</Tag>
+              <Tag>-</Tag>
             </Tooltip>
           );
         }
@@ -420,7 +420,7 @@ export default function BalancersTab({
           : (live.selected || []).map(resolve).join(', ');
         return (
           <Tooltip title={tooltipText || undefined}>
-            <Tag color={live.override ? 'orange' : 'blue'}>{picked || '—'}</Tag>
+            <Tag color={live.override ? 'orange' : 'blue'}>{picked || '-'}</Tag>
           </Tooltip>
         );
       },

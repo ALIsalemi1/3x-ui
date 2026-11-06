@@ -27,21 +27,21 @@ _openapi:
         Returns id, remark, tag, protocol, port, a server-computed
         tlsFlowCapable flag (true for VLESS on TCP with tls or reality, or on
         XHTTP with VLESS encryption / vlessenc enabled), and ssMethod (the
-        Shadowsocks cipher, empty for non-Shadowsocks inbounds — used by the
+        Shadowsocks cipher, empty for non-Shadowsocks inbounds - used by the
         client UI to generate a valid Shadowsocks 2022 PSK). Use this for
-        dropdowns and attach pickers — it skips settings, streamSettings, and
+        dropdowns and attach pickers - it skips settings, streamSettings, and
         clientStats so the payload stays small even on panels with thousands of
         clients.
-      url: '#lightweight-picker-projection-of-the-authenticated-users-inbounds-returns-id-remark-tag-protocol-port-a-server-computed-tlsflowcapable-flag-true-for-vless-on-tcp-with-tls-or-reality-or-on-xhttp-with-vless-encryption--vlessenc-enabled-and-ssmethod-the-shadowsocks-cipher-empty-for-non-shadowsocks-inbounds--used-by-the-client-ui-to-generate-a-valid-shadowsocks-2022-psk-use-this-for-dropdowns-and-attach-pickers--it-skips-settings-streamsettings-and-clientstats-so-the-payload-stays-small-even-on-panels-with-thousands-of-clients'
+      url: '#lightweight-picker-projection-of-the-authenticated-users-inbounds-returns-id-remark-tag-protocol-port-a-server-computed-tlsflowcapable-flag-true-for-vless-on-tcp-with-tls-or-reality-or-on-xhttp-with-vless-encryption--vlessenc-enabled-and-ssmethod-the-shadowsocks-cipher-empty-for-non-shadowsocks-inbounds---used-by-the-client-ui-to-generate-a-valid-shadowsocks-2022-psk-use-this-for-dropdowns-and-attach-pickers---it-skips-settings-streamsettings-and-clientstats-so-the-payload-stays-small-even-on-panels-with-thousands-of-clients'
     - depth: 2
       title: Return every protocol URL (vless://, vmess://, trojan://, ss://,
         hysteria://, mtproto) across all inbounds and all of their clients.
         Links are rendered through the subscription engine, so the configured
-        remark template (name-only display part) is applied per client — the
+        remark template (name-only display part) is applied per client - the
         same output the client info/QR pages use. Protocols without a URL form
         (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing.
         Used by the panel’s "Export all inbound links" action.
-      url: '#return-every-protocol-url-vless-vmess-trojan-ss-hysteria-mtproto-across-all-inbounds-and-all-of-their-clients-links-are-rendered-through-the-subscription-engine-so-the-configured-remark-template-name-only-display-part-is-applied-per-client--the-same-output-the-client-infoqr-pages-use-protocols-without-a-url-form-socks-http-mixed-wireguard-dokodemo-tunnel-contribute-nothing-used-by-the-panels-export-all-inbound-links-action'
+      url: '#return-every-protocol-url-vless-vmess-trojan-ss-hysteria-mtproto-across-all-inbounds-and-all-of-their-clients-links-are-rendered-through-the-subscription-engine-so-the-configured-remark-template-name-only-display-part-is-applied-per-client---the-same-output-the-client-infoqr-pages-use-protocols-without-a-url-form-socks-http-mixed-wireguard-dokodemo-tunnel-contribute-nothing-used-by-the-panels-export-all-inbound-links-action'
     - depth: 2
       title: Fetch a single inbound by numeric ID.
       url: '#fetch-a-single-inbound-by-numeric-id'
@@ -84,9 +84,9 @@ _openapi:
         cleanup + SyncInbound). Destructive and cannot be undone.
       url: '#remove-every-client-attached-to-a-single-inbound-while-keeping-the-inbound-itself-collects-emails-from-settingsclients-and-feeds-them-into-the-optimized-bulk-delete-path-runtime-user-removal--traffic-row-cleanup--syncinbound-destructive-and-cannot-be-undone'
     - depth: 2
-      title: Reset upload + download counters on every inbound. Destructive —
+      title: Reset upload + download counters on every inbound. Destructive -
         accounting history is lost.
-      url: '#reset-upload--download-counters-on-every-inbound-destructive--accounting-history-is-lost'
+      url: '#reset-upload--download-counters-on-every-inbound-destructive---accounting-history-is-lost'
     - depth: 2
       title: Bulk-import an inbound from a JSON blob (e.g. one exported via the UI).
         The body uses form encoding with a single "data" field.
@@ -94,10 +94,10 @@ _openapi:
     - depth: 2
       title: Receive a master panel's aggregated per-client usage, keyed by the
         master's GUID. Stored in a side table used only for the UI display
-        overlay and local quota enforcement — never folded into the local
+        overlay and local quota enforcement - never folded into the local
         counters that masters poll, so delta accounting stays intact. Called
         panel-to-panel by the node traffic sync job.
-      url: '#receive-a-master-panels-aggregated-per-client-usage-keyed-by-the-masters-guid-stored-in-a-side-table-used-only-for-the-ui-display-overlay-and-local-quota-enforcement--never-folded-into-the-local-counters-that-masters-poll-so-delta-accounting-stays-intact-called-panel-to-panel-by-the-node-traffic-sync-job'
+      url: '#receive-a-master-panels-aggregated-per-client-usage-keyed-by-the-masters-guid-stored-in-a-side-table-used-only-for-the-ui-display-overlay-and-local-quota-enforcement---never-folded-into-the-local-counters-that-masters-poll-so-delta-accounting-stays-intact-called-panel-to-panel-by-the-node-traffic-sync-job'
     - depth: 2
       title: List the fallback rules attached to a master VLESS/Trojan TCP-TLS
         inbound. Each rule links one child inbound (the dest) to optional
@@ -125,20 +125,20 @@ _openapi:
           Returns id, remark, tag, protocol, port, a server-computed
           tlsFlowCapable flag (true for VLESS on TCP with tls or reality, or on
           XHTTP with VLESS encryption / vlessenc enabled), and ssMethod (the
-          Shadowsocks cipher, empty for non-Shadowsocks inbounds — used by the
+          Shadowsocks cipher, empty for non-Shadowsocks inbounds - used by the
           client UI to generate a valid Shadowsocks 2022 PSK). Use this for
-          dropdowns and attach pickers — it skips settings, streamSettings, and
+          dropdowns and attach pickers - it skips settings, streamSettings, and
           clientStats so the payload stays small even on panels with thousands
           of clients.
-        id: lightweight-picker-projection-of-the-authenticated-users-inbounds-returns-id-remark-tag-protocol-port-a-server-computed-tlsflowcapable-flag-true-for-vless-on-tcp-with-tls-or-reality-or-on-xhttp-with-vless-encryption--vlessenc-enabled-and-ssmethod-the-shadowsocks-cipher-empty-for-non-shadowsocks-inbounds--used-by-the-client-ui-to-generate-a-valid-shadowsocks-2022-psk-use-this-for-dropdowns-and-attach-pickers--it-skips-settings-streamsettings-and-clientstats-so-the-payload-stays-small-even-on-panels-with-thousands-of-clients
+        id: lightweight-picker-projection-of-the-authenticated-users-inbounds-returns-id-remark-tag-protocol-port-a-server-computed-tlsflowcapable-flag-true-for-vless-on-tcp-with-tls-or-reality-or-on-xhttp-with-vless-encryption--vlessenc-enabled-and-ssmethod-the-shadowsocks-cipher-empty-for-non-shadowsocks-inbounds---used-by-the-client-ui-to-generate-a-valid-shadowsocks-2022-psk-use-this-for-dropdowns-and-attach-pickers---it-skips-settings-streamsettings-and-clientstats-so-the-payload-stays-small-even-on-panels-with-thousands-of-clients
       - content: Return every protocol URL (vless://, vmess://, trojan://, ss://,
           hysteria://, mtproto) across all inbounds and all of their clients.
           Links are rendered through the subscription engine, so the configured
-          remark template (name-only display part) is applied per client — the
+          remark template (name-only display part) is applied per client - the
           same output the client info/QR pages use. Protocols without a URL form
           (socks, http, mixed, wireguard, dokodemo, tunnel) contribute nothing.
           Used by the panel’s "Export all inbound links" action.
-        id: return-every-protocol-url-vless-vmess-trojan-ss-hysteria-mtproto-across-all-inbounds-and-all-of-their-clients-links-are-rendered-through-the-subscription-engine-so-the-configured-remark-template-name-only-display-part-is-applied-per-client--the-same-output-the-client-infoqr-pages-use-protocols-without-a-url-form-socks-http-mixed-wireguard-dokodemo-tunnel-contribute-nothing-used-by-the-panels-export-all-inbound-links-action
+        id: return-every-protocol-url-vless-vmess-trojan-ss-hysteria-mtproto-across-all-inbounds-and-all-of-their-clients-links-are-rendered-through-the-subscription-engine-so-the-configured-remark-template-name-only-display-part-is-applied-per-client---the-same-output-the-client-infoqr-pages-use-protocols-without-a-url-form-socks-http-mixed-wireguard-dokodemo-tunnel-contribute-nothing-used-by-the-panels-export-all-inbound-links-action
       - content: Fetch a single inbound by numeric ID.
         id: fetch-a-single-inbound-by-numeric-id
       - content: Create a new inbound. Send the full inbound payload (protocol, port,
@@ -171,18 +171,18 @@ _openapi:
           into the optimized bulk-delete path (runtime user removal +
           traffic-row cleanup + SyncInbound). Destructive and cannot be undone.
         id: remove-every-client-attached-to-a-single-inbound-while-keeping-the-inbound-itself-collects-emails-from-settingsclients-and-feeds-them-into-the-optimized-bulk-delete-path-runtime-user-removal--traffic-row-cleanup--syncinbound-destructive-and-cannot-be-undone
-      - content: Reset upload + download counters on every inbound. Destructive —
+      - content: Reset upload + download counters on every inbound. Destructive -
           accounting history is lost.
-        id: reset-upload--download-counters-on-every-inbound-destructive--accounting-history-is-lost
+        id: reset-upload--download-counters-on-every-inbound-destructive---accounting-history-is-lost
       - content: Bulk-import an inbound from a JSON blob (e.g. one exported via the UI).
           The body uses form encoding with a single "data" field.
         id: bulk-import-an-inbound-from-a-json-blob-eg-one-exported-via-the-ui-the-body-uses-form-encoding-with-a-single-data-field
       - content: Receive a master panel's aggregated per-client usage, keyed by the
           master's GUID. Stored in a side table used only for the UI display
-          overlay and local quota enforcement — never folded into the local
+          overlay and local quota enforcement - never folded into the local
           counters that masters poll, so delta accounting stays intact. Called
           panel-to-panel by the node traffic sync job.
-        id: receive-a-master-panels-aggregated-per-client-usage-keyed-by-the-masters-guid-stored-in-a-side-table-used-only-for-the-ui-display-overlay-and-local-quota-enforcement--never-folded-into-the-local-counters-that-masters-poll-so-delta-accounting-stays-intact-called-panel-to-panel-by-the-node-traffic-sync-job
+        id: receive-a-master-panels-aggregated-per-client-usage-keyed-by-the-masters-guid-stored-in-a-side-table-used-only-for-the-ui-display-overlay-and-local-quota-enforcement---never-folded-into-the-local-counters-that-masters-poll-so-delta-accounting-stays-intact-called-panel-to-panel-by-the-node-traffic-sync-job
       - content: List the fallback rules attached to a master VLESS/Trojan TCP-TLS
           inbound. Each rule links one child inbound (the dest) to optional
           SNI/ALPN/path/dest/xver match criteria. When dest is empty the child

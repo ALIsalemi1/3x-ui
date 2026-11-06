@@ -112,7 +112,7 @@ export default function RemarkTemplateField({
         <div style={{ fontSize: 12, marginTop: 4, opacity: 0.7 }}>
           {t('pages.hosts.remarkVars.preview')}:{' '}
           <span style={{ fontFamily: 'monospace' }}>
-            {previewRemark(value, variables, metadataOnly) || '—'}
+            {previewRemark(value, variables, metadataOnly) || '-'}
           </span>
         </div>
       )}

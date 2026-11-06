@@ -3,7 +3,7 @@ package resellerbot
 import "fmt"
 
 // Chat strings for the buyer-facing shop bot are Persian/English only,
-// selected per BotCustomer.Language — not the panel's 13-locale
+// selected per BotCustomer.Language - not the panel's 13-locale
 // internal/web/translation system. That system backs a single global
 // LocalizerBot fixed at process startup (internal/web/locale), which cannot
 // serve independent per-buyer language choice across many owners' bots, so
@@ -35,6 +35,10 @@ func t(lang, key string, args ...any) string {
 
 var catalog = map[string]map[string]string{
 	langFA: {
+		"planOption":      "%s · %s / %d روز · %d تومان",
+		"money":           "%d تومان",
+		"daysHours":       "%d روز و %d ساعت",
+		"hours":           "%d ساعت",
 		"chooseLanguage":  "لطفاً زبان خود را انتخاب کنید:",
 		"welcome":         "لطفاً یکی از گزینه\u200cهای زیر را انتخاب کنید:",
 		"menuBuyNew":      "🛍 خرید اشتراک جدید",
@@ -90,7 +94,7 @@ var catalog = map[string]map[string]string{
 		"kindPurchase":         "اشتراک جدید",
 		"kindRenewal":          "تمدید اشتراک",
 		"kindTopup":            "افزایش موجودی کیف پول",
-		"none":                 "—",
+		"none":                 "-",
 
 		"walletTopupPrompt":  "مبلغ افزایش موجودی را به تومان ارسال کنید:",
 		"walletTopupInvalid": "لطفاً یک عدد معتبر ارسال کنید.",
@@ -158,6 +162,10 @@ var catalog = map[string]map[string]string{
 		"statsRevenue":          "💰 درآمد: %d تومان",
 	},
 	langEN: {
+		"planOption":      "%s · %s / %d days · %d Toman",
+		"money":           "%d Toman",
+		"daysHours":       "%dd %dh",
+		"hours":           "%dh",
 		"chooseLanguage":  "Please choose your language:",
 		"welcome":         "Please choose one of the options below:",
 		"menuBuyNew":      "🛍 Buy new subscription",
@@ -213,7 +221,7 @@ var catalog = map[string]map[string]string{
 		"kindPurchase":         "New subscription",
 		"kindRenewal":          "Renewal",
 		"kindTopup":            "Wallet top-up",
-		"none":                 "—",
+		"none":                 "-",
 
 		"walletTopupPrompt":  "Send the top-up amount in Toman:",
 		"walletTopupInvalid": "Please send a valid number.",

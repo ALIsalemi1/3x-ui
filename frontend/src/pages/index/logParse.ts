@@ -33,10 +33,10 @@ export const LEVEL_CLASSES = [
   'level-error',
 ];
 
-// "Mon DD HH:MM:SS host ident[pid]: <message>" — captures the journal date,
+// "Mon DD HH:MM:SS host ident[pid]: <message>" - captures the journal date,
 // time, and the message that follows the syslog identifier.
 const SYSLOG_PREFIX = /^([A-Za-z]{3}\s+\d{1,2})\s+(\d{2}:\d{2}:\d{2})\s+\S+\s+\S+?:\s+(.*)$/;
-// Redundant Go std-log date prefix ("2006/01/02 15:04:05 ") to strip — the
+// Redundant Go std-log date prefix ("2006/01/02 15:04:05 ") to strip - the
 // journal already carries the timestamp.
 const GO_LOG_DATE = /^\d{4}\/\d{2}\/\d{2}\s+\d{2}:\d{2}:\d{2}\s+/;
 // telego's own line prefix: "[Mon Jan _2 15:04:05 MST 2006] LEVEL rest".
@@ -97,7 +97,7 @@ export function parseLogLine(line: string): ParsedLog {
       levelText = app[3];
       body = app[4];
     } else {
-      // Plain message with no timestamp/level — show it verbatim.
+      // Plain message with no timestamp/level - show it verbatim.
       body = raw;
     }
   }

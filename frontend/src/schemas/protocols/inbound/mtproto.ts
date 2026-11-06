@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // mtg's [domain-fronting] section: where the sidecar forwards non-Telegram
-// traffic (e.g. an NGINX fake site). All optional — omitted keys fall back to
+// traffic (e.g. an NGINX fake site). All optional - omitted keys fall back to
 // mtg's defaults (DNS-resolve the FakeTLS host, port 443, no proxy protocol).
 export const MtprotoDomainFrontingSchema = z.object({
   ip: z.string().optional(),

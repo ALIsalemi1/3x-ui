@@ -146,7 +146,7 @@ function defaultXmcProfile(): Record<string, unknown> {
 // `profiles` objects carrying a Mojang-signed session profile, and dropped the
 // "default to Dream" fallback so at least one complete profile is now
 // mandatory. The signature can only come from Mojang's session server, so a
-// legacy username cannot be upgraded automatically — carry it into a profile
+// legacy username cannot be upgraded automatically - carry it into a profile
 // stub instead, which keeps the operator's player names visible and leaves the
 // per-field validators pointing at exactly what still has to be filled in.
 export function migrateXmcSettings(settings: Record<string, unknown>): {
@@ -313,7 +313,7 @@ export default function FinalMaskForm({
 
   const isHysteria = protocol === OutboundProtocols.Hysteria || protocol === 'hysteria';
   // Wireguard carries no user-selectable transport (always a UDP listener/
-  // dialer), so only the UDP mask section applies — TCP masks would never
+  // dialer), so only the UDP mask section applies - TCP masks would never
   // wrap anything even though the leftover network value may be 'tcp'.
   const isWireguard = protocol === 'wireguard';
   const showTcp = showAll || (!isWireguard && TCP_NETWORKS.includes(network));
@@ -618,7 +618,7 @@ function SudokuSettings({ fieldName }: { fieldName: number }) {
 }
 
 // xray's fragment `packets` accepts "tlshello" or an arbitrary packet-number
-// range like "1-3" (#5075 — presets only covered the common cases).
+// range like "1-3" (#5075 - presets only covered the common cases).
 function validateFragmentPackets(_rule: unknown, value: unknown): Promise<void> {
   const str = typeof value === 'string' ? value.trim() : String(value ?? '').trim();
   if (str.length === 0 || str === 'tlshello' || /^\d+-\d+$/.test(str)) {
@@ -631,7 +631,7 @@ function validateFragmentLength(_rule: unknown, value: unknown): Promise<void> {
   const str = typeof value === 'string' ? value.trim() : String(value ?? '').trim();
   if (str.length === 0) {
     return Promise.reject(
-      new Error('Length is required — xray rejects a fragment mask whose LengthMin is 0'),
+      new Error('Length is required - xray rejects a fragment mask whose LengthMin is 0'),
     );
   }
   const min = Number(str.split('-')[0]);
@@ -648,7 +648,7 @@ function validateFragmentDelayEntry(_rule: unknown, value: unknown): Promise<voi
   const str = typeof value === 'string' ? value.trim() : String(value ?? '').trim();
   if (str.length === 0) {
     return Promise.reject(
-      new Error("Delay is required — remove the row if you don't want a delay"),
+      new Error("Delay is required - remove the row if you don't want a delay"),
     );
   }
   if (!/^\d+(?:-\d+)?$/.test(str)) {
@@ -718,7 +718,7 @@ function FragmentRangeList({
   );
 }
 
-// randRange bytes must sit in 0-255 — xray rejects the whole config with
+// randRange bytes must sit in 0-255 - xray rejects the whole config with
 // "invalid randRange" otherwise (reversed ranges like "200-100" are fine,
 // xray reorders them).
 function validateRandRange(_rule: unknown, value: unknown): Promise<void> {
@@ -760,7 +760,7 @@ function validateXmcUuid(_rule: unknown, value: unknown): Promise<void> {
   return Promise.reject(new Error('Enter the profile UUID (dashed or 32 hex characters)'));
 }
 
-// Each mask needs at least one fully signed profile since xray-core #6487 —
+// Each mask needs at least one fully signed profile since xray-core #6487 -
 // an empty or partial list makes the core reject the whole config, so the
 // panel blocks the save here rather than letting the backend drop the mask.
 function XmcProfilesList({ tcpFieldName }: { tcpFieldName: number }) {

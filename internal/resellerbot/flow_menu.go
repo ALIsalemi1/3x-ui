@@ -4,25 +4,12 @@ import (
 	"context"
 	"strings"
 
+	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+
 	"github.com/mymmrac/telego"
 	th "github.com/mymmrac/telego/telegohandler"
 	tu "github.com/mymmrac/telego/telegoutil"
 )
-
-// mainMenuKeyboard is the persistent bottom keyboard shown after language
-// selection, matching the reference layout: buy / trial / invoices / subs /
-// account, then support+tutorial paired, then a lone back-to-menu row.
-func mainMenuKeyboard(lang string) *telego.ReplyKeyboardMarkup {
-	kb := tu.Keyboard(
-		tu.KeyboardRow(tu.KeyboardButton(t(lang, "menuBuyNew"))),
-		tu.KeyboardRow(tu.KeyboardButton(t(lang, "menuTrial"))),
-		tu.KeyboardRow(tu.KeyboardButton(t(lang, "menuInvoices")), tu.KeyboardButton(t(lang, "menuSubs"))),
-		tu.KeyboardRow(tu.KeyboardButton(t(lang, "menuAccount"))),
-		tu.KeyboardRow(tu.KeyboardButton(t(lang, "menuSupport")), tu.KeyboardButton(t(lang, "menuTutorial"))),
-	)
-	kb.ResizeKeyboard = true
-	return kb
-}
 
 func languageKeyboard() *telego.InlineKeyboardMarkup {
 	return tu.InlineKeyboard(tu.InlineKeyboardRow(
@@ -59,6 +46,11 @@ func (inst *botInstance) handleStart(_ *th.Context, message telego.Message) erro
 	}
 
 	if customer.Language == "" {
+		if cfg, err := configFor(inst.ownerId); err == nil && (cfg.Presentation.DefaultLanguage == langFA || cfg.Presentation.DefaultLanguage == langEN) {
+			_ = botSvc.SetLanguage(customer.Id, cfg.Presentation.DefaultLanguage)
+			inst.sendMainMenu(message.Chat.ID, cfg.Presentation.DefaultLanguage)
+			return nil
+		}
 		inst.send(message.Chat.ID, t(langFA, "chooseLanguage")+"\n"+t(langEN, "chooseLanguage"), languageKeyboard())
 		return nil
 	}
@@ -67,7 +59,8 @@ func (inst *botInstance) handleStart(_ *th.Context, message telego.Message) erro
 }
 
 func (inst *botInstance) sendMainMenu(chatID int64, lang string) {
-	inst.send(chatID, t(lang, "welcome"), mainMenuKeyboard(lang))
+	cfg, _ := configFor(inst.ownerId)
+	inst.send(chatID, shopWelcome(lang, cfg), shopMenuKeyboard(lang, cfg))
 }
 
 func (inst *botInstance) handleSelectLanguage(chatID, buyerTgID int64, buyerUsername, lang string) {
@@ -106,7 +99,8 @@ func menuAction(lang, text string) string {
 }
 
 func (inst *botInstance) handleMenuText(message telego.Message, lang string) bool {
-	switch menuAction(lang, message.Text) {
+	cfg, _ := configFor(inst.ownerId)
+	switch shopMenuAction(lang, message.Text, cfg) {
 	case "buy":
 		inst.sendPlanList(message.Chat.ID, lang)
 	case "trial":
@@ -118,21 +112,32 @@ func (inst *botInstance) handleMenuText(message telego.Message, lang string) boo
 	case "account":
 		inst.sendAccountCard(message.Chat.ID, message.From.ID, message.From.Username, lang)
 	case "support":
-		inst.sendConfigText(message.Chat.ID, lang, func() string { cfg, _ := configFor(inst.ownerId); return cfg.SupportText })
+		inst.sendHelpText(message.Chat.ID, lang, cfg, false)
 	case "tutorial":
-		inst.sendConfigText(message.Chat.ID, lang, func() string { cfg, _ := configFor(inst.ownerId); return cfg.TutorialText })
+		inst.sendHelpText(message.Chat.ID, lang, cfg, true)
 	default:
 		return false
 	}
 	return true
 }
 
-func (inst *botInstance) sendConfigText(chatID int64, lang string, get func() string) {
-	text := get()
-	if text == "" {
-		text = t(lang, "error")
+func (inst *botInstance) sendHelpText(chatID int64, lang string, cfg *model.BotConfig, tutorial bool) {
+	if cfg == nil {
+		inst.send(chatID, t(lang, "error"))
+		return
 	}
-	inst.send(chatID, text)
+	text, link, action := cfg.SupportText, cfg.Presentation.SupportURL, "support"
+	if tutorial {
+		text, link, action = cfg.TutorialText, cfg.Presentation.TutorialURL, "tutorial"
+	}
+	if text == "" {
+		text = shopMenuLabel(lang, action, cfg)
+	}
+	if link != "" {
+		inst.send(chatID, text, tu.InlineKeyboard(tu.InlineKeyboardRow(tu.InlineKeyboardButton(shopMenuLabel(lang, action, cfg)).WithURL(link))))
+	} else {
+		inst.send(chatID, text)
+	}
 }
 
 func (inst *botInstance) send(chatID int64, text string, markup ...telego.ReplyMarkup) {

@@ -389,7 +389,7 @@ export default function ClientsPage() {
   // actually manages nodes (#4997).
   const { nodes } = useNodesQuery();
   // Tunnel configs advertise these Hosts, so an empty list must mean "no hosts"
-  // and not "not loaded yet" — the page gate waits for it.
+  // and not "not loaded yet" - the page gate waits for it.
   const {
     hosts,
     fetched: hostsFetched,
@@ -399,7 +399,7 @@ export default function ClientsPage() {
   const hostsError = hosts.length > 0 ? '' : hostsFetchError;
 
   // Owner (reseller) list for the Owner filter/column. /resellers/list is
-  // admin-only — a reseller's request 403s, which we treat the same as "no
+  // admin-only - a reseller's request 403s, which we treat the same as "no
   // owners to filter by" (they only ever see their own clients anyway).
   const [owners, setOwners] = useState<OwnerOption[]>([]);
   useEffect(() => {
@@ -471,7 +471,7 @@ export default function ClientsPage() {
   // Last visit's resolved size stands in until the settings land, so the list
   // request goes out with the page mount instead of queueing behind them. If the
   // admin has since changed the setting the authoritative value replaces it and
-  // costs one refetch — only on the load that follows the change. Null means
+  // costs one refetch - only on the load that follows the change. Null means
   // nothing is known yet, which is the one case worth waiting for.
   const resolvedPageSize = pageSizeChoice ?? settingsPageSize ?? initial.pageSize;
   const tablePageSize = resolvedPageSize ?? DEFAULT_TABLE_PAGE_SIZE;
@@ -507,7 +507,7 @@ export default function ClientsPage() {
   }, [searchKey]);
 
   useEffect(() => {
-    // Reset to page 1 whenever a filter or sort changes — otherwise an empty
+    // Reset to page 1 whenever a filter or sort changes - otherwise an empty
     // result set on a high page number leaves the user staring at "no clients".
     setCurrentPage(1);
   }, [debouncedSearch, filters, sortColumn, sortOrder]);
@@ -638,7 +638,7 @@ export default function ClientsPage() {
   }
 
   // The list page renders rows the server already sorted, filtered, and
-  // paginated. Local filtering is gone — keep the variable name so the rest
+  // paginated. Local filtering is gone - keep the variable name so the rest
   // of the file (table dataSource, mobile cards, select-all) doesn't need
   // a rename.
   const filteredClients = clients;
@@ -759,7 +759,7 @@ export default function ClientsPage() {
         return;
       }
       modal.confirm({
-        title: `${t('pages.inbounds.resetTraffic')} — ${row.email}`,
+        title: `${t('pages.inbounds.resetTraffic')} - ${row.email}`,
         content: t('pages.inbounds.resetTrafficContent'),
         okText: t('reset'),
         cancelText: t('cancel'),
@@ -920,7 +920,7 @@ export default function ClientsPage() {
           const firstError = skipped[0]?.reason ?? '';
           messageApi.warning(
             firstError
-              ? `${t('pages.clients.toasts.importedMixed', { ok: created, failed: skipped.length })} — ${firstError}`
+              ? `${t('pages.clients.toasts.importedMixed', { ok: created, failed: skipped.length })} - ${firstError}`
               : t('pages.clients.toasts.importedMixed', { ok: created, failed: skipped.length }),
           );
         }
@@ -984,7 +984,7 @@ export default function ClientsPage() {
         } else {
           messageApi.warning(
             firstError
-              ? `${t(mixedKey, { ok: changed, failed })} — ${firstError}`
+              ? `${t(mixedKey, { ok: changed, failed })} - ${firstError}`
               : t(mixedKey, { ok: changed, failed }),
           );
         }
@@ -1013,7 +1013,7 @@ export default function ClientsPage() {
         } else {
           messageApi.warning(
             firstError
-              ? `${t('pages.clients.toasts.bulkDeletedMixed', { ok, failed })} — ${firstError}`
+              ? `${t('pages.clients.toasts.bulkDeletedMixed', { ok, failed })} - ${firstError}`
               : t('pages.clients.toasts.bulkDeletedMixed', { ok, failed }),
           );
         }
@@ -1159,7 +1159,7 @@ export default function ClientsPage() {
         width: 130,
         hidden: allGroups.length === 0,
         render: (_v, record) => {
-          if (!record.group) return <Typography.Text type="secondary">—</Typography.Text>;
+          if (!record.group) return <Typography.Text type="secondary">-</Typography.Text>;
           const isActive = filters.groups.includes(record.group);
           return (
             <Tag
@@ -1184,7 +1184,7 @@ export default function ClientsPage() {
         hidden: owners.length === 0,
         render: (_v, record) => {
           if (!record.ownerId || !record.ownerName)
-            return <span style={{ color: 'rgba(0,0,0,0.45)' }}>—</span>;
+            return <span style={{ color: 'rgba(0,0,0,0.45)' }}>-</span>;
           return <Tag>{record.ownerName}</Tag>;
         },
       },
@@ -1227,7 +1227,7 @@ export default function ClientsPage() {
           if (!isActiveSpeed(speed)) {
             return (
               <Tag color="default" className={SPEED_TAG_CLASS_NAME} style={SPEED_TAG_STYLE}>
-                —
+                -
               </Tag>
             );
           }

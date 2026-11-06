@@ -827,7 +827,7 @@ export default function OutboundsTab({
                   >
                     {previewData.map((o, i) => (
                       <Tag key={i}>
-                        {o?.tag || '—'}
+                        {o?.tag || '-'}
                         {o?.protocol ? ` · ${o.protocol}` : ''}
                       </Tag>
                     ))}

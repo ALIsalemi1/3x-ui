@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Modal that prompts for a single value — a plain input, a multi-line textarea, or a JSON editor. Confirms on Enter (input) or Ctrl+S (textarea) and returns the entered text.',
+          'Modal that prompts for a single value - a plain input, a multi-line textarea, or a JSON editor. Confirms on Enter (input) or Ctrl+S (textarea) and returns the entered text.',
       },
     },
   },
@@ -42,7 +42,7 @@ function InputDemo() {
       <Button type="primary" onClick={() => setOpen(true)}>
         Rename client
       </Button>
-      <div style={{ marginTop: 12 }}>Last confirmed: {value || '—'}</div>
+      <div style={{ marginTop: 12 }}>Last confirmed: {value || '-'}</div>
       <PromptModal
         open={open}
         title="Enter a new name"

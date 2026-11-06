@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { PortSchema } from '@/schemas/primitives';
 
-// SOCKS outbound persists in Xray's `servers[].users[]` shape — wire-identical
+// SOCKS outbound persists in Xray's `servers[].users[]` shape - wire-identical
 // to HTTP outbound but with `socks` as the parent protocol literal. The panel
 // only supports a single server with at most one user.
 export const SocksOutboundUserSchema = z.object({

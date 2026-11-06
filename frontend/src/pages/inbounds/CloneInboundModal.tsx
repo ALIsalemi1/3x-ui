@@ -8,7 +8,7 @@ import { buildClonePayload, pickClonePort } from '@/lib/xray/inbound-clone';
 import type { NodeRecord } from '@/api/queries/useNodesQuery';
 import type { DBInbound } from '@/models/dbinbound';
 
-// 0 is the "local panel" sentinel (inbounds without a nodeId) — the same
+// 0 is the "local panel" sentinel (inbounds without a nodeId) - the same
 // convention as the clients page node filter (#4997).
 const LOCAL_PANEL = 0;
 
@@ -51,7 +51,7 @@ export default function CloneInboundModal({
     [nodes, t],
   );
 
-  // "Select all" must not pick targets the user can't pick manually —
+  // "Select all" must not pick targets the user can't pick manually -
   // offline nodes are disabled options in the dropdown.
   const selectableOptions = useMemo(
     () => targetOptions.filter((o) => !o.disabled),
@@ -61,7 +61,7 @@ export default function CloneInboundModal({
   // Reset the selection when the dialog OPENS: pre-select the source
   // inbound's own node when it is a selectable target, otherwise the local
   // panel (the only destination the clone action had before this picker).
-  // Deps are deliberately `[open]` only — `nodes` gets a new identity on every
+  // Deps are deliberately `[open]` only - `nodes` gets a new identity on every
   // background refetch (heartbeats bump latency/status), and keying the reset
   // on it would clobber the user's selection mid-dialog.
   useEffect(() => {
@@ -103,7 +103,7 @@ export default function CloneInboundModal({
       } else {
         const firstError = results.find((r) => !r.ok)?.reason ?? '';
         const base = t('pages.inbounds.toasts.clonedMixed', { ok: okCount, failed });
-        messageApi.warning(firstError ? `${base} — ${firstError}` : base);
+        messageApi.warning(firstError ? `${base} - ${firstError}` : base);
       }
       if (okCount > 0) await onCloned();
       onClose();

@@ -63,7 +63,7 @@ export interface ClientQueryParams {
   page: number;
   pageSize: number;
   search?: string;
-  // CSV strings — frontend joins arrays on ',', backend splits the same way.
+  // CSV strings - frontend joins arrays on ',', backend splits the same way.
   filter?: string;
   protocol?: string;
   inbound?: string;
@@ -167,7 +167,7 @@ async function fetchDefaults(): Promise<Record<string, unknown>> {
 }
 
 export interface UseClientsOptions {
-  // Callers that only need the mutations — the bulk modals, the groups page —
+  // Callers that only need the mutations - the bulk modals, the groups page -
   // pass false. Mounting them used to start a second 5-second poll of the paged
   // list whose result they never read, which on a large panel means a full
   // summary aggregate every 5 seconds for nothing.
@@ -180,7 +180,7 @@ export function useClients(options: UseClientsOptions = {}) {
 
   // Null until the page has settled on a query. The clients page cannot build
   // one until the persisted sort and the panel's configured page size are both
-  // known, and fetching before then cost three sequential requests per load —
+  // known, and fetching before then cost three sequential requests per load -
   // the first two thrown away (#trace).
   const [query, setQueryState] = useState<ClientQueryParams | null>(null);
   // setQuery shallow-compares so callers can pass a fresh object every render
@@ -257,11 +257,11 @@ export function useClients(options: UseClientsOptions = {}) {
   const fetched = listQuery.data !== undefined || listQuery.isError;
   const fetchError = listQuery.error ? (listQuery.error as Error).message : '';
   // isFetching is deliberately NOT read here. Touching it makes it a tracked
-  // property, so the 5s refetchInterval notifies twice per cycle — two whole
+  // property, so the 5s refetchInterval notifies twice per cycle - two whole
   // page renders even when structural sharing leaves the data identical, and
   // each one bumps rc-table's immutable mark and re-runs every cell renderer.
   // Callers that want a spinner for an explicit refresh drive it locally.
-  // Showing kept-previous data for a new key (filter/sort/page) — drives the
+  // Showing kept-previous data for a new key (filter/sort/page) - drives the
   // table overlay so the 5s background poll doesn't flash it.
   const transitioning = listQuery.isPlaceholderData;
 
@@ -299,7 +299,7 @@ export function useClients(options: UseClientsOptions = {}) {
   const trafficDiff = ((defaults.trafficDiff as number) ?? 0) * 1073741824;
   const pageSize = (defaults.pageSize as number) ?? 0;
   // pageSize 0 means "one long page", which is indistinguishable from "the
-  // settings have not arrived yet" — so callers need this flag to know when the
+  // settings have not arrived yet" - so callers need this flag to know when the
   // configured page size is real. isFetched (not isSuccess) so a failed
   // settings request still lets the page fall back and render.
   const settingsReady = defaultsQuery.isFetched;
@@ -764,7 +764,7 @@ export function useClients(options: UseClientsOptions = {}) {
         // Xray reports a row per client whether or not it moved a byte, so most of
         // this map used to be zeros. A missing entry and a zero entry render
         // identically (isActiveSpeed treats both as inactive), so the zeros are
-        // dropped and an unchanged result returns the previous object — which lets
+        // dropped and an unchanged result returns the previous object - which lets
         // React bail out of the update instead of re-rendering the table.
         const next: Record<string, ClientSpeedEntry> = {};
         const source = p.clientTrafficSource === 'tuic' ? 'tuic' : 'xray';

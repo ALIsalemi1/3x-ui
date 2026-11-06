@@ -74,7 +74,7 @@ export function newStreamSlice(network: string): Record<string, unknown> {
   }
 }
 
-// Hysteria2 always rides its own QUIC transport with TLS — the panel never
+// Hysteria2 always rides its own QUIC transport with TLS - the panel never
 // offers another transport or 'none' security for it.
 export function hysteriaStreamSlice(): Record<string, unknown> {
   return {

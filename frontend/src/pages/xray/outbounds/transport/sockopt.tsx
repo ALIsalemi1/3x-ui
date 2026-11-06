@@ -181,7 +181,7 @@ export default function SockoptForm({
                 label={t('pages.inbounds.form.tryDelayMs')}
                 name={['streamSettings', 'sockopt', 'happyEyeballs', 'tryDelayMs']}
               >
-                <InputNumber min={0} placeholder="0 (disabled) — 250 recommended" />
+                <InputNumber min={0} placeholder="0 (disabled) - 250 recommended" />
               </FormField>
               <FormField
                 label={t('pages.inbounds.form.prioritizeIPv6')}

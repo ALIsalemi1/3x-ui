@@ -4,7 +4,7 @@ import OutboundSubtreeJsonForm from './OutboundSubtreeJsonForm';
 import { serializeOverride } from './helpers';
 
 /*
- * Mux override editor — reuses the outbound MuxForm (same fields as the sub-JSON
+ * Mux override editor - reuses the outbound MuxForm (same fields as the sub-JSON
  * settings editor). Stored in the host's muxParams JSON string. Defaults match
  * the sub-JSON editor; the host stores '' (= inherit the inbound/global mux)
  * when the toggle is off, an explicit mux object when on.

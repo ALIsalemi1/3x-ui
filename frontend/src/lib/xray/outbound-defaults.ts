@@ -16,7 +16,7 @@ import type { WireguardOutboundSettings } from '@/schemas/protocols/outbound/wir
 
 // Plain-object factories mirroring `new Outbound.<X>Settings()` from the
 // legacy class hierarchy, then `.toJson()`. The output matches the wire
-// shape — the same starting state the OutboundFormModal's `ob.settings`
+// shape - the same starting state the OutboundFormModal's `ob.settings`
 // holds the first time the user picks a protocol.
 //
 // Required-by-schema fields the legacy class leaves undefined (address,
@@ -156,7 +156,7 @@ export type AnyOutboundSettings =
 // keeping the contract identical so callers can stay protocol-agnostic.
 //
 // The `RandomUtil` reference is held to silence unused-import warnings
-// when no per-call randomization happens at the dispatcher level —
+// when no per-call randomization happens at the dispatcher level -
 // individual factories may pull from it via their own seeds.
 export function createDefaultOutboundSettings(protocol: string): AnyOutboundSettings | null {
   void RandomUtil;

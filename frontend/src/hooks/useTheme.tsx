@@ -3,6 +3,18 @@ import type { ReactNode } from 'react';
 import { theme as antdTheme } from 'antd';
 import type { ThemeConfig } from 'antd';
 
+export const PANEL_ACCENTS = {
+  ocean: '#1675e8',
+  lagoon: '#008b82',
+  violet: '#7957d5',
+  rose: '#c7446c',
+  amber: '#ae6500',
+} as const;
+export type PanelAccent = keyof typeof PANEL_ACCENTS;
+const storedAccent = localStorage.getItem('panel-accent') || 'ocean';
+const initialAccent: PanelAccent =
+  storedAccent in PANEL_ACCENTS ? (storedAccent as PanelAccent) : 'ocean';
+
 const STORAGE_DARK = 'dark-mode';
 const STORAGE_ULTRA = 'isUltraDarkThemeEnabled';
 
@@ -35,10 +47,10 @@ const initialUltra = readBool(STORAGE_ULTRA, false);
 applyDom(initialDark, initialUltra);
 
 const DARK_TOKENS = {
-  colorBgBase: '#1a1b1f',
-  colorBgLayout: '#1a1b1f',
-  colorBgContainer: '#23252b',
-  colorBgElevated: '#2d2f37',
+  colorBgBase: '#17212b',
+  colorBgLayout: '#17212b',
+  colorBgContainer: '#202d3a',
+  colorBgElevated: '#2a3b4c',
 };
 const ULTRA_DARK_TOKENS = {
   colorBgBase: '#000',
@@ -47,12 +59,12 @@ const ULTRA_DARK_TOKENS = {
   colorBgElevated: '#1a1a1e',
 };
 const DARK_LAYOUT_TOKENS = {
-  bodyBg: '#1a1b1f',
-  headerBg: '#15161a',
+  bodyBg: '#17212b',
+  headerBg: '#131d27',
   headerColor: '#ffffff',
-  footerBg: '#1a1b1f',
-  siderBg: '#15161a',
-  triggerBg: '#23252b',
+  footerBg: '#17212b',
+  siderBg: '#131d27',
+  triggerBg: '#202d3a',
   triggerColor: '#ffffff',
 };
 const ULTRA_DARK_LAYOUT_TOKENS = {
@@ -65,9 +77,9 @@ const ULTRA_DARK_LAYOUT_TOKENS = {
   triggerColor: '#ffffff',
 };
 const DARK_MENU_TOKENS = {
-  darkItemBg: '#15161a',
-  darkSubMenuItemBg: '#1a1b1f',
-  darkPopupBg: '#23252b',
+  darkItemBg: '#131d27',
+  darkSubMenuItemBg: '#17212b',
+  darkPopupBg: '#202d3a',
 };
 const ULTRA_DARK_MENU_TOKENS = {
   darkItemBg: '#050507',
@@ -99,8 +111,8 @@ const LIGHT_BUTTON_TOKENS = {
 };
 
 // hashed:false drops the `:where(.css-<hash>)` wrapper antd puts around every
-// rule. It costs nothing in specificity — `:where()` contributes zero, so the
-// panel's own `.ant-*` overrides still win — and it removes roughly 5,700
+// rule. It costs nothing in specificity - `:where()` contributes zero, so the
+// panel's own `.ant-*` overrides still win - and it removes roughly 5,700
 // wrappers, 16% of the generated stylesheet, from what the browser has to parse.
 //
 // cssVar.key pins the CSS-variable scope. Every panel page mounts its own
@@ -112,22 +124,36 @@ const SHARED_STYLE_CONFIG = {
   cssVar: { key: 'xui' },
 } as const;
 
-export function buildAntdThemeConfig(isDark: boolean, isUltra: boolean): ThemeConfig {
+export function buildAntdThemeConfig(
+  isDark: boolean,
+  isUltra: boolean,
+  accent: PanelAccent = 'ocean',
+  compact = false,
+): ThemeConfig {
+  const sharedTokens = {
+    colorPrimary: PANEL_ACCENTS[accent],
+    colorInfo: PANEL_ACCENTS[accent],
+    colorSuccess: '#119b7a',
+    colorWarning: '#df9b26',
+    borderRadius: 10,
+    controlHeight: compact ? 30 : 36,
+  };
+
   if (!isDark) {
     return {
       ...SHARED_STYLE_CONFIG,
       algorithm: antdTheme.defaultAlgorithm,
-      token: LIGHT_CONTRAST_TOKENS,
+      token: { ...LIGHT_CONTRAST_TOKENS, ...sharedTokens },
       components: {
         Statistic: STATISTIC_TOKENS,
-        Button: LIGHT_BUTTON_TOKENS,
+        Button: accent === 'ocean' ? LIGHT_BUTTON_TOKENS : {},
       },
     };
   }
   return {
     ...SHARED_STYLE_CONFIG,
     algorithm: antdTheme.darkAlgorithm,
-    token: isUltra ? ULTRA_DARK_TOKENS : DARK_TOKENS,
+    token: { ...(isUltra ? ULTRA_DARK_TOKENS : DARK_TOKENS), ...sharedTokens },
     components: {
       Layout: isUltra ? ULTRA_DARK_LAYOUT_TOKENS : DARK_LAYOUT_TOKENS,
       Menu: isUltra ? ULTRA_DARK_MENU_TOKENS : DARK_MENU_TOKENS,
@@ -151,6 +177,10 @@ export function pauseAnimationsUntilLeave(elementId: string): void {
 }
 
 interface ThemeContextValue {
+  accent: PanelAccent;
+  setAccent: (accent: PanelAccent) => void;
+  compact: boolean;
+  setCompact: (compact: boolean) => void;
   isDark: boolean;
   isUltra: boolean;
   toggleTheme: () => void;
@@ -161,6 +191,13 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [accent, setAccent] = useState<PanelAccent>(initialAccent);
+  const [compact, setCompact] = useState(() => readBool('panel-compact', false));
+  useLayoutEffect(() => {
+    localStorage.setItem('panel-accent', accent);
+    localStorage.setItem('panel-compact', String(compact));
+    document.documentElement.style.setProperty('--panel-accent', PANEL_ACCENTS[accent]);
+  }, [accent, compact]);
   const [isDark, setIsDark] = useState<boolean>(initialDark);
   const [isUltra, setIsUltra] = useState<boolean>(initialUltra);
 
@@ -173,11 +210,24 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const toggleTheme = useCallback(() => setIsDark((v) => !v), []);
   const toggleUltra = useCallback(() => setIsUltra((v) => !v), []);
 
-  const antdThemeConfig = useMemo(() => buildAntdThemeConfig(isDark, isUltra), [isDark, isUltra]);
+  const antdThemeConfig = useMemo(
+    () => buildAntdThemeConfig(isDark, isUltra, accent, compact),
+    [isDark, isUltra, accent, compact],
+  );
 
   const value = useMemo<ThemeContextValue>(
-    () => ({ isDark, isUltra, toggleTheme, toggleUltra, antdThemeConfig }),
-    [isDark, isUltra, toggleTheme, toggleUltra, antdThemeConfig],
+    () => ({
+      isDark,
+      isUltra,
+      toggleTheme,
+      toggleUltra,
+      antdThemeConfig,
+      accent,
+      setAccent,
+      compact,
+      setCompact,
+    }),
+    [isDark, isUltra, toggleTheme, toggleUltra, antdThemeConfig, accent, compact],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

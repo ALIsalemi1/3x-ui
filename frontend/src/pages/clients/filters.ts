@@ -3,7 +3,7 @@ export interface ClientFilters {
   protocols: string[];
   inboundIds: number[];
   // Node ids to filter by; 0 is the "local panel" sentinel (inbounds with
-  // no nodeId). Mapped onto inbound ids client-side — see ClientsPage.
+  // no nodeId). Mapped onto inbound ids client-side - see ClientsPage.
   nodeIds: number[];
   groups: string[];
   expiryFrom?: number;

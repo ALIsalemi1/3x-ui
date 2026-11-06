@@ -82,8 +82,8 @@ export default function RealityForm({
       r.certSubject && r.certIssuer
         ? `${r.certSubject} (${r.certIssuer})`
         : r.certSubject || r.certIssuer;
-    if (!who) return '—';
-    return r.certValid ? who : `${who} — ${t('pages.inbounds.form.scanCertInvalid')}`;
+    if (!who) return '-';
+    return r.certValid ? who : `${who} - ${t('pages.inbounds.form.scanCertInvalid')}`;
   };
   const maxClientVerPath = 'streamSettings.realitySettings.maxClientVer';
   const revalidateMaxClientVer = () => {
@@ -170,12 +170,12 @@ export default function RealityForm({
                 )}
                 <Descriptions size="small" column={1}>
                   <Descriptions.Item label={t('pages.inbounds.form.scanSniUsed')}>
-                    {scanResult.host || '—'}
+                    {scanResult.host || '-'}
                   </Descriptions.Item>
-                  <Descriptions.Item label="TLS">{scanResult.tlsVersion || '—'}</Descriptions.Item>
-                  <Descriptions.Item label="ALPN">{scanResult.alpn || '—'}</Descriptions.Item>
+                  <Descriptions.Item label="TLS">{scanResult.tlsVersion || '-'}</Descriptions.Item>
+                  <Descriptions.Item label="ALPN">{scanResult.alpn || '-'}</Descriptions.Item>
                   <Descriptions.Item label={t('pages.inbounds.form.scanCurve')}>
-                    {scanResult.curveID || '—'}
+                    {scanResult.curveID || '-'}
                   </Descriptions.Item>
                   <Descriptions.Item label={t('pages.inbounds.form.scanCert')}>
                     {certSummary(scanResult)}
@@ -183,13 +183,13 @@ export default function RealityForm({
                   <Descriptions.Item label={t('pages.inbounds.form.scanCertExpiry')}>
                     {scanResult.notAfter
                       ? dayjs(scanResult.notAfter).format('YYYY-MM-DD HH:mm')
-                      : '—'}
+                      : '-'}
                   </Descriptions.Item>
                   <Descriptions.Item label={t('pages.inbounds.form.scanCertChain')}>
-                    {scanResult.certChainBytes > 0 ? `${scanResult.certChainBytes} B` : '—'}
+                    {scanResult.certChainBytes > 0 ? `${scanResult.certChainBytes} B` : '-'}
                   </Descriptions.Item>
                   <Descriptions.Item label={t('pages.inbounds.form.scanLatency')}>
-                    {scanResult.latencyMs > 0 ? `${scanResult.latencyMs} ms` : '—'}
+                    {scanResult.latencyMs > 0 ? `${scanResult.latencyMs} ms` : '-'}
                   </Descriptions.Item>
                 </Descriptions>
               </>

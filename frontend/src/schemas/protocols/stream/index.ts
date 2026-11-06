@@ -43,11 +43,11 @@ export type Network = z.infer<typeof NetworkSchema>;
 
 // Tagged-wrapper DU on `network`. The wire shape uses an asymmetric per-
 // network key (`tcpSettings`, `wsSettings`, ...) rather than a single
-// `settings` object — same pattern Xray ships and the panel's StreamSettings
+// `settings` object - same pattern Xray ships and the panel's StreamSettings
 // class flattens via toJson. Each branch carries only the matching key so
 // fixtures round-trip byte-identical.
 //
-// `hysteria` is only valid when the parent protocol is hysteria — the
+// `hysteria` is only valid when the parent protocol is hysteria - the
 // network selector hides it for other protocols. xray-core enforces
 // the constraint server-side too.
 const TransportNetworkSettingsSchema = z.discriminatedUnion('network', [
@@ -73,14 +73,14 @@ const TransportNetworkSettingsSchema = z.discriminatedUnion('network', [
 ]);
 
 // Wireguard (always a UDP listener) and Tunnel (dokodemo-door) expose no
-// user-selectable transport: their streamSettings carries no `network` key —
+// user-selectable transport: their streamSettings carries no `network` key -
 // only security/sockopt, and Tunnel relies on `sockopt.tproxy` for its TProxy
 // mode. The transportless branch accepts that shape (network absent), while a
 // present-but-invalid network still fails both branches so a typo can't slip
 // through. `network: never().optional()` reads as "this key must be absent".
 //
-// The preprocess folds `method` — xray-core v26.7.11's preferred alias for
-// `network`, which wins over `network` when both are present — back into the
+// The preprocess folds `method` - xray-core v26.7.11's preferred alias for
+// `network`, which wins over `network` when both are present - back into the
 // panel-canonical `network` key, so imported/pasted configs keyed on the
 // alias don't silently match the transportless branch and lose their
 // transport.
@@ -100,7 +100,7 @@ export const NetworkSettingsSchema = z.preprocess(
 export type NetworkSettings = z.infer<typeof NetworkSettingsSchema>;
 
 // Orthogonal extras that ride alongside the network and security branches.
-// All optional on the wire — legacy toJson() omits any field whose value
+// All optional on the wire - legacy toJson() omits any field whose value
 // is empty. The shadow harness treats absent and empty-array as the same
 // canonical state.
 export const StreamExtrasSchema = z.object({

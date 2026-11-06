@@ -28,7 +28,7 @@ export function tokenFor(file: string, code: string, kind: GeoKind): string {
 /**
  * Xray treats category codes case-insensitively and accepts both the
  * `geosite:cn` shorthand and its `ext:geosite.dat:cn` long form, so tokens are
- * compared through this normal form. Only comparison uses it — whatever the
+ * compared through this normal form. Only comparison uses it - whatever the
  * user typed is what stays in the rule.
  */
 export function canonicalToken(token: string): string {

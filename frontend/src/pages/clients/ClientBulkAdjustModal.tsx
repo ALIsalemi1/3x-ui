@@ -79,7 +79,7 @@ export default function ClientBulkAdjustModal({
         const firstReason = result.skipped?.[0]?.reason ?? '';
         messageApi.warning(
           firstReason
-            ? `${t('pages.clients.toasts.bulkAdjustedMixed', { ok, skipped })} — ${firstReason}`
+            ? `${t('pages.clients.toasts.bulkAdjustedMixed', { ok, skipped })} - ${firstReason}`
             : t('pages.clients.toasts.bulkAdjustedMixed', { ok, skipped }),
         );
       }

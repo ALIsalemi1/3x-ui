@@ -313,7 +313,7 @@ export default function NordModal({
         secretKey: nordData?.private_key,
         address: ['10.5.0.2/32'],
         peers: [{ publicKey, endpoint: `${server.station}:51820` }],
-        // Userspace TUN — same reasoning as the WARP outbound (#5205): kernel
+        // Userspace TUN - same reasoning as the WARP outbound (#5205): kernel
         // TUN fails silently on many VPS setups and diverges from the data
         // path the panel's connectivity test exercises.
         noKernelTun: true,

@@ -70,7 +70,7 @@ export default function GeodataSection({ active, onBusy, onClose }: GeodataSecti
       setStandardSources(payload.geodataSources ?? []);
 
       // Download outbound candidates: template outbounds + subscription outbounds.
-      // Skip blackhole outbounds — routing a download through one just drops it.
+      // Skip blackhole outbounds - routing a download through one just drops it.
       const tags = new Set<string>();
       const outbounds = Array.isArray(next.outbounds) ? next.outbounds : [];
       for (const o of outbounds) {

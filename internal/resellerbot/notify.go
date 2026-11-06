@@ -13,7 +13,7 @@ import (
 )
 
 // notifyBuyerApproved sends the full subscription-detail card (not just a
-// bare "approved" line) — the buyer's actual delivery message for a fresh
+// bare "approved" line) - the buyer's actual delivery message for a fresh
 // purchase or a renewal.
 func (inst *botInstance) notifyBuyerApproved(order *model.BotOrder, email string) {
 	lang := inst.customerLang(order.BuyerTgId, order.BuyerUsername)
@@ -52,7 +52,7 @@ func (inst *botInstance) notifyOwnerPendingReview(orderID int) {
 
 // NotifyOrderApproved messages the buyer through the owner's bot after an
 // order is approved from the web panel. A no-op if that bot isn't running
-// (e.g. disabled) — the buyer just won't get a Telegram ping.
+// (e.g. disabled) - the buyer just won't get a Telegram ping.
 func NotifyOrderApproved(order *model.BotOrder, email string) {
 	if inst, ok := GetManager().instanceFor(order.OwnerId); ok {
 		inst.notifyBuyerApproved(order, email)
@@ -83,7 +83,7 @@ func NotifyAutoRenewResult(ownerId int, buyerTgId int64, renewed bool) {
 }
 
 // FetchProofPhoto streams a payment-proof photo live from Telegram by
-// file_id — nothing is ever stored locally. Uses the owner's running bot
+// file_id - nothing is ever stored locally. Uses the owner's running bot
 // instance if there is one, otherwise spins up a throwaway client from the
 // stored token (the bot may be temporarily stopped while still configured).
 func FetchProofPhoto(ownerId int, fileId string) (io.ReadCloser, string, error) {

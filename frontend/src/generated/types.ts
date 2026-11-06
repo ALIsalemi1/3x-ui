@@ -409,6 +409,7 @@ export interface BotConfig {
   enabled: boolean;
   id: number;
   ownerId: number;
+  presentation: BotPresentation;
   referralEnabled: boolean;
   referralKind: string;
   referralTrigger: string;
@@ -495,6 +496,20 @@ export interface BotPlan {
   priceToman: number;
   sortOrder: number;
   trafficGB: number;
+}
+
+export interface BotPresentation {
+  announcement: string;
+  brandName: string;
+  defaultLanguage: string;
+  hideSupport: boolean;
+  hideTrial: boolean;
+  hideTutorial: boolean;
+  labels: Record<string, string>;
+  menuLayout: string;
+  supportURL: string;
+  tutorialURL: string;
+  welcomeEN: string;
 }
 
 export interface BotRedeemCode {

@@ -73,7 +73,7 @@ export default function GeoTokenInput({
           setCheckFailed(false);
         })
         // A rejected check says nothing about the tokens, so the warnings are
-        // dropped but replaced by a notice — silence here reads as "all valid".
+        // dropped but replaced by a notice - silence here reads as "all valid".
         .catch(() => {
           if (cancelled) return;
           setIssues([]);

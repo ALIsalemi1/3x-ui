@@ -33,7 +33,7 @@ import {
 // Snapshot + Zod round-trip for each createDefault*OutboundSettings factory.
 // The factory output mirrors the legacy `new Outbound.<X>Settings()` start
 // state, so most required fields are empty stubs (address, port, password,
-// id). Zod parsing happens AFTER patching the stubs with sensible values —
+// id). Zod parsing happens AFTER patching the stubs with sensible values -
 // this catches schema/factory drift without forcing the factory to invent
 // data it shouldn't.
 

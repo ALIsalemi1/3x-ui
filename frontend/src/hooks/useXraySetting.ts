@@ -18,7 +18,7 @@ import {
 const DEFAULT_TEST_URL = 'https://www.google.com/generate_204';
 // One HTTP-mode batch request tests this many outbounds through a single
 // shared temp xray instance; chunking keeps responses bounded (~30s worst
-// case — each probe is a cold plus a warm request) and lands Test All
+// case - each probe is a cold plus a warm request) and lands Test All
 // results progressively.
 const HTTP_BATCH_CHUNK = 16;
 
@@ -218,7 +218,7 @@ export function useXraySetting(): UseXraySettingResult {
       setTemplateSettingsState(parsed);
       syncingRef.current = false;
     } catch {
-      /* ignore — wait for user to finish */
+      /* ignore - wait for user to finish */
     }
   }, []);
 
@@ -398,7 +398,7 @@ export function useXraySetting(): UseXraySettingResult {
           ) {
             return;
           }
-          // freedom ("direct") and dns aren't proxies — skip them in every mode.
+          // freedom ("direct") and dns aren't proxies - skip them in every mode.
           if (isOutboundProtocol(ob, 'freedom') || isOutboundProtocol(ob, 'dns')) return;
           if (kind === 'sub' && !tag) return;
           const toHttp = mode !== 'tcp' || isUdpOutbound(ob);
@@ -429,7 +429,7 @@ export function useXraySetting(): UseXraySettingResult {
           };
           await Promise.all(Array.from({ length: Math.min(8, queue.length) }, () => worker()));
         };
-        // HTTP probes go out as chunked batches — one temp xray spawn per
+        // HTTP probes go out as chunked batches - one temp xray spawn per
         // chunk instead of one per outbound, with results landing per chunk.
         const runTplHttpLane = async () => {
           for (let at = 0; at < httpTplQueue.length; at += HTTP_BATCH_CHUNK) {

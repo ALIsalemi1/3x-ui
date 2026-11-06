@@ -430,7 +430,7 @@ function ClientQrModalContent({
           <SubscriptionQrPresentation
             variant={variant}
             standardLink={subLink}
-            remark={`${client?.email || ''} — ${t('subscription.title')}`}
+            remark={`${client?.email || ''} - ${t('subscription.title')}`}
             happLink={happLink}
             happLoading={happLoading}
             happError={happError}
@@ -446,7 +446,7 @@ function ClientQrModalContent({
       out.push({
         key: 'subJson',
         label: `${t('subscription.title')} (JSON)`,
-        children: <QrPanel value={subJsonLink} remark={`${client?.email || ''} — JSON`} />,
+        children: <QrPanel value={subJsonLink} remark={`${client?.email || ''} - JSON`} />,
       });
     }
     links.forEach((link, idx) => {
@@ -557,7 +557,7 @@ function ClientQrModalContent({
   return (
     <Modal
       open={open}
-      title={client ? `${t('qrCode')} — ${client.email}` : t('qrCode')}
+      title={client ? `${t('qrCode')} - ${client.email}` : t('qrCode')}
       footer={null}
       width={520}
       centered

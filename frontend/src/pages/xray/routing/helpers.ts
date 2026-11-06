@@ -55,7 +55,7 @@ export function formatInboundTag(tag: string, remarkByTag: Record<string, string
 }
 
 /**
- * Formatted inbound entries — `tag (remark)` when a distinct remark exists, else
+ * Formatted inbound entries - `tag (remark)` when a distinct remark exists, else
  * `tag`. Returns an array (not a joined string) so callers never have to re-split
  * on commas, which a remark may legitimately contain.
  */
@@ -81,7 +81,7 @@ export function inboundTagChipPreview(
   return chipPreviewParts(formatInboundTagList(tags, remarkByTag));
 }
 
-/** The internal api rule (stats traffic) — its enabled state must stay locked on. */
+/** The internal api rule (stats traffic) - its enabled state must stay locked on. */
 export function isApiRule(rule: { outboundTag?: string; inboundTag?: string | string[] }): boolean {
   if (rule.outboundTag !== 'api') return false;
   const tags = Array.isArray(rule.inboundTag) ? rule.inboundTag : csv(rule.inboundTag);

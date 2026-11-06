@@ -16,7 +16,7 @@ export const DNSRuleSchema = z.object({
 export type DNSRule = z.infer<typeof DNSRuleSchema>;
 
 // DNS outbound rewrites DNS queries onto a different transport. All five
-// fields are emitted conditionally — empty/zero values are omitted from the
+// fields are emitted conditionally - empty/zero values are omitted from the
 // wire payload entirely (handled at the caller, not here).
 export const DNSOutboundSettingsSchema = z.object({
   rewriteNetwork: z.string().optional(),

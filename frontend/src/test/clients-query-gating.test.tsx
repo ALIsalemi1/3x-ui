@@ -75,7 +75,7 @@ describe('useClients query gating', () => {
     const { result } = renderHook(() => useClients(), { wrapper: wrapperFor() });
 
     await waitFor(() => expect(result.current.settingsReady).toBe(true));
-    // The page has not called setQuery yet, so nothing should have gone out —
+    // The page has not called setQuery yet, so nothing should have gone out -
     // this is what used to cost a thrown-away round trip on every page load.
     expect(pagedUrls).toEqual([]);
     expect(result.current.fetched).toBe(false);

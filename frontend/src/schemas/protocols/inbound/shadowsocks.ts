@@ -6,7 +6,7 @@ export const SSNetworkSchema = z.enum(['tcp', 'udp', 'tcp,udp']);
 export type SSNetwork = z.infer<typeof SSNetworkSchema>;
 
 // On a single-user shadowsocks inbound the client carries no method/password
-// of its own — the inbound-level method+password are authoritative. On a
+// of its own - the inbound-level method+password are authoritative. On a
 // 2022-blake3 multi-user setup each client provides its own password (and
 // optionally a per-client method).
 export const ShadowsocksClientSchema = z.object({

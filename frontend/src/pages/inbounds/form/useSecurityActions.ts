@@ -17,7 +17,7 @@ interface UseSecurityActionsArgs {
   modal: ModalHookAPI;
   /*
    * Node the inbound is deployed to (null = central panel). "Set Cert from
-   * Panel" must read the node's own cert paths for a node-assigned inbound —
+   * Panel" must read the node's own cert paths for a node-assigned inbound -
    * the central panel's paths don't exist on the node. See issue #4854.
    */
   nodeId: number | null;
@@ -112,7 +112,7 @@ export function useSecurityActions({
     const xver = Number(getValues('streamSettings.realitySettings.xver')) || 0;
     /*
      * Clients dial the target but send an SNI from serverNames, so the probe
-     * must too — a fronting proxy answers a bare target name with its default
+     * must too - a fronting proxy answers a bare target name with its default
      * certificate, which then reads as an untrusted target.
      */
     const serverNames =

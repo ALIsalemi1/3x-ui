@@ -12,7 +12,7 @@ import { AllSetting } from '@/models/setting';
  * frontend AllSetting class defaults (what the form shows when the API omits
  * a value), and the tag's own comparison. If someone bumps a default on one
  * side only, the Default tag would start calling a different value "Default"
- * than the one the form displays — this test fails instead.
+ * than the one the form displays - this test fails instead.
  */
 
 function goDefaultLiterals(): Record<string, string> {

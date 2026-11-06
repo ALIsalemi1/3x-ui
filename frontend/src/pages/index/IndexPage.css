@@ -1,4 +1,4 @@
-/* Overview page — trend-first layout. Every colour comes from the AntD theme
+/* Overview page - trend-first layout. Every colour comes from the AntD theme
    tokens so light / dark / ultra-dark keep working and the sidebar is untouched.
    Set --ov-accent once here if you want a fixed accent instead of the primary. */
 
@@ -29,7 +29,7 @@
   gap: var(--ov-gap);
 }
 
-/* — action bar — */
+/* - action bar - */
 
 .ov-bar {
   display: flex;
@@ -167,7 +167,7 @@
   );
 }
 
-/* — shared type — */
+/* - shared type - */
 
 .ov-kicker {
   font-size: 11px;
@@ -192,7 +192,7 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* — vitals tiles — */
+/* - vitals tiles - */
 
 .ov-vitals {
   display: grid;
@@ -271,7 +271,7 @@
   margin-top: 6px;
 }
 
-/* — throughput + connections — */
+/* - throughput + connections - */
 
 .ov-mid {
   display: grid;
@@ -394,7 +394,7 @@
   }
 }
 
-/* — system strip — */
+/* - system strip - */
 
 /* tracks follow SystemStrip's cell order:
    uptime (xray | os) · panel (memory | threads) · ip addresses */
@@ -474,7 +474,7 @@
   color: var(--ov-label);
 }
 
-/* — preserved from the previous overview — */
+/* - preserved from the previous overview - */
 
 .index-page .ip-toggle-icon {
   cursor: pointer;

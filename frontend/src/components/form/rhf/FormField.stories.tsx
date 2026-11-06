@@ -24,7 +24,7 @@ const meta = {
     },
   },
   argTypes: {
-    name: { description: 'Field path — a dotted string or an array of segments joined with dots.' },
+    name: { description: 'Field path - a dotted string or an array of segments joined with dots.' },
     control: {
       description: 'Optional react-hook-form control; falls back to the surrounding FormProvider.',
     },

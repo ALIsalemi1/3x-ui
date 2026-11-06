@@ -128,7 +128,7 @@ describe('InboundFormModal', () => {
     const labelsByProto: Record<string, string[]> = {};
     for (const proto of protocols) {
       chooseSelectOption('protocol', proto);
-      // Flush antd Form.useWatch('protocol') before reading — without it every iteration
+      // Flush antd Form.useWatch('protocol') before reading - without it every iteration
       // sees the same pre-update DOM and the loop asserts nothing (the original bug here).
       await act(async () => {
         await new Promise((r) => setTimeout(r, 0));
@@ -145,7 +145,7 @@ describe('InboundFormModal', () => {
     if (labelsByProto.shadowsocks) {
       expect(labelsByProto.shadowsocks).toContain('Encryption method');
     }
-  }, 30000); // iterates every protocol, re-rendering a heavy modal each time — slow on CI runners
+  }, 30000); // iterates every protocol, re-rendering a heavy modal each time - slow on CI runners
 
   it('preserves custom share address strategy when editing a local inbound', async () => {
     renderWithProviders(
@@ -265,7 +265,7 @@ describe('InboundFormModal', () => {
 
     // Race: the modal mounts before /nodes/list resolves (empty placeholder),
     // then nodes arrive. The persisted 'node' strategy must survive the gap and
-    // stay selected once the option reappears — not silently revert to listen.
+    // stay selected once the option reappears - not silently revert to listen.
     const { rerender } = render(modal([], false));
     await flush();
     rerender(modal([node], true));

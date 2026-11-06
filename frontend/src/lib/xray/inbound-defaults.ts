@@ -24,7 +24,7 @@ import type { WireguardInboundSettings } from '@/schemas/protocols/inbound/wireg
 
 // Plain-object factories for protocol clients. Each returns a Zod-parsable
 // object matching the wire shape. Random fields (id, password, auth,
-// email, subId) call RandomUtil at invocation time — pass them in
+// email, subId) call RandomUtil at invocation time - pass them in
 // `overrides` for deterministic tests or for forms that pre-seed values.
 //
 // These replace the legacy `new Inbound.<Settings>.<Client>()` constructors
@@ -159,7 +159,7 @@ export function createDefaultTuicClient(seed: TuicClientSeed = {}): TuicClient {
 }
 
 // Inbound-settings factories. Each returns a Zod-parsable wire-shape with
-// schema defaults already applied — no class instance, no XrayCommonClass.
+// schema defaults already applied - no class instance, no XrayCommonClass.
 // Callers (form modals via Step 4, InboundsPage clone via Step 5) call
 // these instead of the legacy `Inbound.Settings.getSettings(protocol)`.
 
@@ -201,7 +201,7 @@ export function createDefaultShadowsocksInboundSettings(
 }
 
 // Hysteria v1 defaults still emit `version: 2` to match the legacy panel
-// constructor — the field discriminates v1 vs v2 inside the same settings
+// constructor - the field discriminates v1 vs v2 inside the same settings
 // shape. Callers that explicitly want v1 pass `{ version: 1 }`.
 export interface HysteriaInboundSeed {
   version?: 2;
@@ -295,8 +295,8 @@ export interface WireguardInboundSeed {
 // through the client modal, which generates each one's keypair and a unique
 // tunnel address. peers stays empty for backward-compatible parsing.
 //
-// subnetIp/subnetCidr default to 10.0.0.0/24 here — the same value the Go
-// backend has always fallen back to for an inbound with no clients yet — so
+// subnetIp/subnetCidr default to 10.0.0.0/24 here - the same value the Go
+// backend has always fallen back to for an inbound with no clients yet - so
 // a freshly created inbound shows an explicit, editable value from the
 // start (matching AmneziaWG's own subnet field), rather than an empty one
 // that silently relies on server-side inference until an admin fills it in.
@@ -315,7 +315,7 @@ export function createDefaultWireguardInboundSettings(
 }
 
 // AmneziaWG is multi-client, like WireGuard, and uses the same Curve25519
-// keypair format — Wireguard.generateKeypair() works unchanged. Unlike
+// keypair format - Wireguard.generateKeypair() works unchanged. Unlike
 // WireGuard's Xray-native inbound, the server's publicKey is a real
 // persisted field here (the Go backend reads it directly rather than
 // re-deriving it), so it's seeded alongside privateKey. The obfuscation

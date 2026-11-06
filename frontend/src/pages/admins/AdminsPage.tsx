@@ -976,7 +976,7 @@ export default function AdminsPage() {
             <p style={{ color: 'var(--ant-color-text-secondary)' }}>
               {t(
                 'pages.admins.passwordNotStored',
-                'Not stored yet — it is saved the next time this reseller logs in, or set a new password now.',
+                'Not stored yet - it is saved the next time this reseller logs in, or set a new password now.',
               )}
             </p>
           )}

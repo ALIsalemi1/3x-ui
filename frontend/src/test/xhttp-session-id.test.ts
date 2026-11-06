@@ -14,7 +14,7 @@ describe('XHttpStreamSettingsSchema legacy migration', () => {
     });
     expect(parsed.sessionIDPlacement).toBe('cookie');
     expect(parsed.sessionIDKey).toBe('x_session');
-    // legacy keys must not survive — we never emit both names
+    // legacy keys must not survive - we never emit both names
     expect((parsed as Record<string, unknown>).sessionPlacement).toBeUndefined();
     expect((parsed as Record<string, unknown>).sessionKey).toBeUndefined();
   });

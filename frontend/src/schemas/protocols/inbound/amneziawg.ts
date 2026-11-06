@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // AntD InputNumber emits null (not undefined) when the user clears it, and
-// the form store hands that null straight to safeParse on submit — a bare
+// the form store hands that null straight to safeParse on submit - a bare
 // .optional() would reject it and block the save.
 const optionalClearedInt = (schema: z.ZodNumber) =>
   z.preprocess((v) => (v == null ? undefined : v), schema.optional());
@@ -12,12 +12,12 @@ const clearedToDefault = <T extends z.ZodType>(schema: T) =>
   z.preprocess((v) => (v == null ? undefined : v), schema);
 
 // An AmneziaWG client (multi-client model). Same key/address fields as
-// WireguardClientSchema — the panel's generic ClientRecord already has those
+// WireguardClientSchema - the panel's generic ClientRecord already has those
 // exact keys (privateKey/publicKey/preSharedKey/allowedIPs/keepAlive), so
-// bulk operations, the QR modal and subscriptions all work unmodified — plus
+// bulk operations, the QR modal and subscriptions all work unmodified - plus
 // one AmneziaWG-only addition, forwardedPorts (WireGuard's Xray-native
 // inbound has no host-level iptables layer to hang per-client DNAT off of).
-// Keys are optional on the wire — the backend generates them when absent.
+// Keys are optional on the wire - the backend generates them when absent.
 export const AmneziawgClientSchema = z.object({
   privateKey: z.string().optional(),
   publicKey: z.string().optional(),
@@ -44,7 +44,7 @@ export type AmneziawgClient = z.infer<typeof AmneziawgClientSchema>;
 
 // Server-wide AmneziaWG 3.1 obfuscation parameters and tunnel identity,
 // mirroring internal/amneziawg.ServerSettings on the Go side exactly (same
-// field names) — the listen port is not duplicated here, it's the inbound's
+// field names) - the listen port is not duplicated here, it's the inbound's
 // own port like every other protocol. H1-H4 blank falls back to the classic
 // 1/2/3/4 magic header on save; blank optional fields omit their feature
 // from the rendered config.

@@ -70,7 +70,7 @@ export function isUntestable(o: OutboundRow): boolean {
     o.tag === 'blocked'
   )
     return true;
-  // freedom ("direct") and dns aren't proxies — a TCP dial has no endpoint and
+  // freedom ("direct") and dns aren't proxies - a TCP dial has no endpoint and
   // an HTTP probe would only measure the host's own direct reachability, so
   // they're untestable in every mode.
   if (isOutboundProtocol(o, Protocols.Freedom) || isOutboundProtocol(o, Protocols.DNS)) return true;

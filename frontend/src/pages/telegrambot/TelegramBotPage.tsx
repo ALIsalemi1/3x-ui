@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useBlocker } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import {
+  Alert,
   Button,
   Card,
   Col,
@@ -43,8 +45,12 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import AppSidebar from '@/layouts/AppSidebar';
 import { useAllSettings } from '@/api/queries/useAllSettings';
 import { HttpUtil } from '@/utils';
+import type { BotPresentation } from '@/generated/types';
+import BotAppearanceEditor, { emptyPresentation } from './BotAppearanceEditor';
+import './TelegramBotPage.css';
 
 interface BotConfigInfo {
+  presentation: BotPresentation;
   enabled: boolean;
   botUsername: string;
   welcomeMessage: string;
@@ -147,10 +153,10 @@ function basePath(): string {
 }
 
 const PLAN_PRESETS = [
-  { name: '10GB / 30 Days', trafficGB: 10, durationDays: 30 },
-  { name: '30GB / 30 Days', trafficGB: 30, durationDays: 30 },
-  { name: '50GB / 30 Days', trafficGB: 50, durationDays: 30 },
-  { name: '100GB / 30 Days', trafficGB: 100, durationDays: 30 },
+  { trafficGB: 10, durationDays: 30 },
+  { trafficGB: 30, durationDays: 30 },
+  { trafficGB: 50, durationDays: 30 },
+  { trafficGB: 100, durationDays: 30 },
 ];
 
 const STATUS_COLORS: Record<string, string> = {
@@ -159,14 +165,23 @@ const STATUS_COLORS: Record<string, string> = {
   approved: 'green',
   rejected: 'red',
   expired: 'default',
+  canceled: 'default',
 };
 
 export default function TelegramBotPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { allSetting, fetched: settingsFetched } = useAllSettings();
   const { isDark, isUltra, antdThemeConfig } = useTheme();
   const { isMobile } = useMediaQuery();
   const [messageApi, messageContextHolder] = message.useMessage();
+  const [modalApi, modalContextHolder] = Modal.useModal();
+  const money = (value: number) =>
+    t('pages.telegramBot.money', { amount: value.toLocaleString(i18n.language) });
+  const presetName = (preset: (typeof PLAN_PRESETS)[number]) =>
+    t('pages.telegramBot.planPreset', {
+      gb: preset.trafficGB.toLocaleString(i18n.language),
+      days: preset.durationDays.toLocaleString(i18n.language),
+    });
 
   const [config, setConfig] = useState<BotConfigInfo | null>(null);
   const [plans, setPlans] = useState<BotPlan[]>([]);
@@ -180,6 +195,18 @@ export default function TelegramBotPage() {
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState('');
 
+  const [presentation, setPresentation] = useState<BotPresentation>(emptyPresentation);
+  const [activeTab, setActiveTab] = useState('setup');
+  const [orderFilter, setOrderFilter] = useState('all');
+  const [customerSearch, setCustomerSearch] = useState('');
+  const [refreshSeconds, setRefreshSeconds] = useState(() => {
+    const saved = Number(localStorage.getItem('bot-refresh-seconds') ?? '30');
+    return [0, 10, 30, 60].includes(saved) ? saved : 30;
+  });
+  const [lastRefreshed, setLastRefreshed] = useState<Date | null>(null);
+  const refreshingRef = useRef(false);
+  const activeFetchRef = useRef<Promise<void> | null>(null);
+  const dirtyRef = useRef(false);
   const [tokenInput, setTokenInput] = useState('');
   const [enabledInput, setEnabledInput] = useState(false);
   const [welcomeInput, setWelcomeInput] = useState('');
@@ -225,6 +252,50 @@ export default function TelegramBotPage() {
     return classes.join(' ');
   }, [isDark, isUltra]);
 
+  const configDirty =
+    config !== null &&
+    (tokenInput !== '' ||
+      enabledInput !== config.enabled ||
+      welcomeInput !== config.welcomeMessage ||
+      walletEnabledInput !== config.walletEnabled ||
+      referralEnabledInput !== config.referralEnabled ||
+      referralKindInput !== (config.referralKind || 'flat') ||
+      referralValueInput !== (config.referralValue || 0) ||
+      referralTriggerInput !== (config.referralTrigger || 'first_purchase') ||
+      supportTextInput !== config.supportText ||
+      tutorialTextInput !== config.tutorialText ||
+      JSON.stringify(presentation) !==
+        JSON.stringify({
+          ...emptyPresentation,
+          ...config.presentation,
+          labels: config.presentation?.labels || {},
+        }));
+  useEffect(() => {
+    dirtyRef.current = configDirty;
+  }, [configDirty]);
+  const blocker = useBlocker(configDirty);
+  useEffect(() => {
+    if (!configDirty) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [configDirty]);
+  useEffect(() => {
+    if (blocker.state !== 'blocked') return;
+    const dialog = modalApi.confirm({
+      title: t('pages.telegramBot.design.leaveTitle'),
+      content: t('pages.telegramBot.design.leaveHelp'),
+      okText: t('pages.telegramBot.design.discard'),
+      cancelText: t('pages.telegramBot.design.keepEditing'),
+      onOk: () => blocker.proceed(),
+      onCancel: () => blocker.reset(),
+    });
+    return () => dialog.destroy();
+  }, [blocker, modalApi, t]);
+
   const stats = useMemo(
     () => ({
       plans: plans.length,
@@ -234,9 +305,14 @@ export default function TelegramBotPage() {
     [plans, paymentMethods, orders],
   );
 
-  const fetchData = useCallback(
-    () =>
-      Promise.all([
+  const fetchData: (forceHydrate?: boolean) => Promise<void> = useCallback(
+    function loadData(forceHydrate = false): Promise<void> {
+      if (refreshingRef.current)
+        return forceHydrate
+          ? (activeFetchRef.current || Promise.resolve()).then(() => loadData(true))
+          : Promise.resolve();
+      refreshingRef.current = true;
+      const pending = Promise.all([
         HttpUtil.get<BotConfigInfo>('/panel/api/bot/config'),
         HttpUtil.get<BotPlan[]>('/panel/api/bot/plans/list'),
         HttpUtil.get<BotPaymentMethod[]>('/panel/api/bot/payment-methods/list'),
@@ -258,18 +334,26 @@ export default function TelegramBotPage() {
             custResp,
           ]) => {
             setFetchError('');
+            setLastRefreshed(new Date());
             if (cfgResp.success && cfgResp.obj) {
               const cfg = cfgResp.obj;
               setConfig(cfg);
-              setEnabledInput(cfg.enabled);
-              setWelcomeInput(cfg.welcomeMessage);
-              setWalletEnabledInput(cfg.walletEnabled);
-              setReferralEnabledInput(cfg.referralEnabled);
-              setReferralKindInput(cfg.referralKind || 'flat');
-              setReferralValueInput(cfg.referralValue || 0);
-              setReferralTriggerInput(cfg.referralTrigger || 'first_purchase');
-              setSupportTextInput(cfg.supportText);
-              setTutorialTextInput(cfg.tutorialText);
+              if (forceHydrate || !dirtyRef.current) {
+                setPresentation({
+                  ...emptyPresentation,
+                  ...cfg.presentation,
+                  labels: cfg.presentation?.labels || {},
+                });
+                setEnabledInput(cfg.enabled);
+                setWelcomeInput(cfg.welcomeMessage);
+                setWalletEnabledInput(cfg.walletEnabled);
+                setReferralEnabledInput(cfg.referralEnabled);
+                setReferralKindInput(cfg.referralKind || 'flat');
+                setReferralValueInput(cfg.referralValue || 0);
+                setReferralTriggerInput(cfg.referralTrigger || 'first_purchase');
+                setSupportTextInput(cfg.supportText);
+                setTutorialTextInput(cfg.tutorialText);
+              }
             }
             if (plansResp.success && plansResp.obj) setPlans(plansResp.obj);
             if (methodsResp.success && methodsResp.obj) setPaymentMethods(methodsResp.obj);
@@ -286,7 +370,11 @@ export default function TelegramBotPage() {
         .finally(() => {
           setLoading(false);
           setFetched(true);
-        }),
+          refreshingRef.current = false;
+        });
+      activeFetchRef.current = pending;
+      return pending;
+    },
     [t],
   );
 
@@ -299,25 +387,39 @@ export default function TelegramBotPage() {
     if (settingsFetched && allSetting.resellerBotEnable) fetchData();
   }, [fetchData, settingsFetched, allSetting.resellerBotEnable]);
 
+  useEffect(() => {
+    localStorage.setItem('bot-refresh-seconds', String(refreshSeconds));
+    if (!settingsFetched || !allSetting.resellerBotEnable || refreshSeconds === 0) return;
+    const timer = window.setInterval(() => {
+      if (!document.hidden && !savingConfig) void fetchData();
+    }, refreshSeconds * 1000);
+    return () => window.clearInterval(timer);
+  }, [refreshSeconds, fetchData, settingsFetched, allSetting.resellerBotEnable, savingConfig]);
+
   const handleSaveConfig = async () => {
     setSavingConfig(true);
     try {
-      const resp = await HttpUtil.post<unknown>('/panel/api/bot/config', {
-        token: tokenInput,
-        enabled: enabledInput,
-        welcomeMessage: welcomeInput,
-        walletEnabled: walletEnabledInput,
-        referralEnabled: referralEnabledInput,
-        referralKind: referralKindInput,
-        referralValue: referralValueInput,
-        referralTrigger: referralTriggerInput,
-        supportText: supportTextInput,
-        tutorialText: tutorialTextInput,
-      });
+      const resp = await HttpUtil.post<unknown>(
+        '/panel/api/bot/config',
+        {
+          presentation,
+          token: tokenInput,
+          enabled: enabledInput,
+          welcomeMessage: welcomeInput,
+          walletEnabled: walletEnabledInput,
+          referralEnabled: referralEnabledInput,
+          referralKind: referralKindInput,
+          referralValue: referralValueInput,
+          referralTrigger: referralTriggerInput,
+          supportText: supportTextInput,
+          tutorialText: tutorialTextInput,
+        },
+        { headers: { 'Content-Type': 'application/json' } },
+      );
       if (resp.success) {
         setTokenInput('');
         messageApi.success(t('pages.telegramBot.saved', 'Bot settings saved'));
-        refreshData();
+        await fetchData(true);
       }
     } finally {
       setSavingConfig(false);
@@ -344,7 +446,7 @@ export default function TelegramBotPage() {
 
   const applyPreset = (preset: (typeof PLAN_PRESETS)[number]) => {
     planForm.setFieldsValue({
-      name: preset.name,
+      name: presetName(preset),
       trafficGB: preset.trafficGB,
       durationDays: preset.durationDays,
     });
@@ -497,14 +599,18 @@ export default function TelegramBotPage() {
       title: t('pages.telegramBot.planTraffic', 'Traffic / Duration'),
       key: 'traffic',
       sorter: (a: BotPlan, b: BotPlan) => a.trafficGB - b.trafficGB,
-      render: (_: unknown, record: BotPlan) => `${record.trafficGB}GB / ${record.durationDays}d`,
+      render: (_: unknown, record: BotPlan) =>
+        t('pages.telegramBot.planPreset', {
+          gb: record.trafficGB.toLocaleString(i18n.language),
+          days: record.durationDays.toLocaleString(i18n.language),
+        }),
     },
     {
       title: t('pages.telegramBot.planPrice', 'Price'),
       dataIndex: 'priceToman',
       key: 'priceToman',
       sorter: (a: BotPlan, b: BotPlan) => a.priceToman - b.priceToman,
-      render: (v: number) => `${v.toLocaleString()} Toman`,
+      render: (v: number) => money(v),
     },
     {
       title: t('pages.telegramBot.planInbounds', 'Inbounds'),
@@ -557,7 +663,11 @@ export default function TelegramBotPage() {
       dataIndex: 'type',
       key: 'type',
       sorter: (a: BotPaymentMethod, b: BotPaymentMethod) => a.type.localeCompare(b.type),
-      render: (v: string) => <Tag color={v === 'crypto' ? 'gold' : 'blue'}>{v}</Tag>,
+      render: (v: string) => (
+        <Tag color={v === 'crypto' ? 'gold' : 'blue'}>
+          {t(v === 'crypto' ? 'pages.telegramBot.methodCrypto' : 'pages.telegramBot.methodCard')}
+        </Tag>
+      ),
     },
     {
       title: t('pages.telegramBot.methodLabel', 'Label'),
@@ -608,14 +718,18 @@ export default function TelegramBotPage() {
       dataIndex: 'kind',
       key: 'kind',
       sorter: (a: BotOrder, b: BotOrder) => a.kind.localeCompare(b.kind),
-      render: (v: string) => <Tag>{v || 'purchase'}</Tag>,
+      render: (v: string) => (
+        <Tag>{t(`pages.telegramBot.kind.${v || 'purchase'}`, v || 'purchase')}</Tag>
+      ),
     },
     {
       title: t('pages.telegramBot.orderStatus', 'Status'),
       dataIndex: 'status',
       key: 'status',
       sorter: (a: BotOrder, b: BotOrder) => a.status.localeCompare(b.status),
-      render: (v: string) => <Tag color={STATUS_COLORS[v] || 'default'}>{v}</Tag>,
+      render: (v: string) => (
+        <Tag color={STATUS_COLORS[v] || 'default'}>{t(`pages.telegramBot.status.${v}`, v)}</Tag>
+      ),
     },
     {
       title: t('pages.telegramBot.orderAmount', 'Amount'),
@@ -624,7 +738,7 @@ export default function TelegramBotPage() {
       sorter: (a: BotOrder, b: BotOrder) => a.finalAmountToman - b.finalAmountToman,
       render: (v: number, record: BotOrder) => (
         <span>
-          {v?.toLocaleString() ?? 0} Toman
+          {money(v ?? 0)}
           {record.discountAmountToman > 0 && (
             <Typography.Text type="success" style={{ marginInlineStart: 4, fontSize: 12 }}>
               (-{record.discountAmountToman.toLocaleString()})
@@ -695,7 +809,7 @@ export default function TelegramBotPage() {
       title: t('pages.telegramBot.discountValue', 'Value'),
       key: 'value',
       render: (_: unknown, record: BotDiscountCode) =>
-        record.kind === 'percent' ? `${record.value}%` : `${record.value.toLocaleString()} Toman`,
+        record.kind === 'percent' ? `${record.value}%` : money(record.value),
     },
     {
       title: t('pages.telegramBot.uses', 'Uses'),
@@ -744,7 +858,7 @@ export default function TelegramBotPage() {
       dataIndex: 'amountToman',
       key: 'amountToman',
       sorter: (a: BotRedeemCode, b: BotRedeemCode) => a.amountToman - b.amountToman,
-      render: (v: number) => `${v.toLocaleString()} Toman`,
+      render: (v: number) => money(v),
     },
     {
       title: t('pages.telegramBot.uses', 'Uses'),
@@ -798,7 +912,7 @@ export default function TelegramBotPage() {
       dataIndex: 'walletBalanceToman',
       key: 'walletBalanceToman',
       sorter: (a: BotCustomer, b: BotCustomer) => a.walletBalanceToman - b.walletBalanceToman,
-      render: (v: number) => `${v.toLocaleString()} Toman`,
+      render: (v: number) => money(v),
     },
     {
       title: t('pages.telegramBot.referralCode', 'Referral Code'),
@@ -835,6 +949,21 @@ export default function TelegramBotPage() {
   ];
 
   const tabItems = [
+    {
+      key: 'appearance',
+      label: t('pages.telegramBot.design.appearance'),
+      children: (
+        <BotAppearanceEditor
+          value={presentation}
+          onChange={setPresentation}
+          welcome={welcomeInput}
+          onWelcomeChange={setWelcomeInput}
+          username={config?.botUsername || ''}
+          saving={savingConfig}
+          onSave={handleSaveConfig}
+        />
+      ),
+    },
     {
       key: 'setup',
       label: t('pages.telegramBot.tabSetup', 'Setup'),
@@ -1058,9 +1187,23 @@ export default function TelegramBotPage() {
       label: t('pages.telegramBot.tabOrders', 'Orders'),
       children: (
         <Card size="small" hoverable>
+          <Select
+            className="bot-order-filter"
+            value={orderFilter}
+            onChange={setOrderFilter}
+            options={[
+              { value: 'all', label: t('pages.telegramBot.design.allOrders') },
+              ...Object.keys(STATUS_COLORS).map((value) => ({
+                value,
+                label: t(`pages.telegramBot.status.${value}`, value),
+              })),
+            ]}
+          />
           <Table
             scroll={{ x: 700 }}
-            dataSource={orders}
+            dataSource={
+              orderFilter === 'all' ? orders : orders.filter((o) => o.status === orderFilter)
+            }
             columns={orderColumns}
             rowKey="id"
             loading={loading}
@@ -1125,9 +1268,20 @@ export default function TelegramBotPage() {
       label: t('pages.telegramBot.tabCustomers', 'Customers'),
       children: (
         <Card size="small" hoverable>
+          <Input.Search
+            className="bot-table-search"
+            allowClear
+            placeholder={t('pages.telegramBot.design.searchCustomers')}
+            value={customerSearch}
+            onChange={(e) => setCustomerSearch(e.target.value)}
+          />
           <Table
             scroll={{ x: 700 }}
-            dataSource={customers}
+            dataSource={customers.filter((c) =>
+              `${c.buyerUsername} ${c.buyerTgId}`
+                .toLowerCase()
+                .includes(customerSearch.toLowerCase()),
+            )}
             columns={customerColumns}
             rowKey="id"
             loading={loading}
@@ -1140,9 +1294,10 @@ export default function TelegramBotPage() {
   ];
 
   return (
-    <ConfigProvider theme={antdThemeConfig}>
+    <ConfigProvider theme={antdThemeConfig} direction={i18n.dir()}>
       {messageContextHolder}
-      <Layout className={pageClass}>
+      {modalContextHolder}
+      <Layout className={pageClass} dir={i18n.dir()}>
         <AppSidebar />
 
         <Layout className="content-shell">
@@ -1169,43 +1324,145 @@ export default function TelegramBotPage() {
                     }
                   />
                 ) : (
-                  <Row gutter={[isMobile ? 8 : 16, isMobile ? 8 : 12]}>
-                    <Col span={24}>
-                      <Card size="small" hoverable className="summary-card">
-                        <Row gutter={[16, isMobile ? 16 : 12]}>
-                          <Col xs={12} sm={12} md={8}>
-                            <Statistic
-                              title={t('pages.telegramBot.tabPlans', 'Plans')}
-                              value={stats.plans}
-                              prefix={<UnorderedListOutlined />}
-                            />
-                          </Col>
-                          <Col xs={12} sm={12} md={8}>
-                            <Statistic
-                              title={t('pages.telegramBot.tabPaymentMethods', 'Payment Methods')}
-                              value={stats.methods}
-                              prefix={<WalletOutlined />}
-                            />
-                          </Col>
-                          <Col xs={24} sm={24} md={8}>
-                            <Statistic
-                              title={t('pages.telegramBot.pendingReview', 'Pending Review')}
-                              value={stats.pendingReview}
-                              prefix={<ClockCircleOutlined />}
-                              valueStyle={
-                                stats.pendingReview > 0
-                                  ? { color: 'var(--ant-color-warning)' }
-                                  : undefined
-                              }
-                            />
-                          </Col>
-                        </Row>
-                      </Card>
-                    </Col>
-                    <Col span={24}>
-                      <Tabs items={tabItems} tabBarExtraContent={<RobotOutlined />} />
-                    </Col>
-                  </Row>
+                  <div className="bot-workspace">
+                    <header className="bot-workspace-header">
+                      <div className="bot-title-group">
+                        <span className="bot-workspace-mark">
+                          <RobotOutlined />
+                        </span>
+                        <div>
+                          <h1>{config?.presentation?.brandName || t('menu.telegramBot')}</h1>
+                          <p>{t('pages.telegramBot.design.dashboardSubtitle')}</p>
+                        </div>
+                      </div>
+                      <Space wrap>
+                        <Tag color={config?.enabled ? 'cyan' : 'default'}>
+                          {config?.enabled ? t('enabled') : t('disabled')}
+                        </Tag>
+                        <Button onClick={refreshData} loading={loading}>
+                          {t('refresh')}
+                        </Button>
+                        <Button
+                          type="primary"
+                          loading={savingConfig}
+                          onClick={
+                            activeTab === 'appearance' || configDirty
+                              ? handleSaveConfig
+                              : () => setActiveTab('appearance')
+                          }
+                        >
+                          {t(
+                            activeTab === 'appearance' || configDirty
+                              ? 'pages.telegramBot.design.save'
+                              : 'pages.telegramBot.design.customize',
+                          )}
+                        </Button>
+                      </Space>
+                    </header>
+                    {configDirty && (
+                      <Alert
+                        className="bot-unsaved-alert"
+                        type="warning"
+                        showIcon
+                        title={t('pages.telegramBot.design.unsaved')}
+                        description={t('pages.telegramBot.design.unsavedHelp')}
+                        action={
+                          <Space wrap>
+                            <Button
+                              type="primary"
+                              loading={savingConfig}
+                              onClick={handleSaveConfig}
+                            >
+                              {t('save')}
+                            </Button>
+                            <Button
+                              disabled={savingConfig}
+                              onClick={() => {
+                                setTokenInput('');
+                                void fetchData(true);
+                              }}
+                            >
+                              {t('pages.telegramBot.design.discard')}
+                            </Button>
+                          </Space>
+                        }
+                      />
+                    )}
+                    <div className="bot-refresh-bar">
+                      <label>
+                        <span>{t('pages.telegramBot.design.autoRefresh')}</span>
+                        <Select
+                          aria-label={t('pages.telegramBot.design.autoRefresh')}
+                          value={refreshSeconds}
+                          onChange={setRefreshSeconds}
+                          options={[
+                            { value: 0, label: t('pages.telegramBot.design.refreshOff') },
+                            ...[10, 30, 60].map((value) => ({
+                              value,
+                              label: t('pages.telegramBot.design.refreshInterval', {
+                                seconds: value,
+                              }),
+                            })),
+                          ]}
+                        />
+                      </label>
+                      {lastRefreshed && (
+                        <span aria-live="off">
+                          {t('pages.telegramBot.design.updatedAt', {
+                            time: lastRefreshed.toLocaleTimeString(i18n.language),
+                          })}
+                        </span>
+                      )}
+                    </div>
+                    <Row gutter={[isMobile ? 8 : 16, isMobile ? 8 : 12]}>
+                      <Col span={24}>
+                        <Card size="small" hoverable className="summary-card">
+                          <Row gutter={[16, isMobile ? 16 : 12]}>
+                            <Col xs={12} sm={12} md={6}>
+                              <Statistic
+                                title={t('pages.telegramBot.tabPlans', 'Plans')}
+                                value={stats.plans}
+                                prefix={<UnorderedListOutlined />}
+                              />
+                            </Col>
+                            <Col xs={12} sm={12} md={6}>
+                              <Statistic
+                                title={t('pages.telegramBot.tabPaymentMethods', 'Payment Methods')}
+                                value={stats.methods}
+                                prefix={<WalletOutlined />}
+                              />
+                            </Col>
+                            <Col xs={12} sm={12} md={6}>
+                              <Statistic
+                                title={t('pages.telegramBot.pendingReview', 'Pending Review')}
+                                value={stats.pendingReview}
+                                prefix={<ClockCircleOutlined />}
+                                valueStyle={
+                                  stats.pendingReview > 0
+                                    ? { color: 'var(--ant-color-warning)' }
+                                    : undefined
+                                }
+                              />
+                            </Col>
+                            <Col xs={12} sm={12} md={6}>
+                              <Statistic
+                                title={t('pages.telegramBot.tabCustomers')}
+                                value={customers.length}
+                              />
+                            </Col>
+                          </Row>
+                        </Card>
+                      </Col>
+                      <Col span={24}>
+                        <Tabs
+                          activeKey={activeTab}
+                          onChange={setActiveTab}
+                          items={tabItems}
+                          className="bot-workspace-tabs"
+                        />
+                      </Col>
+                    </Row>
+                  </div>
                 )}
               </Spin>
             )}
@@ -1233,8 +1490,8 @@ export default function TelegramBotPage() {
             </div>
             <Space wrap>
               {PLAN_PRESETS.map((preset) => (
-                <Button key={preset.name} size="small" onClick={() => applyPreset(preset)}>
-                  {preset.name}
+                <Button key={preset.trafficGB} size="small" onClick={() => applyPreset(preset)}>
+                  {presetName(preset)}
                 </Button>
               ))}
             </Space>
@@ -1459,9 +1716,9 @@ export default function TelegramBotPage() {
             {walletAdjustCustomer.buyerUsername
               ? `@${walletAdjustCustomer.buyerUsername}`
               : walletAdjustCustomer.buyerTgId}
-            {' — '}
+            {' - '}
             {t('pages.telegramBot.currentBalance', 'Current balance')}:{' '}
-            {walletAdjustCustomer.walletBalanceToman.toLocaleString()} Toman
+            {money(walletAdjustCustomer.walletBalanceToman)}
           </Typography.Paragraph>
         )}
         <Form form={walletAdjustForm} layout="vertical">

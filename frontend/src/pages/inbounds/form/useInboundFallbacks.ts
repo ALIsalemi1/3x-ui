@@ -72,7 +72,7 @@ export function useInboundFallbacks(dbInbound: DBInbound | null, dbInbounds: DBI
   };
 
   // Derive a fallback row's SNI / ALPN / Path / xver from a child
-  // inbound's streamSettings — what the legacy panel auto-filled when an
+  // inbound's streamSettings - what the legacy panel auto-filled when an
   // operator wired a fallback target. SNI/ALPN come straight off the
   // child's TLS block; path depends on the child's transport (ws/grpc
   // /httpupgrade carry an explicit path; tcp/kcp/xhttp have no path of
@@ -126,7 +126,7 @@ export function useInboundFallbacks(dbInbound: DBInbound | null, dbInbounds: DBI
         // When the picker selects a new child inbound and the row hasn't
         // been hand-edited yet (sni/alpn/path/dest all blank, xver = 0),
         // pull the SNI/ALPN/Path defaults off that child. Operators who
-        // intentionally typed values keep them — we only fill the empties.
+        // intentionally typed values keep them - we only fill the empties.
         if (typeof patch.childId === 'number' && patch.childId !== r.childId) {
           const isPristine = !r.name && !r.alpn && !r.path && !r.dest && r.xver === 0;
           if (isPristine) return { ...r, ...patch, ...deriveFallbackDefaults(patch.childId) };

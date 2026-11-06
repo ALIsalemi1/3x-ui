@@ -1,7 +1,7 @@
 // Template variables an operator can embed in a Host's Remark. At subscription
 // time the backend (internal/sub/remark_vars.go) substitutes each {{TOKEN}}
 // per client. This file is the single frontend source of truth for the picker
-// UI and the live preview — keep the token list in sync with remark_vars.go.
+// UI and the live preview - keep the token list in sync with remark_vars.go.
 
 export type RemarkVarGroup = 'client' | 'traffic' | 'time' | 'connection';
 

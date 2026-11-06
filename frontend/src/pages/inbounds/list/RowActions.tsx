@@ -48,7 +48,7 @@ export function buildRowActionsMenu({
       items.push({
         key: 'subs',
         icon: <ExportOutlined />,
-        label: `${t('pages.inbounds.export')} — ${t('pages.settings.subSettings')}`,
+        label: `${t('pages.inbounds.export')} - ${t('pages.settings.subSettings')}`,
       });
     }
   } else {

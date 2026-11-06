@@ -5,7 +5,7 @@ import { useFactoryDefaults } from '@/api/queries/useFactoryDefaults';
 
 /**
  * Value semantics on purpose: the tag answers "does this equal the shipped
- * default?", not "has the user ever saved this key?" — a stored 2096 and a
+ * default?", not "has the user ever saved this key?" - a stored 2096 and a
  * fallback 2096 behave identically, so they read identically.
  */
 export function matchesFactoryDefault(

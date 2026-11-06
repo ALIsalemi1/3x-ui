@@ -1,7 +1,7 @@
 // Pure helpers for header-shape conversion between the panel's internal
 // HeaderEntry[] form and Xray's V2-style header map. Extracted from
 // XrayCommonClass.toHeaders / .toV2Headers so callers can stop relying on
-// the class hierarchy. Behavior is byte-equivalent to the legacy methods —
+// the class hierarchy. Behavior is byte-equivalent to the legacy methods -
 // the shadow tests in src/test/headers.test.ts pin that.
 
 export interface HeaderEntry {
@@ -35,7 +35,7 @@ export function toHeaders(v2Headers: unknown): HeaderEntry[] {
 // Case-insensitive lookup against a wire-shape header map. The legacy
 // `Inbound.getHeader(obj, name)` iterated `obj.headers` as a HeaderEntry[];
 // this version reads the Record map our Zod schemas store. For repeated
-// header names (string[] in TCP/WS-style maps) the first value wins —
+// header names (string[] in TCP/WS-style maps) the first value wins -
 // matches the legacy iteration order. Returns '' when missing, mirroring
 // the legacy fallback so link-generator call sites stay simple.
 export function getHeaderValue(
@@ -54,10 +54,10 @@ export function getHeaderValue(
 }
 
 // Collapse a HeaderEntry[] back into a V2-style header map. When `arr` is
-// true (the default — matches Xray's TCP/WS/HTTP request/response shape),
+// true (the default - matches Xray's TCP/WS/HTTP request/response shape),
 // duplicate header names accumulate into a string[]. When false (used for
 // WS/HTTPUpgrade/xHTTP top-level headers, sockopt portMap, etc.), the
-// last value wins. Entries with empty name or value are skipped — same as
+// last value wins. Entries with empty name or value are skipped - same as
 // the legacy ObjectUtil.isEmpty() filter.
 export function toV2Headers(headers: HeaderEntry[], arr: boolean = true): V2HeaderMap {
   const out: V2HeaderMap = {};
