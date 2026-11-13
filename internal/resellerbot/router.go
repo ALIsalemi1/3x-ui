@@ -117,6 +117,22 @@ func (inst *botInstance) handleCallback(_ *th.Context, query telego.CallbackQuer
 	lang := inst.customerLang(buyerID, buyerUsername)
 
 	switch parts[0] {
+	case "shop":
+		switch parts[1] {
+		case "page":
+			if len(parts) < 3 {
+				return nil
+			}
+			page, err := strconv.Atoi(parts[2])
+			if err != nil || page < 0 {
+				return nil
+			}
+			inst.states.clear(chatID)
+			inst.sendPlanPage(chatID, lang, page)
+		case "back":
+			inst.states.clear(chatID)
+			inst.sendMainMenu(chatID, lang)
+		}
 	case "lang":
 		inst.handleSelectLanguage(chatID, buyerID, buyerUsername, parts[1])
 	case "buy":
