@@ -422,7 +422,9 @@
   font-size: 12px;
   font-weight: 600;
   min-height: 42px;
-  box-shadow: inset 0 1px 0 #ffffff30, 0 2px 7px #00000030;
+  box-shadow:
+    inset 0 1px 0 #ffffff30,
+    0 2px 7px #00000030;
 }
 .bot-phone-menu-row > span.bot-menu-button--success {
   background: linear-gradient(135deg, #277d4b, #216639);
