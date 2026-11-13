@@ -203,7 +203,7 @@ func (inst *botInstance) handleCallback(_ *th.Context, query telego.CallbackQuer
 			return nil
 		}
 		switch parts[1] {
-		case "view":
+		case "view", "refresh":
 			if id, err := strconv.Atoi(parts[2]); err == nil {
 				inst.sendInvoiceCard(chatID, id, lang)
 			}
