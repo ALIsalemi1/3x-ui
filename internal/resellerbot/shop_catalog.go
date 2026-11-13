@@ -144,11 +144,8 @@ func shopSortPlans(plans []model.BotPlan, mode string) []model.BotPlan {
 	case "traffic":
 		sort.SliceStable(sorted, func(i, j int) bool {
 			a, b := sorted[i].TrafficGB, sorted[j].TrafficGB
-			if a == 0 {
-				return true
-			}
-			if b == 0 {
-				return false
+			if a == 0 || b == 0 {
+				return a == 0 && b != 0
 			}
 			return a > b
 		})
