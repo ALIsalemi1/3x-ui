@@ -65,24 +65,27 @@ func TestSubscriptionCardButtonsLinkAndTraffic(t *testing.T) {
 	text, kb := subscriptionCardWithStats(sub, stats, "https://example.com/sub?a=1&b=2", langFA)
 	for _, want := range []string{
 		"💎 جزئیات اشتراک", "test&lt;&amp;", "<code>https://example.com/sub?a=1&amp;b=2</code>",
-		"🟢 فعال", "باقی", "زمان",
+		"🟢 فعال", "باقی", "زمان", "100%", "🟥", "⚠️",
 	} {
 		if !strings.Contains(text, want) {
 			t.Errorf("subscription missing %q: %s", want, text)
 		}
 	}
-	if kb == nil || len(kb.InlineKeyboard) != 3 || len(kb.InlineKeyboard[0]) != 2 {
+	if kb == nil || len(kb.InlineKeyboard) != 4 || len(kb.InlineKeyboard[0]) != 2 || len(kb.InlineKeyboard[1]) != 2 {
 		t.Fatalf("subscription action layout changed: %+v", kb)
 	}
 	got := []struct{ cb, style string }{
 		{kb.InlineKeyboard[0][0].CallbackData, kb.InlineKeyboard[0][0].Style},
 		{kb.InlineKeyboard[0][1].CallbackData, kb.InlineKeyboard[0][1].Style},
 		{kb.InlineKeyboard[1][0].CallbackData, kb.InlineKeyboard[1][0].Style},
+		{kb.InlineKeyboard[1][1].CallbackData, kb.InlineKeyboard[1][1].Style},
 		{kb.InlineKeyboard[2][0].CallbackData, kb.InlineKeyboard[2][0].Style},
+		{kb.InlineKeyboard[3][0].CallbackData, kb.InlineKeyboard[3][0].Style},
 	}
 	want := []struct{ cb, style string }{
 		{"sub:configs:9", "primary"}, {"sub:renew:9", "success"},
-		{"sub:autorenew:9", "success"}, {"sub:revoke:9", "danger"},
+		{"sub:refresh:9", "primary"}, {"sub:autorenew:9", "success"},
+		{"sub:revoke:9", "danger"}, {"sub:list:0", ""},
 	}
 	for i := range want {
 		if got[i] != want[i] {
@@ -91,7 +94,7 @@ func TestSubscriptionCardButtonsLinkAndTraffic(t *testing.T) {
 	}
 	sub.AutoRenewEnabled = false
 	_, kb = subscriptionCardWithStats(sub, nil, "", langEN)
-	if kb.InlineKeyboard[1][0].Style != "primary" {
+	if kb.InlineKeyboard[1][1].Style != "primary" {
 		t.Fatal("disabled auto-renew should use primary style")
 	}
 }
