@@ -1,0 +1,71 @@
+name: VPN Shop feature-branch autoformat (temporary)
+
+on:
+  push:
+    branches:
+      - vpn-shop-six-upgrades-2026-11-13
+    paths:
+      - go.mod
+      - go.sum
+      - "internal/resellerbot/**"
+      - "internal/web/service/panel/**"
+      - "internal/database/model/model.go"
+      - "frontend/src/pages/telegrambot/BotAppearanceEditor.tsx"
+      - ".github/workflows/vpn-shop-branch-format.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: true
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - name: Refresh Go module checksum and format changed Go code
+        run: |
+          go mod tidy
+          go install mvdan.cc/gofumpt@latest
+          "$(go env GOPATH)/bin/gofumpt" -w \
+            internal/resellerbot/appearance_cards_test.go \
+            internal/resellerbot/presentation_test.go \
+            internal/resellerbot/subscription_ui_test.go \
+            internal/resellerbot/upgrade_features_test.go \
+            internal/resellerbot/alerts.go \
+            internal/resellerbot/bot.go \
+            internal/resellerbot/flow_admin.go \
+            internal/resellerbot/flow_account.go \
+            internal/resellerbot/flow_purchase.go \
+            internal/resellerbot/router.go \
+            internal/resellerbot/shop_catalog.go \
+            internal/web/service/panel/reseller_bot_orders.go \
+            internal/web/service/panel/reseller_bot_customer.go \
+            internal/web/service/panel/reseller_bot_upgrades_test.go \
+            internal/database/model/model.go \
+            internal/resellerbot/i18n.go \
+            internal/resellerbot/presentation.go
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Format Telegram appearance editor
+        working-directory: frontend
+        run: |
+          npm ci
+          npx oxfmt src/pages/telegrambot/BotAppearanceEditor.tsx
+      - name: Push formatting fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add go.mod go.sum internal/resellerbot internal/web/service/panel \
+            internal/database/model/model.go \
+            frontend/src/pages/telegrambot/BotAppearanceEditor.tsx
+          if ! git diff --cached --quiet; then
+            git commit -m "Apply gofumpt, oxfmt and Go module security checksum refresh"
+            git push
+          fi
