@@ -87,6 +87,8 @@ var catalog = map[string]map[string]string{
 
 		"invoiceTitle":         "🧾 فاکتور شما با موفقیت ایجاد شد.",
 		"invoiceCardTitle":     "🧾 جزئیات فاکتور",
+		"btnRefreshInvoice":    "🔄 پیگیری وضعیت فاکتور",
+		"invoiceReviewNote":    "🔎 رسید شما در صف بررسی فروشنده است. با دکمه پیگیری می‌توانید وضعیت را تازه کنید.",
 		"invoiceAmountPretty":  "💰 مبلغ نهایی: %s تومان",
 		"invoiceListEmpty":     "📭 هنوز فاکتوری ثبت نکرده\u200cاید.",
 		"invoiceListHint":      "👇 برای مشاهده جزئیات، یکی از فاکتورها را انتخاب کنید.",
@@ -281,6 +283,8 @@ var catalog = map[string]map[string]string{
 
 		"invoiceTitle":         "🧾 Your invoice was created.",
 		"invoiceCardTitle":     "🧾 Invoice details",
+		"btnRefreshInvoice":    "🔄 Check invoice status",
+		"invoiceReviewNote":    "🔎 Your proof is waiting for seller review. Use the button to refresh its status.",
 		"invoiceAmountPretty":  "💰 Total amount: %s Toman",
 		"invoiceListEmpty":     "📭 You don't have any invoices yet.",
 		"invoiceListHint":      "👇 Select an invoice to view its details.",

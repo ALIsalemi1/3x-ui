@@ -3,6 +3,7 @@ package resellerbot
 import (
 	"context"
 	"fmt"
+	"html"
 	"strconv"
 	"strings"
 
@@ -75,18 +76,28 @@ func (inst *botInstance) sendOrderReviewCard(chatID int64, o model.BotOrder) {
 	if plan != nil {
 		planName = plan.Name
 	}
-	summary := fmt.Sprintf("#%d - @%s\n%s\n%s\nProof: %s", o.Id, o.BuyerUsername, planName,
-		t(langFA, "invoiceAmount", o.FinalAmountToman), orderProofSummary(o))
+	username := o.BuyerUsername
+	if username == "" {
+		username = strconv.FormatInt(o.BuyerTgId, 10)
+	}
+	proof := []rune(orderProofSummary(o))
+	if len(proof) > 160 {
+		proof = append(proof[:160], '…')
+	}
+	summary := fmt.Sprintf("<b>🧾 سفارش #%d</b>\n👤 @%s\n📦 %s\n💰 %s تومان\n🧷 رسید: %s",
+		o.Id, html.EscapeString(username), html.EscapeString(planName),
+		groupedToman(o.FinalAmountToman), html.EscapeString(string(proof)))
 	if o.TransactionRef != "" {
-		summary += "\n" + t(langFA, "invoiceTxRef", o.TransactionRef)
+		summary += "\n" + t(langFA, "invoiceTxRef", html.EscapeString(o.TransactionRef))
 	}
 	markup := tu.InlineKeyboard(tu.InlineKeyboardRow(
-		tu.InlineKeyboardButton(t(langFA, "approve")).WithCallbackData("a:"+strconv.Itoa(o.Id)),
-		tu.InlineKeyboardButton(t(langFA, "reject")).WithCallbackData("r:"+strconv.Itoa(o.Id)),
+		shopCatalogButton(t(langFA, "approve"), "a:"+strconv.Itoa(o.Id), "success"),
+		shopCatalogButton(t(langFA, "reject"), "r:"+strconv.Itoa(o.Id), "danger"),
 	))
 	if o.ProofTgFileId != "" {
 		_, _ = inst.bot.SendPhoto(context.Background(), &telego.SendPhotoParams{
-			ChatID: tu.ID(chatID), Photo: telego.InputFile{FileID: o.ProofTgFileId}, Caption: summary, ReplyMarkup: markup,
+			ChatID: tu.ID(chatID), Photo: telego.InputFile{FileID: o.ProofTgFileId},
+			Caption: summary, ParseMode: "HTML", ReplyMarkup: markup,
 		})
 		return
 	}
