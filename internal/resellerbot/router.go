@@ -235,6 +235,16 @@ func (inst *botInstance) handleCallback(_ *th.Context, query telego.CallbackQuer
 		case "autorenew":
 			inst.handleToggleAutoRenew(chatID, parts[2], lang)
 		}
+	case "admin":
+		if !isOwnerChat(inst.ownerId, chatID) {
+			return nil
+		}
+		switch parts[1] {
+		case "stats":
+			inst.sendOwnerStats(chatID)
+		case "orders":
+			inst.sendPendingOrders(chatID)
+		}
 	case "acct":
 		switch parts[1] {
 		case "topup":

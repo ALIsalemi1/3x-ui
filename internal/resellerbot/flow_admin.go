@@ -2,9 +2,12 @@ package resellerbot
 
 import (
 	"fmt"
+	"html"
 	"strconv"
+	"strings"
 
 	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"github.com/mhsanaei/3x-ui/v3/internal/web/service/panel"
 
 	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
@@ -13,12 +16,19 @@ import (
 // adminMenuKeyboard is the owner's own management menu - shown instead of
 // the buyer shop menu in the owner's linked chat, so managing the shop
 // doesn't require falling back to /orders and the web panel for everything.
+func adminMenuButton(label, style string) telego.KeyboardButton {
+	button := tu.KeyboardButton(label)
+	button.Style = style
+	return button
+}
+
 func adminMenuKeyboard() *telego.ReplyKeyboardMarkup {
 	kb := tu.Keyboard(
-		tu.KeyboardRow(tu.KeyboardButton(t(langFA, "adminMenuOrders"))),
-		tu.KeyboardRow(tu.KeyboardButton(t(langFA, "adminMenuCustomers")), tu.KeyboardButton(t(langFA, "adminMenuStats"))),
+		tu.KeyboardRow(adminMenuButton(t(langFA, "adminMenuOrders"), "danger")),
+		tu.KeyboardRow(adminMenuButton(t(langFA, "adminMenuCustomers"), "primary"), adminMenuButton(t(langFA, "adminMenuStats"), "success")),
 	)
 	kb.ResizeKeyboard = true
+	kb.IsPersistent = true
 	return kb
 }
 
@@ -79,9 +89,25 @@ func (inst *botInstance) sendCustomersSummary(chatID int64) {
 		if label == "" {
 			label = strconv.FormatInt(c.BuyerTgId, 10)
 		}
-		text += fmt.Sprintf("\n@%s - %s", label, t(langFA, "money", c.WalletBalanceToman))
+		text += fmt.Sprintf("\n👤 @%s - %s", html.EscapeString(label), t(langFA, "money", c.WalletBalanceToman))
 	}
 	inst.send(chatID, text)
+}
+
+func ownerStatsCard(stats *panel.OwnerStats) string {
+	return strings.Join([]string{
+		"<b>" + t(langFA, "adminStatsTitle") + "</b>",
+		"━━━━━━━━━━━━━━",
+		t(langFA, "statsRevenueToday", groupedToman(stats.RevenueTodayToman)),
+		t(langFA, "statsRevenueMonth", groupedToman(stats.RevenueMonthToman)),
+		t(langFA, "statsRevenue", stats.RevenueToman),
+		"━━━━━━━━━━━━━━",
+		t(langFA, "statsActiveSubs", stats.ActiveSubscriptions),
+		t(langFA, "statsCustomers", stats.CustomerCount),
+		t(langFA, "statsNewCustomersToday", stats.NewCustomersToday),
+		t(langFA, "statsApprovedOrders", stats.ApprovedOrders),
+		t(langFA, "statsPendingReview", stats.PendingReview),
+	}, "\n")
 }
 
 func (inst *botInstance) sendOwnerStats(chatID int64) {
@@ -90,11 +116,10 @@ func (inst *botInstance) sendOwnerStats(chatID int64) {
 		inst.send(chatID, t(langFA, "error"))
 		return
 	}
-	text := fmt.Sprintf("%s\n%s\n%s\n%s",
-		t(langFA, "statsCustomers", stats.CustomerCount),
-		t(langFA, "statsApprovedOrders", stats.ApprovedOrders),
-		t(langFA, "statsPendingReview", stats.PendingReview),
-		t(langFA, "statsRevenue", stats.RevenueToman),
-	)
-	inst.send(chatID, text)
+	inst.send(chatID, ownerStatsCard(stats), tu.InlineKeyboard(
+		tu.InlineKeyboardRow(
+			shopCatalogButton(t(langFA, "adminRefreshStats"), "admin:stats", "success"),
+			shopCatalogButton(t(langFA, "adminMenuOrders"), "admin:orders", "danger"),
+		),
+	))
 }

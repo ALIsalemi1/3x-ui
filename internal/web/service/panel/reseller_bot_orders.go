@@ -451,10 +451,14 @@ func (s *BotService) RejectOrder(orderId, reviewerId int, reason string) (*model
 
 // OwnerStats is a quick shop-health summary for the bot's admin "Stats" menu.
 type OwnerStats struct {
-	CustomerCount  int64
-	ApprovedOrders int64
-	PendingReview  int64
-	RevenueToman   int64
+	CustomerCount      int64
+	ApprovedOrders     int64
+	PendingReview      int64
+	RevenueToman       int64
+	RevenueTodayToman  int64
+	RevenueMonthToman  int64
+	NewCustomersToday  int64
+	ActiveSubscriptions int64
 }
 
 // GetOwnerStats aggregates counts/revenue for the owner's bot. Revenue
@@ -479,6 +483,35 @@ func (s *BotService) GetOwnerStats(ownerId int) (*OwnerStats, error) {
 	if err := db.Model(&model.BotOrder{}).
 		Where("owner_id = ? AND status = ? AND kind != ?", ownerId, model.BotOrderApproved, model.BotOrderKindTopup).
 		Select("COALESCE(SUM(final_amount_toman), 0)").Scan(&stats.RevenueToman).Error; err != nil {
+		return nil, err
+	}
+	today := time.Now()
+	dayStart := time.Date(today.Year(), today.Month(), today.Day(), 0, 0, 0, 0, today.Location()).UnixMilli()
+	monthStart := time.Date(today.Year(), today.Month(), 1, 0, 0, 0, 0, today.Location()).UnixMilli()
+	for _, period := range []struct {
+		start int64
+		dest  *int64
+	}{
+		{dayStart, &stats.RevenueTodayToman},
+		{monthStart, &stats.RevenueMonthToman},
+	} {
+		if err := db.Model(&model.BotOrder{}).
+			Where("owner_id = ? AND status = ? AND kind != ? AND paid_at >= ?",
+				ownerId, model.BotOrderApproved, model.BotOrderKindTopup, period.start).
+			Select("COALESCE(SUM(final_amount_toman), 0)").Scan(period.dest).Error; err != nil {
+			return nil, err
+		}
+	}
+	if err := db.Model(&model.BotCustomer{}).
+		Where("owner_id = ? AND created_at >= ?", ownerId, dayStart).
+		Count(&stats.NewCustomersToday).Error; err != nil {
+		return nil, err
+	}
+	if err := db.Table("bot_subscriptions").
+		Joins("JOIN client_traffics ON client_traffics.email = bot_subscriptions.client_email").
+		Where("bot_subscriptions.owner_id = ? AND client_traffics.enable = ? AND (client_traffics.expiry_time <= 0 OR client_traffics.expiry_time > ?)",
+			ownerId, true, today.UnixMilli()).
+		Count(&stats.ActiveSubscriptions).Error; err != nil {
 		return nil, err
 	}
 	return stats, nil
