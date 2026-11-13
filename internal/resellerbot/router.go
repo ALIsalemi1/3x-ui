@@ -116,6 +116,45 @@ func (inst *botInstance) handleCallback(_ *th.Context, query telego.CallbackQuer
 	}
 	lang := inst.customerLang(buyerID, buyerUsername)
 
+	// Native callback data is client-controlled: never use a numeric order
+	// or subscription ID before verifying the current buyer owns it.
+	switch parts[0] {
+	case "inv", "pmwallet", "pm", "disc":
+		idText := parts[1]
+		if parts[0] == "inv" || parts[0] == "disc" {
+			if len(parts) != 3 {
+				return nil
+			}
+			idText = parts[2]
+		}
+		id, err := strconv.Atoi(idText)
+		if err != nil {
+			return nil
+		}
+		order, err := botSvc.GetOrder(inst.ownerId, id)
+		if err != nil || order.BuyerTgId != buyerID {
+			return nil
+		}
+	case "sub":
+		if parts[1] != "list" {
+			if len(parts) != 3 {
+				return nil
+			}
+			id, err := strconv.Atoi(parts[2])
+			if err != nil {
+				return nil
+			}
+			sub, err := botSvc.GetSubscription(inst.ownerId, id)
+			if err != nil {
+				return nil
+			}
+			customer, err := botSvc.GetOrCreateCustomer(inst.ownerId, buyerID, buyerUsername)
+			if err != nil || sub.CustomerId != customer.Id {
+				return nil
+			}
+		}
+	}
+
 	switch parts[0] {
 	case "shop":
 		switch parts[1] {

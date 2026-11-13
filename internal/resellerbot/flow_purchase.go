@@ -369,6 +369,11 @@ func (inst *botInstance) handleProofMessage(message telego.Message, orderIDStr, 
 	if err != nil {
 		return
 	}
+	order, err := botSvc.GetOrder(inst.ownerId, orderID)
+	if err != nil || order.BuyerTgId != message.From.ID {
+		inst.states.clear(message.Chat.ID)
+		return
+	}
 	var fileID string
 	if len(message.Photo) > 0 {
 		fileID = message.Photo[len(message.Photo)-1].FileID

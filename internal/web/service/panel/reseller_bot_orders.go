@@ -75,6 +75,19 @@ func (s *BotService) CreatePurchaseOrder(ownerId, planId int, buyerTgId int64, b
 	if err := database.GetDB().Where("id = ? AND owner_id = ?", planId, ownerId).First(plan).Error; err != nil {
 		return nil, err
 	}
+	// A repeated tap on the purchase button reopens the same unpaid invoice.
+	// This is a best-effort UX dedupe, not an account-level concurrency lock.
+	var pending []model.BotOrder
+	if err := database.GetDB().
+		Where("owner_id = ? AND buyer_tg_id = ? AND plan_id = ? AND requested_email = ? AND kind = ? AND status = ? AND created_at > ?",
+			ownerId, buyerTgId, planId, requestedEmail, model.BotOrderKindPurchase,
+			model.BotOrderPendingPayment, time.Now().Add(-staleOrderTTL).UnixMilli()).
+		Order("id DESC").Limit(1).Find(&pending).Error; err != nil {
+		return nil, err
+	}
+	if len(pending) > 0 {
+		return &pending[0], nil
+	}
 	order := s.newOrder(ownerId, model.BotOrderKindPurchase, planId, 0, buyerTgId, buyerUsername, paymentMethodId, plan.PriceToman)
 	order.RequestedEmail = requestedEmail
 	if err := s.applyDiscount(order, discountCode, plan.PriceToman); err != nil {
@@ -97,6 +110,17 @@ func (s *BotService) CreateRenewalOrder(ownerId, subscriptionId int, buyerTgId i
 	if err := database.GetDB().First(plan, sub.PlanId).Error; err != nil {
 		return nil, err
 	}
+	var pending []model.BotOrder
+	if err := database.GetDB().
+		Where("owner_id = ? AND buyer_tg_id = ? AND subscription_id = ? AND kind = ? AND status = ? AND created_at > ?",
+			ownerId, buyerTgId, sub.Id, model.BotOrderKindRenewal,
+			model.BotOrderPendingPayment, time.Now().Add(-staleOrderTTL).UnixMilli()).
+		Order("id DESC").Limit(1).Find(&pending).Error; err != nil {
+		return nil, err
+	}
+	if len(pending) > 0 {
+		return &pending[0], nil
+	}
 	order := s.newOrder(ownerId, model.BotOrderKindRenewal, sub.PlanId, sub.Id, buyerTgId, buyerUsername, paymentMethodId, plan.PriceToman)
 	if err := s.applyDiscount(order, discountCode, plan.PriceToman); err != nil {
 		return nil, err
@@ -113,6 +137,17 @@ func (s *BotService) CreateRenewalOrder(ownerId, subscriptionId int, buyerTgId i
 func (s *BotService) CreateTopupOrder(ownerId int, buyerTgId int64, buyerUsername string, amountToman int64, paymentMethodId int) (*model.BotOrder, error) {
 	if amountToman <= 0 {
 		return nil, errors.New("top-up amount must be positive")
+	}
+	var pending []model.BotOrder
+	if err := database.GetDB().
+		Where("owner_id = ? AND buyer_tg_id = ? AND kind = ? AND status = ? AND final_amount_toman = ? AND created_at > ?",
+			ownerId, buyerTgId, model.BotOrderKindTopup, model.BotOrderPendingPayment,
+			amountToman, time.Now().Add(-5*time.Minute).UnixMilli()).
+		Order("id DESC").Limit(1).Find(&pending).Error; err != nil {
+		return nil, err
+	}
+	if len(pending) > 0 {
+		return &pending[0], nil
 	}
 	order := s.newOrder(ownerId, model.BotOrderKindTopup, 0, 0, buyerTgId, buyerUsername, paymentMethodId, amountToman)
 	if err := database.GetDB().Create(order).Error; err != nil {
