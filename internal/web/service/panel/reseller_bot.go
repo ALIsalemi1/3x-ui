@@ -3,9 +3,6 @@ package panel
 import (
 	"encoding/json"
 	"errors"
-	"net/url"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/mhsanaei/3x-ui/v3/internal/database"
@@ -70,13 +67,6 @@ func (s *BotService) SaveConfig(ownerId int, in BotConfigInput) (*model.BotConfi
 	if in.Presentation != nil {
 		if err := validateBotPresentation(in.Presentation); err != nil {
 			return nil, err
-		}
-		if in.Presentation.MiniAppURL != "" {
-			u, _ := url.Parse(in.Presentation.MiniAppURL)
-			// Only this seller's storefront may be configured as a Mini App.
-			if !strings.HasSuffix(u.Path, "/shop/"+strconv.Itoa(ownerId)+"/") {
-				return nil, errors.New("Mini App URL must point to this owner's shop")
-			}
 		}
 	}
 	db := database.GetDB()

@@ -170,21 +170,23 @@ func TestExtendedAccentDoesNotDoublePrefixCustomLabel(test *testing.T) {
 	}
 }
 
-func TestGraphicalShopKeyboardOptInDoesNotReplaceExistingButtons(test *testing.T) {
-	const url = "https://panel.example/base/shop/12/"
-	cfg := &model.BotConfig{Presentation: model.BotPresentation{MiniAppURL: url}}
-	keyboard := shopMenuKeyboard(langFA, cfg)
-	if len(keyboard.Keyboard) < 2 || len(keyboard.Keyboard[0]) != 1 {
-		test.Fatalf("Mini App button missing: %+v", keyboard)
-	}
-	button := keyboard.Keyboard[0][0]
-	if button.WebApp == nil || button.WebApp.URL != url {
-		test.Fatalf("Web App URL not attached to Telegram button: %+v", button)
-	}
-	if keyboard.Keyboard[1][0].Text != t(langFA, "menuBuyNew") {
-		test.Fatal("Original purchase button was removed")
-	}
-	if len(shopMenuKeyboard(langFA, nil).Keyboard) != 5 {
-		test.Fatal("Legacy bot without Mini App should still show its original menu")
+func TestShopMenuContainsOnlyNativeTelegramButtons(test *testing.T) {
+	for _, lang := range []string{langFA, langEN} {
+		for _, cfg := range []*model.BotConfig{nil, &model.BotConfig{}} {
+			keyboard := shopMenuKeyboard(lang, cfg)
+			if len(keyboard.Keyboard) != 5 {
+				test.Fatalf("expected five Telegram menu rows, got %d", len(keyboard.Keyboard))
+			}
+			for _, row := range keyboard.Keyboard {
+				for _, button := range row {
+					if button.WebApp != nil {
+						test.Fatalf("unexpected Mini App button: %+v", button)
+					}
+				}
+			}
+			if shopMenuAction(lang, keyboard.Keyboard[0][0].Text, cfg) != "buy" {
+				test.Fatal("purchase button stopped routing")
+			}
+		}
 	}
 }
