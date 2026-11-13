@@ -1,0 +1,39 @@
+name: Format VPN SHOP Mini App frontend
+
+on:
+  push:
+    branches:
+      - feat/vpn-shop-telegram-miniapp-v1.5.0
+    paths:
+      - ".github/workflows/format-vpn-shop-miniapp.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: feat/vpn-shop-telegram-miniapp-v1.5.0
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+        working-directory: frontend
+      - name: Format affected frontend components
+        run: ./node_modules/.bin/oxfmt src/pages/telegrambot/BotAppearanceEditor.tsx src/pages/telegrambot/TelegramBotPage.tsx
+        working-directory: frontend
+      - name: Commit formatted sources to the branch
+        run: |
+          set -e
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add frontend/src/pages/telegrambot/BotAppearanceEditor.tsx frontend/src/pages/telegrambot/TelegramBotPage.tsx
+          if ! git diff --cached --quiet; then
+            git commit -m 'style(miniapp): format admin appearance editor'
+            git push origin HEAD:refs/heads/feat/vpn-shop-telegram-miniapp-v1.5.0
+          fi

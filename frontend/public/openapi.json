@@ -2111,10 +2111,8 @@
           "menuLayout": {
             "type": "string"
           },
-
           "miniAppURL": {
             "type": "string"
-
           },
           "supportURL": {
             "type": "string"

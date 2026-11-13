@@ -2085,10 +2085,8 @@ export const SCHEMAS: Record<string, unknown> = {
       "menuLayout": {
         "type": "string"
       },
-
       "miniAppURL": {
         "type": "string"
-
       },
       "supportURL": {
         "type": "string"
