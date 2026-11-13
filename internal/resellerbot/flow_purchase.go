@@ -8,7 +8,6 @@ import (
 	"unicode"
 
 	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
 	"github.com/mhsanaei/3x-ui/v3/internal/util/jalali"
 
 	"github.com/mymmrac/telego"
@@ -56,24 +55,7 @@ func kindLabel(lang, kind string) string {
 }
 
 func (inst *botInstance) sendPlanList(chatID int64, lang string) {
-	plans, err := botSvc.ListPlans(inst.ownerId)
-	if err != nil {
-		inst.send(chatID, t(lang, "error"))
-		return
-	}
-	var rows [][]telego.InlineKeyboardButton
-	for _, p := range plans {
-		if !p.Enabled || p.IsTrial {
-			continue
-		}
-		label := t(lang, "planOption", p.Name, common.FormatTraffic(p.TrafficGB*bytesPerGB), p.DurationDays, p.PriceToman)
-		rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(label).WithCallbackData("buy:"+strconv.Itoa(p.Id))))
-	}
-	if len(rows) == 0 {
-		inst.send(chatID, t(lang, "noPlans"))
-		return
-	}
-	inst.send(chatID, t(lang, "choosePlan"), tu.InlineKeyboard(rows...))
+	inst.sendPlanPage(chatID, lang, 0)
 }
 
 func (inst *botInstance) handleBuyPlan(chatID int64, planIDStr, lang string) {
@@ -81,9 +63,10 @@ func (inst *botInstance) handleBuyPlan(chatID int64, planIDStr, lang string) {
 		return
 	}
 	inst.states.set(chatID, "awaiting_username:"+planIDStr)
-	inst.send(chatID, t(lang, "askUsername"), tu.InlineKeyboard(tu.InlineKeyboardRow(
-		tu.InlineKeyboardButton(t(lang, "usernameRandom")).WithCallbackData("email:random:"+planIDStr),
-	)))
+	inst.send(chatID, t(lang, "askUsername"), tu.InlineKeyboard(
+		tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, "usernameRandom")).WithCallbackData("email:random:"+planIDStr)),
+		tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, "btnBack")).WithCallbackData("shop:page:0")),
+	))
 }
 
 // validUsername mirrors this codebase's client-email character rule
