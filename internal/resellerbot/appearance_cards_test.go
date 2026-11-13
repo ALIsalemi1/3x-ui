@@ -39,6 +39,18 @@ func TestInvoiceCardNativeButtonsAndEscapedDetails(t *testing.T) {
 	}
 }
 
+func TestInvoiceReviewHasRefreshWithoutPaymentActions(t *testing.T) {
+	order := &model.BotOrder{
+		Id: 71, Kind: model.BotOrderKindPurchase,
+		Status: model.BotOrderPendingReview, PublicToken: "test-71",
+	}
+	text, kb := invoiceCard(order, "Starter", langFA)
+	if !strings.Contains(text, "بررسی") || kb == nil || len(kb.InlineKeyboard) != 1 ||
+		kb.InlineKeyboard[0][0].CallbackData != "inv:refresh:71" {
+		t.Fatalf("pending review status should only offer refresh: %q %+v", text, kb)
+	}
+}
+
 func TestInvoiceCardKeepsNonPayableStatusesAndTopupSafe(t *testing.T) {
 	order := &model.BotOrder{
 		Id: 17, PublicToken: "T-17", Kind: model.BotOrderKindTopup,
@@ -83,9 +95,12 @@ func TestSubscriptionCardButtonsLinkAndTraffic(t *testing.T) {
 		{kb.InlineKeyboard[3][0].CallbackData, kb.InlineKeyboard[3][0].Style},
 	}
 	want := []struct{ cb, style string }{
-		{"sub:configs:9", "primary"}, {"sub:renew:9", "success"},
-		{"sub:refresh:9", "primary"}, {"sub:autorenew:9", "success"},
-		{"sub:revoke:9", "danger"}, {"sub:list:0", ""},
+		{"sub:configs:9", "primary"},
+		{"sub:renew:9", "success"},
+		{"sub:refresh:9", "primary"},
+		{"sub:autorenew:9", "success"},
+		{"sub:revoke:9", "danger"},
+		{"sub:list:0", ""},
 	}
 	for i := range want {
 		if got[i] != want[i] {

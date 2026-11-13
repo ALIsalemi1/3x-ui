@@ -2,6 +2,7 @@ package resellerbot
 
 import (
 	"fmt"
+	"html"
 	"strings"
 	"time"
 
@@ -78,9 +79,34 @@ func (inst *botInstance) handleToggleNotifications(chatID, buyerTgID int64, buye
 	inst.sendAccountCard(chatID, buyerTgID, buyerUsername, lang)
 }
 
+func referralCardText(lang string, codeLink string, total, bonus, balance int64, referrals []string) string {
+	parts := []string{
+		"<b>" + t(lang, "referralCardTitle") + "</b>",
+		"━━━━━━━━━━━━━━",
+		t(lang, "referralInviteHint"),
+		"<code>" + html.EscapeString(codeLink) + "</code>",
+		"",
+		t(lang, "referralTotal", total),
+		t(lang, "referralEarned", groupedToman(bonus)),
+		t(lang, "referralWallet", groupedToman(balance)),
+	}
+	if len(referrals) > 0 {
+		parts = append(parts, "━━━━━━━━━━━━━━", "<b>"+t(lang, "referralRecentTitle")+"</b>")
+		for _, label := range referrals {
+			parts = append(parts, "👤 "+html.EscapeString(label))
+		}
+	}
+	return strings.Join(parts, "\n")
+}
+
 func (inst *botInstance) sendReferralInfo(chatID, buyerTgID int64, buyerUsername, lang string) {
 	customer, err := botSvc.GetOrCreateCustomer(inst.ownerId, buyerTgID, buyerUsername)
 	if err != nil {
+		inst.send(chatID, t(lang, "error"))
+		return
+	}
+	cfg, err := botSvc.GetConfig(inst.ownerId)
+	if err != nil || cfg == nil || !cfg.ReferralEnabled {
 		inst.send(chatID, t(lang, "error"))
 		return
 	}
@@ -89,7 +115,26 @@ func (inst *botInstance) sendReferralInfo(chatID, buyerTgID int64, buyerUsername
 		inst.send(chatID, t(lang, "error"))
 		return
 	}
-	cfg, _ := botSvc.GetConfig(inst.ownerId)
+	if cfg.BotUsername == "" {
+		inst.send(chatID, t(lang, "referralUsernameMissing"))
+		return
+	}
+	invited, err := botSvc.RecentReferrals(customer.Id)
+	if err != nil {
+		inst.send(chatID, t(lang, "error"))
+		return
+	}
+	labels := make([]string, 0, len(invited))
+	for _, user := range invited {
+		label := user.BuyerUsername
+		if label == "" {
+			label = t(lang, "referralHiddenName")
+		}
+		labels = append(labels, label)
+	}
 	link := "https://t.me/" + cfg.BotUsername + "?start=ref_" + stats.ReferralCode
-	inst.send(chatID, t(lang, "referralInfo", link, stats.ReferredCount, stats.TotalBonusToman))
+	inst.send(chatID, referralCardText(lang, link, stats.ReferredCount, stats.TotalBonusToman,
+		customer.WalletBalanceToman, labels), tu.InlineKeyboard(tu.InlineKeyboardRow(
+		shopCatalogButton(t(lang, "btnReferralRefresh"), "acct:referral", "success"),
+	)))
 }

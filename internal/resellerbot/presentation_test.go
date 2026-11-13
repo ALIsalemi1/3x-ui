@@ -52,7 +52,7 @@ func TestShopWelcomeEscapesBrandAndUsesEnglishGreeting(test *testing.T) {
 func TestShopButtonsHaveDistinctTelegramColors(test *testing.T) {
 	kb := shopMenuKeyboard(langFA, nil)
 	expected := map[string]string{
-		shopMenuDisplayLabel(langFA, "buy", nil):   "success",
+		shopMenuDisplayLabel(langFA, "buy", nil):      "success",
 		shopMenuDisplayLabel(langFA, "trial", nil):    "primary",
 		shopMenuDisplayLabel(langFA, "invoices", nil): "primary",
 		shopMenuDisplayLabel(langFA, "subs", nil):     "success",
@@ -103,10 +103,10 @@ func TestShopMenuButtonStylesOverrideDefaultsAndKeepRouting(test *testing.T) {
 		}
 	}
 	for label, want := range map[string]string{
-		"🛒 خرید ویژه":             "danger",
-		t(langFA, "menuTrial"):    "success",
-		t(langFA, "menuAccount"):  "",
-		t(langFA, "menuSupport"):  "primary",
+		"🛒 خرید ویژه":                                 "danger",
+		t(langFA, "menuTrial"):                        "success",
+		t(langFA, "menuAccount"):                      "",
+		t(langFA, "menuSupport"):                      "primary",
 		shopMenuDisplayLabel(langFA, "invoices", cfg): "primary",
 	} {
 		if got := styles[label]; got != want {
@@ -177,7 +177,7 @@ func TestExtendedAccentDoesNotDoublePrefixCustomLabel(test *testing.T) {
 
 func TestShopMenuContainsOnlyNativeTelegramButtons(test *testing.T) {
 	for _, lang := range []string{langFA, langEN} {
-		for _, cfg := range []*model.BotConfig{nil, &model.BotConfig{}} {
+		for _, cfg := range []*model.BotConfig{nil, {}} {
 			keyboard := shopMenuKeyboard(lang, cfg)
 			if len(keyboard.Keyboard) != 4 {
 				test.Fatalf("expected four Telegram menu rows, got %d", len(keyboard.Keyboard))
@@ -262,7 +262,7 @@ func TestRetiredGraphicalShopButtonCannotReappear(test *testing.T) {
 		for _, layout := range []string{"spacious", "compact"} {
 			cfg := &model.BotConfig{Presentation: model.BotPresentation{
 				MenuLayout: layout,
-				Labels: map[string]string{lang + ":buy": "🛍 ورود به فروشگاه گرافیکی"},
+				Labels:     map[string]string{lang + ":buy": "🛍 ورود به فروشگاه گرافیکی"},
 			}}
 			kb := shopMenuKeyboard(lang, cfg)
 			if len(kb.Keyboard) == 0 || kb.Keyboard[0][0].Text != t(lang, "menuBuyNew") {

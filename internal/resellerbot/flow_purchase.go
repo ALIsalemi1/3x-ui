@@ -172,12 +172,20 @@ func invoiceCard(order *model.BotOrder, planName, lang string) (string, *telego.
 		lines = append(lines, t(lang, "invoiceTxRef", html.EscapeString(order.TransactionRef)))
 	}
 	text := strings.Join(lines, "\n")
+	id := strconv.Itoa(order.Id)
+	if order.Status == model.BotOrderPendingReview {
+		return text + "\n\n" + t(lang, "invoiceReviewNote"), tu.InlineKeyboard(tu.InlineKeyboardRow(
+			shopCatalogButton(t(lang, "btnRefreshInvoice"), "inv:refresh:"+id, "primary"),
+		))
+	}
 	if order.Status != model.BotOrderPendingPayment {
 		return text, nil
 	}
-	id := strconv.Itoa(order.Id)
 	rows := [][]telego.InlineKeyboardButton{
-		tu.InlineKeyboardRow(shopCatalogButton(t(lang, "btnPay"), "inv:pay:"+id, "success")),
+		tu.InlineKeyboardRow(
+			shopCatalogButton(t(lang, "btnPay"), "inv:pay:"+id, "success"),
+			shopCatalogButton(t(lang, "btnRefreshInvoice"), "inv:refresh:"+id, "primary"),
+		),
 	}
 	if order.DiscountCodeId == 0 && order.Kind != model.BotOrderKindTopup {
 		rows = append(rows, tu.InlineKeyboardRow(shopCatalogButton(t(lang, "btnApplyDiscount"), "inv:disc:"+id, "primary")))
@@ -278,6 +286,10 @@ func (inst *botInstance) handleInvoicePayStart(chatID int64, orderIDStr, lang st
 		inst.send(chatID, t(lang, "error"))
 		return
 	}
+	if order.Status != model.BotOrderPendingPayment {
+		inst.sendInvoiceCard(chatID, orderID, lang)
+		return
+	}
 	methods, err := botSvc.ListPaymentMethods(inst.ownerId)
 	if err != nil {
 		inst.send(chatID, t(lang, "error"))
@@ -369,6 +381,11 @@ func (inst *botInstance) handleProofMessage(message telego.Message, orderIDStr, 
 	if err != nil {
 		return
 	}
+	order, err := botSvc.GetOrder(inst.ownerId, orderID)
+	if err != nil || order.BuyerTgId != message.From.ID {
+		inst.states.clear(message.Chat.ID)
+		return
+	}
 	var fileID string
 	if len(message.Photo) > 0 {
 		fileID = message.Photo[len(message.Photo)-1].FileID
@@ -377,6 +394,8 @@ func (inst *botInstance) handleProofMessage(message telego.Message, orderIDStr, 
 		return
 	}
 	inst.states.clear(message.Chat.ID)
-	inst.send(message.Chat.ID, t(lang, "proofReceived"))
+	inst.send(message.Chat.ID, t(lang, "proofReceived"), tu.InlineKeyboard(tu.InlineKeyboardRow(
+		shopCatalogButton(t(lang, "btnRefreshInvoice"), "inv:refresh:"+strconv.Itoa(orderID), "primary"),
+	)))
 	inst.notifyOwnerPendingReview(orderID)
 }

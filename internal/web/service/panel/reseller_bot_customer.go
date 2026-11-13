@@ -205,3 +205,12 @@ func (s *BotService) ApplyReferralBonus(order *model.BotOrder) error {
 	return s.CreditWallet(order.OwnerId, buyer.ReferredByCustomerId, model.BotWalletTxReferralBonus,
 		bonus, order.Id, "referral bonus")
 }
+
+// RecentReferrals returns this customer's own referrals, newest first.
+func (s *BotService) RecentReferrals(customerId int) ([]model.BotCustomer, error) {
+	var referred []model.BotCustomer
+	err := database.GetDB().
+		Where("referred_by_customer_id = ?", customerId).
+		Order("id DESC").Limit(10).Find(&referred).Error
+	return referred, err
+}

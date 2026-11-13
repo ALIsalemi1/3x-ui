@@ -132,7 +132,73 @@ func shopCatalogCaption(lang string, page, total int) string {
 	return caption
 }
 
+// shopSortPlans offers useful real-plan filters without inventing location
+// metadata: a plan may contain inbounds from multiple countries.
+func shopSortPlans(plans []model.BotPlan, mode string) []model.BotPlan {
+	sorted := append([]model.BotPlan(nil), plans...)
+	switch mode {
+	case "price":
+		sort.SliceStable(sorted, func(i, j int) bool {
+			return sorted[i].PriceToman < sorted[j].PriceToman
+		})
+	case "traffic":
+		sort.SliceStable(sorted, func(i, j int) bool {
+			a, b := sorted[i].TrafficGB, sorted[j].TrafficGB
+			if a == 0 || b == 0 {
+				return a == 0 && b != 0
+			}
+			return a > b
+		})
+	case "duration":
+		sort.SliceStable(sorted, func(i, j int) bool {
+			return sorted[i].DurationDays < sorted[j].DurationDays
+		})
+	}
+	return sorted
+}
+
+func shopCatalogKeyboardMode(lang string, plans []model.BotPlan, page int, mode string) (*telego.InlineKeyboardMarkup, int, int) {
+	plans = shopSortPlans(plans, mode)
+	keyboard, currentPage, pageCount := shopCatalogKeyboard(lang, plans, page)
+	if keyboard == nil {
+		return nil, currentPage, pageCount
+	}
+	filters := []struct{ name, label string }{
+		{"all", "catalogFilterAll"},
+		{"price", "catalogFilterPrice"},
+		{"traffic", "catalogFilterTraffic"},
+		{"duration", "catalogFilterDuration"},
+	}
+	controls := make([]telego.InlineKeyboardButton, 0, 4)
+	for _, f := range filters {
+		style := "primary"
+		if f.name == mode || (mode == "" && f.name == "all") {
+			style = "success"
+		}
+		controls = append(controls, shopCatalogButton(t(lang, f.label), "shop:filter:"+f.name, style))
+	}
+	keyboard.InlineKeyboard = append([][]telego.InlineKeyboardButton{
+		tu.InlineKeyboardRow(controls[:2]...),
+		tu.InlineKeyboardRow(controls[2:]...),
+	}, keyboard.InlineKeyboard...)
+	if mode != "" && mode != "all" {
+		for row := range keyboard.InlineKeyboard {
+			for col := range keyboard.InlineKeyboard[row] {
+				button := &keyboard.InlineKeyboard[row][col]
+				if strings.HasPrefix(button.CallbackData, "shop:page:") {
+					button.CallbackData = "shop:page:" + mode + ":" + strings.TrimPrefix(button.CallbackData, "shop:page:")
+				}
+			}
+		}
+	}
+	return keyboard, currentPage, pageCount
+}
+
 func (inst *botInstance) sendPlanPage(chatID int64, lang string, page int) {
+	inst.sendPlanPageMode(chatID, lang, page, "all")
+}
+
+func (inst *botInstance) sendPlanPageMode(chatID int64, lang string, page int, mode string) {
 	plans, err := botSvc.ListPlans(inst.ownerId)
 	if err != nil {
 		inst.send(chatID, t(lang, "error"))
@@ -143,7 +209,7 @@ func (inst *botInstance) sendPlanPage(chatID int64, lang string, page int) {
 		inst.send(chatID, t(lang, "noPlans"))
 		return
 	}
-	keyboard, currentPage, pages := shopCatalogKeyboard(lang, visible, page)
+	keyboard, currentPage, pages := shopCatalogKeyboardMode(lang, visible, page, mode)
 	caption := shopCatalogCaption(lang, currentPage, pages)
 	_, err = inst.bot.SendPhoto(context.Background(), &telego.SendPhotoParams{
 		ChatID:      tu.ID(chatID),

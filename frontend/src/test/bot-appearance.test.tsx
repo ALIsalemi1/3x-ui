@@ -57,7 +57,10 @@ test('custom native button colors appear in preview and save payload', () => {
   );
   const preview = container.querySelector('.bot-phone-menu');
   expect(preview?.querySelector('.bot-menu-button--danger')?.textContent).toContain('خرید');
-  expect(preview?.querySelector('.bot-menu-button--success')?.textContent).toContain('تست');
+  expect(
+    preview?.querySelector('.bot-phone-menu-row:nth-child(3) .bot-menu-button--success')
+      ?.textContent,
+  ).toContain('تست');
   expect(preview?.querySelector('.bot-menu-button--default')?.textContent).toContain('حساب');
   fireEvent.click(container.querySelector('.bot-save-bar button')!);
   const saved = JSON.parse(screen.getByTestId('saved').textContent!);

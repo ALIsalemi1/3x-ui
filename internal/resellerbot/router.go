@@ -3,6 +3,7 @@ package resellerbot
 import (
 	"context"
 	"fmt"
+	"html"
 	"strconv"
 	"strings"
 
@@ -75,18 +76,28 @@ func (inst *botInstance) sendOrderReviewCard(chatID int64, o model.BotOrder) {
 	if plan != nil {
 		planName = plan.Name
 	}
-	summary := fmt.Sprintf("#%d - @%s\n%s\n%s\nProof: %s", o.Id, o.BuyerUsername, planName,
-		t(langFA, "invoiceAmount", o.FinalAmountToman), orderProofSummary(o))
+	username := o.BuyerUsername
+	if username == "" {
+		username = strconv.FormatInt(o.BuyerTgId, 10)
+	}
+	proof := []rune(orderProofSummary(o))
+	if len(proof) > 160 {
+		proof = append(proof[:160], '…')
+	}
+	summary := fmt.Sprintf("<b>🧾 سفارش #%d</b>\n👤 @%s\n📦 %s\n💰 %s تومان\n🧷 رسید: %s",
+		o.Id, html.EscapeString(username), html.EscapeString(planName),
+		groupedToman(o.FinalAmountToman), html.EscapeString(string(proof)))
 	if o.TransactionRef != "" {
-		summary += "\n" + t(langFA, "invoiceTxRef", o.TransactionRef)
+		summary += "\n" + t(langFA, "invoiceTxRef", html.EscapeString(o.TransactionRef))
 	}
 	markup := tu.InlineKeyboard(tu.InlineKeyboardRow(
-		tu.InlineKeyboardButton(t(langFA, "approve")).WithCallbackData("a:"+strconv.Itoa(o.Id)),
-		tu.InlineKeyboardButton(t(langFA, "reject")).WithCallbackData("r:"+strconv.Itoa(o.Id)),
+		shopCatalogButton(t(langFA, "approve"), "a:"+strconv.Itoa(o.Id), "success"),
+		shopCatalogButton(t(langFA, "reject"), "r:"+strconv.Itoa(o.Id), "danger"),
 	))
 	if o.ProofTgFileId != "" {
 		_, _ = inst.bot.SendPhoto(context.Background(), &telego.SendPhotoParams{
-			ChatID: tu.ID(chatID), Photo: telego.InputFile{FileID: o.ProofTgFileId}, Caption: summary, ReplyMarkup: markup,
+			ChatID: tu.ID(chatID), Photo: telego.InputFile{FileID: o.ProofTgFileId},
+			Caption: summary, ParseMode: "HTML", ReplyMarkup: markup,
 		})
 		return
 	}
@@ -116,6 +127,45 @@ func (inst *botInstance) handleCallback(_ *th.Context, query telego.CallbackQuer
 	}
 	lang := inst.customerLang(buyerID, buyerUsername)
 
+	// Native callback data is client-controlled: never use a numeric order
+	// or subscription ID before verifying the current buyer owns it.
+	switch parts[0] {
+	case "inv", "pmwallet", "pm", "disc":
+		idText := parts[1]
+		if parts[0] == "inv" || parts[0] == "disc" {
+			if len(parts) != 3 {
+				return nil
+			}
+			idText = parts[2]
+		}
+		id, err := strconv.Atoi(idText)
+		if err != nil {
+			return nil
+		}
+		order, err := botSvc.GetOrder(inst.ownerId, id)
+		if err != nil || order.BuyerTgId != buyerID {
+			return nil
+		}
+	case "sub":
+		if parts[1] != "list" {
+			if len(parts) != 3 {
+				return nil
+			}
+			id, err := strconv.Atoi(parts[2])
+			if err != nil {
+				return nil
+			}
+			sub, err := botSvc.GetSubscription(inst.ownerId, id)
+			if err != nil {
+				return nil
+			}
+			customer, err := botSvc.GetOrCreateCustomer(inst.ownerId, buyerID, buyerUsername)
+			if err != nil || sub.CustomerId != customer.Id {
+				return nil
+			}
+		}
+	}
+
 	switch parts[0] {
 	case "shop":
 		switch parts[1] {
@@ -123,12 +173,29 @@ func (inst *botInstance) handleCallback(_ *th.Context, query telego.CallbackQuer
 			if len(parts) < 3 {
 				return nil
 			}
-			page, err := strconv.Atoi(parts[2])
+			pageInput, mode := parts[2], "all"
+			if modeInput, pagePart, ok := strings.Cut(parts[2], ":"); ok {
+				if modeInput != "price" && modeInput != "traffic" && modeInput != "duration" {
+					return nil
+				}
+				mode, pageInput = modeInput, pagePart
+			}
+			page, err := strconv.Atoi(pageInput)
 			if err != nil || page < 0 {
 				return nil
 			}
 			inst.states.clear(chatID)
-			inst.sendPlanPage(chatID, lang, page)
+			inst.sendPlanPageMode(chatID, lang, page, mode)
+		case "filter":
+			if len(parts) < 3 {
+				return nil
+			}
+			mode := parts[2]
+			if mode != "all" && mode != "price" && mode != "traffic" && mode != "duration" {
+				return nil
+			}
+			inst.states.clear(chatID)
+			inst.sendPlanPageMode(chatID, lang, 0, mode)
 		case "back":
 			inst.states.clear(chatID)
 			inst.sendMainMenu(chatID, lang)
@@ -147,7 +214,7 @@ func (inst *botInstance) handleCallback(_ *th.Context, query telego.CallbackQuer
 			return nil
 		}
 		switch parts[1] {
-		case "view":
+		case "view", "refresh":
 			if id, err := strconv.Atoi(parts[2]); err == nil {
 				inst.sendInvoiceCard(chatID, id, lang)
 			}
@@ -195,6 +262,16 @@ func (inst *botInstance) handleCallback(_ *th.Context, query telego.CallbackQuer
 			inst.handleRenew(chatID, buyerID, buyerUsername, parts[2], lang)
 		case "autorenew":
 			inst.handleToggleAutoRenew(chatID, parts[2], lang)
+		}
+	case "admin":
+		if !isOwnerChat(inst.ownerId, chatID) {
+			return nil
+		}
+		switch parts[1] {
+		case "stats":
+			inst.sendOwnerStats(chatID)
+		case "orders":
+			inst.sendPendingOrders(chatID)
 		}
 	case "acct":
 		switch parts[1] {

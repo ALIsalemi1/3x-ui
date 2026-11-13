@@ -82,11 +82,12 @@ func startBotInstance(ownerId int, token string) (*botInstance, error) {
 	registerHandlers(h, inst)
 	inst.handler = h
 
-	inst.wg.Add(1)
+	inst.wg.Add(2)
 	go func() {
 		defer inst.wg.Done()
 		_ = h.Start()
 	}()
+	go inst.subscriptionAlertLoop(ctx)
 
 	go inst.cacheUsername()
 

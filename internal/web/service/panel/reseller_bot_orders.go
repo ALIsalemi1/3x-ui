@@ -75,6 +75,19 @@ func (s *BotService) CreatePurchaseOrder(ownerId, planId int, buyerTgId int64, b
 	if err := database.GetDB().Where("id = ? AND owner_id = ?", planId, ownerId).First(plan).Error; err != nil {
 		return nil, err
 	}
+	// A repeated tap on the purchase button reopens the same unpaid invoice.
+	// This is a best-effort UX dedupe, not an account-level concurrency lock.
+	var pending []model.BotOrder
+	if err := database.GetDB().
+		Where("owner_id = ? AND buyer_tg_id = ? AND plan_id = ? AND requested_email = ? AND kind = ? AND status = ? AND created_at > ?",
+			ownerId, buyerTgId, planId, requestedEmail, model.BotOrderKindPurchase,
+			model.BotOrderPendingPayment, time.Now().Add(-staleOrderTTL).UnixMilli()).
+		Order("id DESC").Limit(1).Find(&pending).Error; err != nil {
+		return nil, err
+	}
+	if len(pending) > 0 {
+		return &pending[0], nil
+	}
 	order := s.newOrder(ownerId, model.BotOrderKindPurchase, planId, 0, buyerTgId, buyerUsername, paymentMethodId, plan.PriceToman)
 	order.RequestedEmail = requestedEmail
 	if err := s.applyDiscount(order, discountCode, plan.PriceToman); err != nil {
@@ -97,6 +110,17 @@ func (s *BotService) CreateRenewalOrder(ownerId, subscriptionId int, buyerTgId i
 	if err := database.GetDB().First(plan, sub.PlanId).Error; err != nil {
 		return nil, err
 	}
+	var pending []model.BotOrder
+	if err := database.GetDB().
+		Where("owner_id = ? AND buyer_tg_id = ? AND subscription_id = ? AND kind = ? AND status = ? AND created_at > ?",
+			ownerId, buyerTgId, sub.Id, model.BotOrderKindRenewal,
+			model.BotOrderPendingPayment, time.Now().Add(-staleOrderTTL).UnixMilli()).
+		Order("id DESC").Limit(1).Find(&pending).Error; err != nil {
+		return nil, err
+	}
+	if len(pending) > 0 {
+		return &pending[0], nil
+	}
 	order := s.newOrder(ownerId, model.BotOrderKindRenewal, sub.PlanId, sub.Id, buyerTgId, buyerUsername, paymentMethodId, plan.PriceToman)
 	if err := s.applyDiscount(order, discountCode, plan.PriceToman); err != nil {
 		return nil, err
@@ -113,6 +137,17 @@ func (s *BotService) CreateRenewalOrder(ownerId, subscriptionId int, buyerTgId i
 func (s *BotService) CreateTopupOrder(ownerId int, buyerTgId int64, buyerUsername string, amountToman int64, paymentMethodId int) (*model.BotOrder, error) {
 	if amountToman <= 0 {
 		return nil, errors.New("top-up amount must be positive")
+	}
+	var pending []model.BotOrder
+	if err := database.GetDB().
+		Where("owner_id = ? AND buyer_tg_id = ? AND kind = ? AND status = ? AND final_amount_toman = ? AND created_at > ?",
+			ownerId, buyerTgId, model.BotOrderKindTopup, model.BotOrderPendingPayment,
+			amountToman, time.Now().Add(-5*time.Minute).UnixMilli()).
+		Order("id DESC").Limit(1).Find(&pending).Error; err != nil {
+		return nil, err
+	}
+	if len(pending) > 0 {
+		return &pending[0], nil
 	}
 	order := s.newOrder(ownerId, model.BotOrderKindTopup, 0, 0, buyerTgId, buyerUsername, paymentMethodId, amountToman)
 	if err := database.GetDB().Create(order).Error; err != nil {
@@ -416,10 +451,14 @@ func (s *BotService) RejectOrder(orderId, reviewerId int, reason string) (*model
 
 // OwnerStats is a quick shop-health summary for the bot's admin "Stats" menu.
 type OwnerStats struct {
-	CustomerCount  int64
-	ApprovedOrders int64
-	PendingReview  int64
-	RevenueToman   int64
+	CustomerCount       int64
+	ApprovedOrders      int64
+	PendingReview       int64
+	RevenueToman        int64
+	RevenueTodayToman   int64
+	RevenueMonthToman   int64
+	NewCustomersToday   int64
+	ActiveSubscriptions int64
 }
 
 // GetOwnerStats aggregates counts/revenue for the owner's bot. Revenue
@@ -444,6 +483,35 @@ func (s *BotService) GetOwnerStats(ownerId int) (*OwnerStats, error) {
 	if err := db.Model(&model.BotOrder{}).
 		Where("owner_id = ? AND status = ? AND kind != ?", ownerId, model.BotOrderApproved, model.BotOrderKindTopup).
 		Select("COALESCE(SUM(final_amount_toman), 0)").Scan(&stats.RevenueToman).Error; err != nil {
+		return nil, err
+	}
+	today := time.Now()
+	dayStart := time.Date(today.Year(), today.Month(), today.Day(), 0, 0, 0, 0, today.Location()).UnixMilli()
+	monthStart := time.Date(today.Year(), today.Month(), 1, 0, 0, 0, 0, today.Location()).UnixMilli()
+	for _, period := range []struct {
+		start int64
+		dest  *int64
+	}{
+		{dayStart, &stats.RevenueTodayToman},
+		{monthStart, &stats.RevenueMonthToman},
+	} {
+		if err := db.Model(&model.BotOrder{}).
+			Where("owner_id = ? AND status = ? AND kind != ? AND paid_at >= ?",
+				ownerId, model.BotOrderApproved, model.BotOrderKindTopup, period.start).
+			Select("COALESCE(SUM(final_amount_toman), 0)").Scan(period.dest).Error; err != nil {
+			return nil, err
+		}
+	}
+	if err := db.Model(&model.BotCustomer{}).
+		Where("owner_id = ? AND created_at >= ?", ownerId, dayStart).
+		Count(&stats.NewCustomersToday).Error; err != nil {
+		return nil, err
+	}
+	if err := db.Table("bot_subscriptions").
+		Joins("JOIN client_traffics ON client_traffics.email = bot_subscriptions.client_email").
+		Where("bot_subscriptions.owner_id = ? AND client_traffics.enable = ? AND (client_traffics.expiry_time <= 0 OR client_traffics.expiry_time > ?)",
+			ownerId, true, today.UnixMilli()).
+		Count(&stats.ActiveSubscriptions).Error; err != nil {
 		return nil, err
 	}
 	return stats, nil
