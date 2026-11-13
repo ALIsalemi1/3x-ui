@@ -289,8 +289,8 @@ func (inst *botInstance) handleInvoicePayStart(chatID int64, orderIDStr, lang st
 		if customer, cErr := botSvc.GetOrCreateCustomer(inst.ownerId, order.BuyerTgId, order.BuyerUsername); cErr == nil &&
 			customer.WalletBalanceToman >= order.FinalAmountToman {
 			rows = append(rows, tu.InlineKeyboardRow(
-				tu.InlineKeyboardButton(t(lang, "payWithWallet", strconv.FormatInt(customer.WalletBalanceToman, 10))).
-					WithCallbackData("pmwallet:"+strconv.Itoa(order.Id)),
+				shopCatalogButton(t(lang, "payWithWallet", groupedToman(customer.WalletBalanceToman)),
+					"pmwallet:"+strconv.Itoa(order.Id), "success"),
 			))
 		}
 	}
@@ -299,7 +299,7 @@ func (inst *botInstance) handleInvoicePayStart(chatID int64, orderIDStr, lang st
 			continue
 		}
 		rows = append(rows, tu.InlineKeyboardRow(
-			tu.InlineKeyboardButton(m.Label).WithCallbackData(fmt.Sprintf("pm:%d:%d", order.Id, m.Id)),
+			shopCatalogButton(m.Label, fmt.Sprintf("pm:%d:%d", order.Id, m.Id), "primary"),
 		))
 	}
 	if len(rows) == 0 {
@@ -327,9 +327,10 @@ func (inst *botInstance) handleChoosePaymentMethod(chatID int64, orderIDStr, met
 		inst.send(chatID, t(lang, "error"))
 		return
 	}
-	instructions := t(lang, "payInstructions") + "\n" + method.Label + ": " + method.Value
+	instructions := "<b>" + t(lang, "choosePayment") + "</b>\n━━━━━━━━━━━━━━\n" +
+		t(lang, "payInstructions") + "\n" + html.EscapeString(method.Label) + ": <code>" + html.EscapeString(method.Value) + "</code>"
 	if method.HolderName != "" {
-		instructions += "\n" + method.HolderName
+		instructions += "\n" + html.EscapeString(method.HolderName)
 	}
 	instructions += "\n\n" + t(lang, "sendProof")
 	inst.send(chatID, instructions)

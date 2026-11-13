@@ -9,7 +9,7 @@ import (
 
 func (inst *botInstance) handleTopupPrompt(chatID int64, lang string) {
 	inst.states.set(chatID, "awaiting_topup_amount")
-	inst.send(chatID, t(lang, "walletTopupPrompt"))
+	inst.send(chatID, "<b>"+t(lang, "walletTopupTitle")+"</b>\n━━━━━━━━━━━━━━\n"+t(lang, "walletTopupPrompt"))
 }
 
 func (inst *botInstance) handleTopupAmount(message telego.Message, lang string) {
@@ -29,7 +29,7 @@ func (inst *botInstance) handleTopupAmount(message telego.Message, lang string) 
 
 func (inst *botInstance) handleRedeemPrompt(chatID int64, lang string) {
 	inst.states.set(chatID, "awaiting_redeem_code")
-	inst.send(chatID, t(lang, "redeemPrompt"))
+	inst.send(chatID, "<b>"+t(lang, "walletRedeemTitle")+"</b>\n━━━━━━━━━━━━━━\n"+t(lang, "redeemPrompt"))
 }
 
 func (inst *botInstance) handleRedeemCode(message telego.Message, lang string) {

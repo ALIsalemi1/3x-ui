@@ -2,6 +2,7 @@ package resellerbot
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/mhsanaei/3x-ui/v3/internal/util/jalali"
@@ -9,6 +10,21 @@ import (
 	"github.com/mymmrac/telego"
 	tu "github.com/mymmrac/telego/telegoutil"
 )
+
+// accountCardText displays the wallet prominently without exposing any
+// unescaped user-provided content or changing account state.
+func accountCardText(lang string, buyerTgID, balance int64, joined string) string {
+	return strings.Join([]string{
+		"<b>" + t(lang, "menuAccount") + "</b>",
+		"━━━━━━━━━━━━━━",
+		t(lang, "accountId", buyerTgID),
+		"",
+		"<b>" + t(lang, "walletCardTitle") + "</b>",
+		t(lang, "walletBalancePretty", groupedToman(balance)),
+		"━━━━━━━━━━━━━━",
+		t(lang, "accountJoined", joined),
+	}, "\n")
+}
 
 func (inst *botInstance) sendAccountCard(chatID, buyerTgID int64, buyerUsername, lang string) {
 	customer, err := botSvc.GetOrCreateCustomer(inst.ownerId, buyerTgID, buyerUsername)
@@ -23,10 +39,7 @@ func (inst *botInstance) sendAccountCard(chatID, buyerTgID int64, buyerUsername,
 		joined = fmt.Sprintf("%d/%02d/%02d", y, m, d)
 	}
 
-	text := "<b>" + t(lang, "menuAccount") + "</b>\n━━━━━━━━━━━━━━\n" +
-		t(lang, "accountId", customer.BuyerTgId) + "\n" +
-		t(lang, "accountBalance", customer.WalletBalanceToman) + "\n" +
-		t(lang, "accountJoined", joined)
+	text := accountCardText(lang, customer.BuyerTgId, customer.WalletBalanceToman, joined)
 
 	notifLabel := "notificationsOff"
 	if customer.NotificationsEnabled {
@@ -37,13 +50,17 @@ func (inst *botInstance) sendAccountCard(chatID, buyerTgID int64, buyerUsername,
 	cfg, _ := botSvc.GetConfig(inst.ownerId)
 	if cfg != nil && cfg.WalletEnabled {
 		rows = append(rows, tu.InlineKeyboardRow(
-			tu.InlineKeyboardButton(t(lang, "btnTopup")).WithCallbackData("acct:topup"),
-			tu.InlineKeyboardButton(t(lang, "btnRedeem")).WithCallbackData("acct:redeem"),
+			shopCatalogButton(t(lang, "btnTopup"), "acct:topup", "success"),
+			shopCatalogButton(t(lang, "btnRedeem"), "acct:redeem", "primary"),
 		))
 	}
-	rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, notifLabel)).WithCallbackData("acct:notif")))
+	notifStyle := "primary"
+	if customer.NotificationsEnabled {
+		notifStyle = "success"
+	}
+	rows = append(rows, tu.InlineKeyboardRow(shopCatalogButton(t(lang, notifLabel), "acct:notif", notifStyle)))
 	if cfg != nil && cfg.ReferralEnabled {
-		rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, "btnReferral")).WithCallbackData("acct:referral")))
+		rows = append(rows, tu.InlineKeyboardRow(shopCatalogButton(t(lang, "btnReferral"), "acct:referral", "primary")))
 	}
 	inst.send(chatID, text, tu.InlineKeyboard(rows...))
 }
