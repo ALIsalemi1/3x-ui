@@ -1,6 +1,8 @@
 package resellerbot
 
 import (
+	"bytes"
+	"image/png"
 	"strings"
 	"testing"
 
@@ -39,5 +41,40 @@ func TestShopWelcomeEscapesBrandAndUsesEnglishGreeting(test *testing.T) {
 	}
 	if strings.Contains(shopWelcome("fa", cfg), "Hello") {
 		test.Fatal("English greeting leaked into Persian")
+	}
+}
+
+func TestShopButtonsHaveDistinctTelegramColors(test *testing.T) {
+	kb := shopMenuKeyboard(langFA, nil)
+	expected := map[string]string{
+		t(langFA, "menuBuyNew"): "success",
+		t(langFA, "menuTrial"): "primary",
+		t(langFA, "menuInvoices"): "primary",
+		t(langFA, "menuSubs"): "success",
+		t(langFA, "menuAccount"): "primary",
+		t(langFA, "menuSupport"): "danger",
+		t(langFA, "menuTutorial"): "success",
+	}
+	for _, row := range kb.Keyboard {
+		for _, button := range row {
+			style, exists := expected[button.Text]
+			if !exists || button.Style != style {
+				test.Fatalf("unexpected button style for %q: got %q, want %q", button.Text, button.Style, style)
+			}
+			delete(expected, button.Text)
+		}
+	}
+	if len(expected) != 0 {
+		test.Fatalf("missing styled buttons: %v", expected)
+	}
+}
+
+func TestShopBannerIsValidPhoto(test *testing.T) {
+	config, err := png.DecodeConfig(bytes.NewReader(vpnShopBanner))
+	if err != nil {
+		test.Fatalf("embedded VPN SHOP banner is not a PNG: %v", err)
+	}
+	if config.Width != 720 || config.Height != 280 {
+		test.Fatalf("unexpected banner dimensions: %dx%d", config.Width, config.Height)
 	}
 }

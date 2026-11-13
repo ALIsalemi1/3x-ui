@@ -32,6 +32,9 @@ test('shop identity and translated menu edits appear in preview and save payload
   fireEvent.change(container.querySelector('#bot-label-buy')!, { target: { value: 'خرید سریع' } });
   expect(container.querySelector('.bot-phone-header strong')?.textContent).toBe('Salemi shop');
   expect(container.querySelector('.bot-phone-menu')?.textContent).toContain('خرید سریع');
+  expect(container.querySelector('.bot-shop-banner')?.getAttribute('alt')).toBe('VPN SHOP');
+  expect(container.querySelector('.bot-phone-menu-row .bot-menu-button--success')?.textContent).toBe('خرید سریع');
+  expect(container.querySelector('.bot-phone-menu .bot-menu-button--danger')?.textContent).toContain('پشتیبانی');
   fireEvent.click(container.querySelector('.bot-save-bar button')!);
   const saved = JSON.parse(screen.getByTestId('saved').textContent!);
   expect(saved.brandName).toBe('Salemi shop');

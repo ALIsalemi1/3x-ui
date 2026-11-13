@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { CheckOutlined, RobotOutlined } from '@ant-design/icons';
 import type { BotPresentation } from '@/generated/types';
 import { PANEL_ACCENTS, useTheme } from '@/hooks/useTheme';
+import vpnShopBanner from '../../assets/vpn-shop-banner.png';
 
 export const emptyPresentation: BotPresentation = {
   brandName: '',
@@ -20,6 +21,12 @@ export const emptyPresentation: BotPresentation = {
 };
 
 const actions = ['buy', 'trial', 'invoices', 'subs', 'account', 'support', 'tutorial'] as const;
+
+function menuButtonStyle(action: string): 'success' | 'primary' | 'danger' {
+  if (action === 'buy' || action === 'subs' || action === 'tutorial') return 'success';
+  if (action === 'support') return 'danger';
+  return 'primary';
+}
 const fallbackLabels = {
   en: {
     buy: '🛍 Buy new subscription',
@@ -254,6 +261,7 @@ export default function BotAppearanceEditor({
             </div>
           </div>
           <div className="bot-chat">
+            <img className="bot-shop-banner" src={vpnShopBanner} alt="VPN SHOP" />
             <div className="bot-chat-bubble">
               {p.brandName && <strong>{p.brandName}</strong>}
               <p>
@@ -272,7 +280,12 @@ export default function BotAppearanceEditor({
               return visible.length ? (
                 <div className="bot-phone-menu-row" key={i}>
                   {visible.map((action) => (
-                    <span key={action}>{label(action as (typeof actions)[number])}</span>
+                    <span
+                      key={action}
+                      className={`bot-menu-button bot-menu-button--${menuButtonStyle(action)}`}
+                    >
+                      {label(action as (typeof actions)[number])}
+                    </span>
                   ))}
                 </div>
               ) : null;
