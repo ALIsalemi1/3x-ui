@@ -3,11 +3,8 @@ package resellerbot
 import (
 	"html"
 	"strconv"
-	"strings"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
 	"github.com/mhsanaei/3x-ui/v3/internal/web/service/panel"
 
 	"github.com/mymmrac/telego"
@@ -52,13 +49,16 @@ func (inst *botInstance) sendSubscriptionList(chatID, buyerTgID int64, buyerUser
 	}
 	var rows [][]telego.InlineKeyboardButton
 	for _, sub := range subs {
-		label := sub.ClientEmail
-		if plan, pErr := botSvc.GetPlan(inst.ownerId, sub.PlanId); pErr == nil {
-			label = plan.Name
+		name := ""
+		if plan, pErr := botSvc.GetPlan(inst.ownerId, sub.PlanId); pErr == nil && plan != nil {
+			name = plan.Name
 		}
-		rows = append(rows, tu.InlineKeyboardRow(shopCatalogButton("💎 "+label, "sub:view:"+strconv.Itoa(sub.Id), "primary")))
+		stats, _ := botSvc.GetSubscriptionStats(sub.ClientEmail)
+		rows = append(rows, tu.InlineKeyboardRow(subscriptionListButton(sub, name, stats)))
 	}
-	caption := "<b>" + t(lang, "menuSubs") + "</b>\n━━━━━━━━━━━━━━\n" + t(lang, "subscriptionListHint")
+	caption := "<b>" + t(lang, "menuSubs") + "</b>\n━━━━━━━━━━━━━━\n" +
+		t(lang, "subscriptionListCount", len(subs)) + "\n" +
+		t(lang, "subscriptionListHint")
 	inst.send(chatID, caption, tu.InlineKeyboard(rows...))
 }
 
@@ -66,66 +66,15 @@ func (inst *botInstance) sendSubscriptionList(chatID, buyerTgID int64, buyerUser
 // subscription-page/subscription bot card shows.
 func clientStatusLabel(lang string, stats *panel.SubscriptionStats) string {
 	switch {
-	case stats == nil || !stats.Enable:
+	case stats == nil:
+		return t(lang, "clientStatusUnknown")
+	case !stats.Enable:
 		return t(lang, "clientStatusDisabled")
 	case stats.ExpiryTime > 0 && stats.ExpiryTime/1000 < time.Now().Unix():
 		return t(lang, "clientStatusExpired")
 	default:
 		return t(lang, "clientStatusActive")
 	}
-}
-
-// subscriptionCardWithStats assembles an HTML-safe detail card with the
-// existing callback IDs. A separate renderer keeps live DB access out of tests.
-func subscriptionCardWithStats(sub *model.BotSubscription, stats *panel.SubscriptionStats, subURL, lang string) (string, *telego.InlineKeyboardMarkup) {
-	lines := []string{
-		"<b>" + t(lang, "subscriptionCardTitle") + "</b>",
-		"━━━━━━━━━━━━━━",
-		t(lang, "subStatus", clientStatusLabel(lang, stats)),
-		t(lang, "subUsername", html.EscapeString(sub.ClientEmail)),
-	}
-	if stats != nil {
-		used := common.FormatTraffic(stats.Up + stats.Down)
-		remaining := t(lang, "unlimited")
-		if stats.Total > 0 {
-			left := stats.Total - stats.Up - stats.Down
-			if left < 0 {
-				left = 0
-			}
-			remaining = common.FormatTraffic(left)
-		}
-		lines = append(lines,
-			"━━━━━━━━━━━━━━",
-			t(lang, "subUsed", used),
-			t(lang, "subRemainingQuota", remaining),
-			t(lang, "subRemaining", timeLeftLabel(stats.ExpiryTime, lang)))
-	}
-	if subURL != "" {
-		lines = append(lines, "━━━━━━━━━━━━━━", t(lang, "subLink", "<code>"+html.EscapeString(subURL)+"</code>"))
-	}
-	autoLabel := "autoRenewOff"
-	autoStyle := "primary"
-	if sub.AutoRenewEnabled {
-		autoLabel = "autoRenewOn"
-		autoStyle = "success"
-	}
-	id := strconv.Itoa(sub.Id)
-	rows := [][]telego.InlineKeyboardButton{
-		tu.InlineKeyboardRow(
-			shopCatalogButton(t(lang, "btnGetConfigs"), "sub:configs:"+id, "primary"),
-			shopCatalogButton(t(lang, "btnRenew"), "sub:renew:"+id, "success"),
-		),
-		tu.InlineKeyboardRow(shopCatalogButton(t(lang, autoLabel), "sub:autorenew:"+id, autoStyle)),
-		tu.InlineKeyboardRow(shopCatalogButton(t(lang, "btnRevoke"), "sub:revoke:"+id, "danger")),
-	}
-	return strings.Join(lines, "\n"), tu.InlineKeyboard(rows...)
-}
-
-// subscriptionCard is also used after wallet payment and order approval.
-func subscriptionCard(sub *model.BotSubscription, lang string) (string, *telego.InlineKeyboardMarkup) {
-	stats, _ := botSvc.GetSubscriptionStats(sub.ClientEmail)
-	subURL, _ := botSvc.GetSubscriptionConfigs(sub.ClientEmail)
-	return subscriptionCardWithStats(sub, stats, subURL, lang)
 }
 
 func (inst *botInstance) sendSubscriptionDetail(chatID int64, subID int, lang string) {
@@ -150,18 +99,40 @@ func (inst *botInstance) handleGetConfigs(chatID int64, subIDStr, lang string) {
 	}
 	links, err := botSvc.GetClientConfigLinks(sub.ClientEmail)
 	if err != nil || len(links) == 0 {
-		inst.send(chatID, t(lang, "error"))
+		inst.send(chatID, t(lang, "configDeliveryEmpty"))
 		return
 	}
-	for _, link := range links {
-		inst.send(chatID, "<code>"+html.EscapeString(link)+"</code>")
+	inst.send(chatID,
+		"<b>"+t(lang, "configDeliveryTitle")+"</b>\n━━━━━━━━━━━━━━\n"+
+			t(lang, "subUsername", "<code>"+html.EscapeString(sub.ClientEmail)+"</code>")+"\n"+
+			t(lang, "configDeliveryCount", len(links))+"\n\n"+
+			t(lang, "configDeliveryHint"))
+	for i, link := range links {
+		inst.send(chatID, configDeliveryItem(lang, i+1, link))
 	}
+	id := strconv.Itoa(sub.Id)
+	inst.send(chatID, t(lang, "configDeliveryFooter"), tu.InlineKeyboard(
+		tu.InlineKeyboardRow(
+			shopCatalogButton(t(lang, "btnSubDetails"), "sub:view:"+id, "primary"),
+			shopCatalogButton(t(lang, "btnBackToSubs"), "sub:list:0", ""),
+		),
+	))
 }
 
 func (inst *botInstance) handleRevokePrompt(chatID int64, subIDStr, lang string) {
-	inst.send(chatID, t(lang, "revokeConfirm"), tu.InlineKeyboard(tu.InlineKeyboardRow(
-		tu.InlineKeyboardButton(t(lang, "btnRevoke")).WithCallbackData("sub:revokeconfirm:"+subIDStr),
-	)))
+	subID, err := strconv.Atoi(subIDStr)
+	if err != nil {
+		return
+	}
+	if _, err := botSvc.GetSubscription(inst.ownerId, subID); err != nil {
+		inst.send(chatID, t(lang, "error"))
+		return
+	}
+	inst.send(chatID, "<b>"+t(lang, "revokeTitle")+"</b>\n\n"+t(lang, "revokeConfirm"),
+		tu.InlineKeyboard(
+			tu.InlineKeyboardRow(shopCatalogButton(t(lang, "btnConfirmRevoke"), "sub:revokeconfirm:"+subIDStr, "danger")),
+			tu.InlineKeyboardRow(shopCatalogButton(t(lang, "btnCancelRevoke"), "sub:view:"+subIDStr, "primary")),
+		))
 }
 
 func (inst *botInstance) handleRevokeConfirm(chatID int64, subIDStr, lang string) {
@@ -174,6 +145,7 @@ func (inst *botInstance) handleRevokeConfirm(chatID int64, subIDStr, lang string
 		return
 	}
 	inst.send(chatID, t(lang, "revokeDone"))
+	inst.sendSubscriptionDetail(chatID, subID, lang)
 }
 
 func (inst *botInstance) handleToggleAutoRenew(chatID int64, subIDStr, lang string) {

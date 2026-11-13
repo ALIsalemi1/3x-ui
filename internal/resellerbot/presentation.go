@@ -188,7 +188,7 @@ func shopWelcome(lang string, cfg *model.BotConfig) string {
 	if welcome == "" {
 		welcome = t(lang, "welcome")
 	}
-	hint := "👇 از دکمه‌های پایین، بخش موردنظرت رو انتخاب کن."
+	hint := "👇 از دکمه\u200cهای پایین، بخش موردنظرت رو انتخاب کن."
 	notice := "اطلاعیه"
 	if lang == langEN {
 		hint = "👇 Choose a section using the buttons below."

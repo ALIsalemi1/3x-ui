@@ -181,6 +181,12 @@ func (inst *botInstance) handleCallback(_ *th.Context, query telego.CallbackQuer
 			}
 		case "configs":
 			inst.handleGetConfigs(chatID, parts[2], lang)
+		case "refresh":
+			if id, err := strconv.Atoi(parts[2]); err == nil {
+				inst.sendSubscriptionDetail(chatID, id, lang)
+			}
+		case "list":
+			inst.sendSubscriptionList(chatID, buyerID, buyerUsername, lang)
 		case "revoke":
 			inst.handleRevokePrompt(chatID, parts[2], lang)
 		case "revokeconfirm":
