@@ -2084,6 +2084,12 @@
           "brandName": {
             "type": "string"
           },
+          "buttonStyles": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
           "defaultLanguage": {
             "type": "string"
           },
@@ -2118,6 +2124,7 @@
         "required": [
           "announcement",
           "brandName",
+          "buttonStyles",
           "defaultLanguage",
           "hideSupport",
           "hideTrial",

@@ -35,6 +35,9 @@ func (s *BotService) GetConfig(ownerId int) (*model.BotConfig, error) {
 	if cfg.Presentation.Labels == nil {
 		cfg.Presentation.Labels = map[string]string{}
 	}
+	if cfg.Presentation.ButtonStyles == nil {
+		cfg.Presentation.ButtonStyles = map[string]string{}
+	}
 	if cfg.Presentation.MenuLayout == "" {
 		cfg.Presentation.MenuLayout = "spacious"
 	}

@@ -32,6 +32,16 @@ func validateBotPresentation(p *model.BotPresentation) error {
 		}
 	}
 	valid := map[string]bool{"buy": true, "trial": true, "invoices": true, "subs": true, "account": true, "support": true, "tutorial": true}
+	for action, style := range p.ButtonStyles {
+		if !valid[action] {
+			return errors.New("invalid menu button style key")
+		}
+		switch style {
+		case "", "auto", "default", "primary", "success", "danger":
+		default:
+			return errors.New("invalid menu button style")
+		}
+	}
 	seen := map[string]bool{}
 	for key, label := range p.Labels {
 		lang, action, ok := strings.Cut(key, ":")

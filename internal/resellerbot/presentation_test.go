@@ -53,7 +53,7 @@ func TestShopButtonsHaveDistinctTelegramColors(test *testing.T) {
 		t(langFA, "menuSubs"):     "success",
 		t(langFA, "menuAccount"):  "primary",
 		t(langFA, "menuSupport"):  "danger",
-		t(langFA, "menuTutorial"): "success",
+		t(langFA, "menuTutorial"): "primary",
 	}
 	for _, row := range kb.Keyboard {
 		for _, button := range row {
@@ -76,5 +76,39 @@ func TestShopBannerIsValidPhoto(test *testing.T) {
 	}
 	if config.Width != 720 || config.Height != 280 {
 		test.Fatalf("unexpected banner dimensions: %dx%d", config.Width, config.Height)
+	}
+}
+
+// Custom colors affect actual Telegram reply buttons, not only the preview.
+func TestShopMenuButtonStylesOverrideDefaultsAndKeepRouting(test *testing.T) {
+	cfg := &model.BotConfig{Presentation: model.BotPresentation{
+		ButtonStyles: map[string]string{
+			"buy":     "danger",
+			"trial":   "success",
+			"account": "default",
+			"support": "primary",
+		},
+		Labels: map[string]string{"fa:buy": "🛒 خرید ویژه"},
+	}}
+	kb := shopMenuKeyboard(langFA, cfg)
+	styles := make(map[string]string)
+	for _, row := range kb.Keyboard {
+		for _, button := range row {
+			styles[button.Text] = button.Style
+		}
+	}
+	for label, want := range map[string]string{
+		"🛒 خرید ویژه":             "danger",
+		t(langFA, "menuTrial"):    "success",
+		t(langFA, "menuAccount"):  "",
+		t(langFA, "menuSupport"):  "primary",
+		t(langFA, "menuInvoices"): "primary",
+	} {
+		if got := styles[label]; got != want {
+			test.Errorf("button %q style = %q, want %q", label, got, want)
+		}
+	}
+	if action := shopMenuAction(langFA, "🛒 خرید ویژه", cfg); action != "buy" {
+		test.Fatalf("custom button label stopped routing: %s", action)
 	}
 }

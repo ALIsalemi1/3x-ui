@@ -501,6 +501,7 @@ export interface BotPlan {
 export interface BotPresentation {
   announcement: string;
   brandName: string;
+  buttonStyles: Record<string, string>;
   defaultLanguage: string;
   hideSupport: boolean;
   hideTrial: boolean;

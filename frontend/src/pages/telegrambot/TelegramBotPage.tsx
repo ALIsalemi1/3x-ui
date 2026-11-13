@@ -269,6 +269,7 @@ export default function TelegramBotPage() {
           ...emptyPresentation,
           ...config.presentation,
           labels: config.presentation?.labels || {},
+          buttonStyles: config.presentation?.buttonStyles || {},
         }));
   useEffect(() => {
     dirtyRef.current = configDirty;
@@ -343,6 +344,7 @@ export default function TelegramBotPage() {
                   ...emptyPresentation,
                   ...cfg.presentation,
                   labels: cfg.presentation?.labels || {},
+                  buttonStyles: cfg.presentation?.buttonStyles || {},
                 });
                 setEnabledInput(cfg.enabled);
                 setWelcomeInput(cfg.welcomeMessage);

@@ -528,6 +528,7 @@ export type BotPlan = z.infer<typeof BotPlanSchema>;
 export const BotPresentationSchema = z.object({
   announcement: z.string(),
   brandName: z.string(),
+  buttonStyles: z.record(z.string(), z.string()),
   defaultLanguage: z.string(),
   hideSupport: z.boolean(),
   hideTrial: z.boolean(),
