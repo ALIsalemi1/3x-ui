@@ -12,7 +12,7 @@ import (
 func TestShopMenuUsesCustomLabelsAndRoutesThem(test *testing.T) {
 	cfg := &model.BotConfig{Presentation: model.BotPresentation{MenuLayout: "compact", HideTrial: true, Labels: map[string]string{"en:buy": "Browse plans"}}}
 	kb := shopMenuKeyboard("en", cfg)
-	if kb.Keyboard[0][0].Text != "Browse plans" || kb.Keyboard[0][1].Text != t("en", "menuSubs") {
+	if kb.Keyboard[0][0].Text != "Browse plans" || kb.Keyboard[0][1].Text != shopMenuDisplayLabel("en", "subs", cfg) {
 		test.Fatalf("wrong compact menu: %+v", kb.Keyboard)
 	}
 	for _, row := range kb.Keyboard {
@@ -34,26 +34,28 @@ func TestShopMenuUsesCustomLabelsAndRoutesThem(test *testing.T) {
 }
 
 func TestShopWelcomeEscapesBrandAndUsesEnglishGreeting(test *testing.T) {
-	cfg := &model.BotConfig{WelcomeMessage: "سلام", Presentation: model.BotPresentation{BrandName: "A & B <shop>", WelcomeEN: "Hello <friend>", Announcement: "Summer & winter"}}
-	got := shopWelcome("en", cfg)
-	if got != "<b>A &amp; B &lt;shop&gt;</b>\n\nHello &lt;friend&gt;\n\nSummer &amp; winter" {
-		test.Fatalf("invalid HTML or wrong welcome: %q", got)
-	}
-	if strings.Contains(shopWelcome("fa", cfg), "Hello") {
-		test.Fatal("English greeting leaked into Persian")
-	}
+ cfg := &model.BotConfig{WelcomeMessage: "سلام", Presentation: model.BotPresentation{BrandName: "A & B <shop>", WelcomeEN: "Hello <friend>", Announcement: "Summer & winter"}}
+ got := shopWelcome(langEN, cfg)
+ if !strings.Contains(got, "<b>✨ A &amp; B &lt;shop&gt;</b>") ||
+  !strings.Contains(got, "Hello &lt;friend&gt;") ||
+  !strings.Contains(got, "<b>📣 Announcement</b>\nSummer &amp; winter") ||
+  !strings.Contains(got, "👇 Choose a section") {
+  test.Fatalf("invalid HTML or wrong welcome: %q", got)
+ }
+ if strings.Contains(shopWelcome(langFA, cfg), "Hello") {
+  test.Fatal("English greeting leaked into Persian")
+ }
 }
-
 func TestShopButtonsHaveDistinctTelegramColors(test *testing.T) {
 	kb := shopMenuKeyboard(langFA, nil)
 	expected := map[string]string{
-		t(langFA, "menuBuyNew"):   "success",
-		t(langFA, "menuTrial"):    "primary",
-		t(langFA, "menuInvoices"): "primary",
-		t(langFA, "menuSubs"):     "success",
-		t(langFA, "menuAccount"):  "primary",
-		t(langFA, "menuSupport"):  "danger",
-		t(langFA, "menuTutorial"): "primary",
+		shopMenuDisplayLabel(langFA, "buy", nil):   "success",
+		shopMenuDisplayLabel(langFA, "trial", nil):    "primary",
+		shopMenuDisplayLabel(langFA, "invoices", nil): "primary",
+		shopMenuDisplayLabel(langFA, "subs", nil):     "success",
+		shopMenuDisplayLabel(langFA, "account", nil):  "primary",
+		shopMenuDisplayLabel(langFA, "support", nil):  "danger",
+		shopMenuDisplayLabel(langFA, "tutorial", nil): "primary",
 	}
 	for _, row := range kb.Keyboard {
 		for _, button := range row {
@@ -102,7 +104,7 @@ func TestShopMenuButtonStylesOverrideDefaultsAndKeepRouting(test *testing.T) {
 		t(langFA, "menuTrial"):    "success",
 		t(langFA, "menuAccount"):  "",
 		t(langFA, "menuSupport"):  "primary",
-		t(langFA, "menuInvoices"): "primary",
+		shopMenuDisplayLabel(langFA, "invoices", cfg): "primary",
 	} {
 		if got := styles[label]; got != want {
 			test.Errorf("button %q style = %q, want %q", label, got, want)
@@ -174,7 +176,7 @@ func TestShopMenuContainsOnlyNativeTelegramButtons(test *testing.T) {
 	for _, lang := range []string{langFA, langEN} {
 		for _, cfg := range []*model.BotConfig{nil, &model.BotConfig{}} {
 			keyboard := shopMenuKeyboard(lang, cfg)
-			if len(keyboard.Keyboard) != 5 {
+			if len(keyboard.Keyboard) != 4 {
 				test.Fatalf("expected five Telegram menu rows, got %d", len(keyboard.Keyboard))
 			}
 			for _, row := range keyboard.Keyboard {
@@ -189,4 +191,26 @@ func TestShopMenuContainsOnlyNativeTelegramButtons(test *testing.T) {
 			}
 		}
 	}
+}
+
+func TestShopDefaultAccentsAndBackwardCompatibleRouting(test *testing.T) {
+ for _, tc := range []struct{ action, indicator string }{
+  {"trial", "🟡"}, {"invoices", "🩷"}, {"subs", "🟣"},
+  {"account", "🩵"}, {"tutorial", "🟠"},
+ } {
+  label := shopMenuDisplayLabel(langFA, tc.action, nil)
+  if !strings.HasPrefix(label, tc.indicator+" ") { test.Fatalf("missing %s accent on %s: %q", tc.indicator, tc.action, label) }
+  if got := shopMenuAction(langFA, label, nil); got != tc.action { test.Fatalf("new button routes to %q", got) }
+  if got := shopMenuAction(langFA, shopMenuLabel(langFA, tc.action, nil), nil); got != tc.action { test.Fatalf("legacy button routes to %q", got) }
+ }
+ cfg := &model.BotConfig{Presentation: model.BotPresentation{ButtonStyles: map[string]string{"trial": "default"}}}
+ if got := shopMenuDisplayLabel(langFA, "trial", cfg); got != t(langFA, "menuTrial") { test.Fatalf("explicit neutral style left an accent: %q", got) }
+}
+
+func TestShopWelcomeSafeFallbackAndPersianAnnouncement(test *testing.T) {
+ got := shopWelcome(langFA, nil)
+ if !strings.Contains(got, "<b>✨ VPN SHOP</b>") || !strings.Contains(got, "👇") { test.Fatalf("welcome layout missing: %q", got) }
+ cfg := &model.BotConfig{Presentation: model.BotPresentation{Announcement: "<b>Unsafe</b>"}}
+ got = shopWelcome(langFA, cfg)
+ if strings.Contains(got, "<b>Unsafe</b>") || !strings.Contains(got, "&lt;b&gt;Unsafe&lt;/b&gt;") { test.Fatalf("HTML escaping broken: %q", got) }
 }
