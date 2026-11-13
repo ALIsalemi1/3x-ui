@@ -2085,6 +2085,9 @@ export const SCHEMAS: Record<string, unknown> = {
       "menuLayout": {
         "type": "string"
       },
+      "miniAppURL": {
+        "type": "string"
+      },
       "supportURL": {
         "type": "string"
       },
@@ -2105,6 +2108,7 @@ export const SCHEMAS: Record<string, unknown> = {
       "hideTutorial",
       "labels",
       "menuLayout",
+      "miniAppURL",
       "supportURL",
       "tutorialURL",
       "welcomeEN"

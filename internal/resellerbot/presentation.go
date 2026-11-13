@@ -100,6 +100,16 @@ func shopMenuKeyboard(lang string, cfg *model.BotConfig) *telego.ReplyKeyboardMa
 		rows = [][]string{{"buy", "subs"}, {"trial", "invoices"}, {"account"}, {"support", "tutorial"}}
 	}
 	kb := &telego.ReplyKeyboardMarkup{ResizeKeyboard: true, IsPersistent: true}
+	if cfg != nil && cfg.Presentation.MiniAppURL != "" {
+		label := "🛍 ورود به فروشگاه گرافیکی"
+		if lang == langEN {
+			label = "🛍 Open graphical shop"
+		}
+		kb.Keyboard = append(kb.Keyboard, []telego.KeyboardButton{{
+			Text:   label,
+			WebApp: &telego.WebAppInfo{URL: cfg.Presentation.MiniAppURL},
+		}})
+	}
 	for _, row := range rows {
 		buttons := []telego.KeyboardButton{}
 		for _, action := range row {

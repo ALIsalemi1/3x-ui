@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0d1021">
+  <title>VPN SHOP • Telegram Store</title>
+  <link rel="stylesheet" href="./app.css">
+  <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><span class="brand-symbol">✦</span><div><strong>VPN <em>SHOP</em></strong><small data-t="tagline">فروشگاه امن و پرسرعت</small></div></div>
+      <div class="online"><span class="status-dot"></span><span data-t="online">آنلاین</span></div>
+    </header>
+    <section class="welcome card">
+      <div class="eyebrow"><span>✦</span> PREMIUM VPN EXPERIENCE</div>
+      <h1><span data-t="hello">سلام!</span> <span id="customer-name"></span> <span class="wave">👋</span></h1>
+      <p data-t="heroDescription">اینترنت آزاد با سرعت و امنیت بالا. سرویس مناسب خودت رو انتخاب کن.</p>
+      <div class="hero-meta"><span>⚡ <span data-t="highSpeed">اتصال پرسرعت</span></span><span>🔒 <span data-t="secure">امن و خصوصی</span></span></div>
+    </section>
+    <div class="section-title"><h2 data-t="quickAccess">دسترسی سریع</h2><span class="section-decoration">✦</span></div>
+    <section class="quick-grid">
+      <button type="button" class="quick-btn gradient-purple" data-screen="plans"><span class="quick-icon">🛍️</span><span data-t="buy">خرید اشتراک</span><small data-t="buySub">پلن‌های ویژه</small></button>
+      <button type="button" class="quick-btn gradient-pink" data-screen="subscriptions"><span class="quick-icon">💎</span><span data-t="mySubs">اشتراک‌های من</span><small data-t="mySubsSub">وضعیت سرویس‌ها</small></button>
+      <button type="button" class="quick-btn gradient-blue" data-screen="invoices"><span class="quick-icon">🧾</span><span data-t="invoices">فاکتورها</span><small data-t="invoicesSub">سفارش‌های من</small></button>
+      <button type="button" class="quick-btn gradient-teal" data-screen="account"><span class="quick-icon">👤</span><span data-t="account">حساب کاربری</span><small data-t="accountSub">کیف پول و پشتیبانی</small></button>
+    </section>
+    <section class="locations card">
+      <div class="card-heading"><h2 data-t="locations">🌍 لوکیشن‌های فروشگاه</h2><span class="tiny-pill">3 <span data-t="locationsCount">لوکیشن</span></span></div>
+      <div class="flags">
+        <div class="flag"><span>🇩🇪</span><strong data-t="germany">آلمان</strong></div>
+        <div class="flag"><span>🇳🇱</span><strong data-t="netherlands">هلند</strong></div>
+        <div class="flag"><span>🇦🇱</span><strong data-t="albania">آلبانی</strong></div>
+      </div>
+      <p class="note" data-t="locationNote">لوکیشن واقعی سرویس به تنظیمات پلن شما بستگی دارد.</p>
+    </section>
+    <section class="content-card card" id="content" aria-live="polite">
+      <div class="loading"><span class="spinner"></span><span data-t="loading">در حال دریافت اطلاعات...</span></div>
+    </section>
+    <div class="footer-note">VPN SHOP <span>✦</span> TELEGRAM MINI APP</div>
+  </main>
+  <nav class="bottom-nav" aria-label="Navigation">
+    <button type="button" class="nav-btn active" data-screen="home" aria-current="page"><span>⌂</span><small data-t="home">خانه</small></button>
+    <button type="button" class="nav-btn" data-screen="plans"><span>◈</span><small data-t="plans">پلن‌ها</small></button>
+    <button type="button" class="nav-btn" data-screen="subscriptions"><span>◆</span><small data-t="subscriptions">اشتراک‌ها</small></button>
+    <button type="button" class="nav-btn" data-screen="account"><span>◉</span><small data-t="account">حساب</small></button>
+  </nav>
+</body>
+</html>

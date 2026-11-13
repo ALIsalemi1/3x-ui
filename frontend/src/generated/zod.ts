@@ -535,6 +535,7 @@ export const BotPresentationSchema = z.object({
   hideTutorial: z.boolean(),
   labels: z.record(z.string(), z.string()),
   menuLayout: z.string(),
+  miniAppURL: z.string(),
   supportURL: z.string(),
   tutorialURL: z.string(),
   welcomeEN: z.string(),

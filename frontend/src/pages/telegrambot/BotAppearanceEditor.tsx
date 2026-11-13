@@ -8,6 +8,7 @@ import vpnShopBanner from '../../assets/vpn-shop-banner.png';
 
 export const emptyPresentation: BotPresentation = {
   brandName: '',
+  miniAppURL: '',
   welcomeEN: '',
   announcement: '',
   supportURL: '',
@@ -79,6 +80,7 @@ interface Props {
   welcome: string;
   onWelcomeChange: (text: string) => void;
   username: string;
+  miniAppSuggestedURL?: string;
   saving: boolean;
   onSave: () => void;
 }
@@ -89,6 +91,7 @@ export default function BotAppearanceEditor({
   welcome,
   onWelcomeChange,
   username,
+  miniAppSuggestedURL,
   saving,
   onSave,
 }: Props) {
@@ -263,6 +266,34 @@ export default function BotAppearanceEditor({
             {t('pages.telegramBot.design.resetLabels')}
           </Button>
         </Card>
+        <Card title={t('pages.telegramBot.design.miniAppTitle', '🌈 Telegram Mini App')}>
+          <label className="bot-field" htmlFor="bot-miniapp-url">
+            <span>{t('pages.telegramBot.design.miniAppURL', 'HTTPS Mini App URL')}</span>
+            <Input
+              id="bot-miniapp-url"
+              value={p.miniAppURL}
+              placeholder={miniAppSuggestedURL || 'https://your-domain.example/shop/1/'}
+              maxLength={512}
+              dir="ltr"
+              type="url"
+              onChange={(e) => change('miniAppURL', e.target.value)}
+            />
+          </label>
+          <Button
+            disabled={!miniAppSuggestedURL}
+            onClick={() => {
+              if (miniAppSuggestedURL) change('miniAppURL', miniAppSuggestedURL);
+            }}
+          >
+            {t('pages.telegramBot.design.miniAppUseURL', 'Use this panel’s HTTPS address')}
+          </Button>
+          <p className="bot-field-help">
+            {t(
+              'pages.telegramBot.design.miniAppHelp',
+              'Enable HTTPS for your panel, then use this panel’s shop URL. The Telegram bot will show a new graphical shop button. Current bot menus remain available.',
+            )}
+          </p>
+        </Card>
         <Card title={t('pages.telegramBot.design.links')}>
           <div className="bot-field-grid">
             {textField('supportURL', 512)}
@@ -333,6 +364,13 @@ export default function BotAppearanceEditor({
             </div>
           </div>
           <div className="bot-phone-menu">
+            {p.miniAppURL && (
+              <div className="bot-phone-menu-row">
+                <span className="bot-menu-button bot-menu-button--success">
+                  🌈 {t('pages.telegramBot.design.miniAppButton', 'Graphical shop')}
+                </span>
+              </div>
+            )}
             {rows.map((row, i) => {
               const visible = row.filter((a) => !hidden(a));
               return visible.length ? (

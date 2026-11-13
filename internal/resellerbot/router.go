@@ -251,6 +251,10 @@ func (inst *botInstance) handleMessage(_ *th.Context, message telego.Message) er
 		return nil
 	}
 	lang := inst.customerLang(message.From.ID, message.From.Username)
+	if message.WebAppData != nil {
+		inst.handleMiniAppMessage(message, lang)
+		return nil
+	}
 	state, ok := inst.states.get(message.Chat.ID)
 	if ok {
 		switch {
