@@ -287,7 +287,12 @@ export default function BotAppearanceEditor({
           >
             {t('pages.telegramBot.design.miniAppUseURL', 'Use this panel’s HTTPS address')}
           </Button>
-          <p className="bot-field-help">{t('pages.telegramBot.design.miniAppHelp', 'Enable HTTPS for your panel, then use this panel’s shop URL. The Telegram bot will show a new graphical shop button. Current bot menus remain available.')}</p>
+          <p className="bot-field-help">
+            {t(
+              'pages.telegramBot.design.miniAppHelp',
+              'Enable HTTPS for your panel, then use this panel’s shop URL. The Telegram bot will show a new graphical shop button. Current bot menus remain available.',
+            )}
+          </p>
         </Card>
         <Card title={t('pages.telegramBot.design.links')}>
           <div className="bot-field-grid">
