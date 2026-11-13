@@ -106,7 +106,7 @@ func shopMenuKeyboard(lang string, cfg *model.BotConfig) *telego.ReplyKeyboardMa
 			label = "🛍 Open graphical shop"
 		}
 		kb.Keyboard = append(kb.Keyboard, []telego.KeyboardButton{{
-			Text: label,
+			Text:   label,
 			WebApp: &telego.WebAppInfo{URL: cfg.Presentation.MiniAppURL},
 		}})
 	}

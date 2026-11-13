@@ -34,8 +34,8 @@ func TestTelegramMiniAppInitDataRequiresValidSignatureAndFreshness(t *testing.T)
 	now := time.Unix(1800000000, 0)
 	data := url.Values{
 		"auth_date": {strconv.FormatInt(now.Unix(), 10)},
-		"query_id": {"AAF-42"},
-		"user": {`{"id":12345,"first_name":"Buyer","username":"vpn_user"}`},
+		"query_id":  {"AAF-42"},
+		"user":      {`{"id":12345,"first_name":"Buyer","username":"vpn_user"}`},
 	}
 	const token = "123456:BOT_TOKEN_SECRET"
 	signed := signMiniAppForTest(token, data)

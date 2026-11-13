@@ -31,8 +31,8 @@ var miniAppFiles embed.FS
 const miniAppAuthMaxAge = 10 * time.Minute
 
 type miniAppBuyer struct {
-	ID       int64  `json:"id"`
-	Username string `json:"username"`
+	ID        int64  `json:"id"`
+	Username  string `json:"username"`
 	FirstName string `json:"first_name"`
 }
 
@@ -185,12 +185,12 @@ func (a *MiniAppController) state(c *gin.Context) {
 		return
 	}
 	type subscription struct {
-		Name      string `json:"name"`
-		Email     string `json:"email"`
-		Used      int64  `json:"usedBytes"`
-		Total     int64  `json:"totalBytes"`
-		Expiry    int64  `json:"expiryTime"`
-		Enabled   bool   `json:"enabled"`
+		Name    string `json:"name"`
+		Email   string `json:"email"`
+		Used    int64  `json:"usedBytes"`
+		Total   int64  `json:"totalBytes"`
+		Expiry  int64  `json:"expiryTime"`
+		Enabled bool   `json:"enabled"`
 	}
 	summaries := make([]subscription, 0, min(30, len(subs)))
 	for _, sub := range subs {
@@ -234,16 +234,16 @@ func (a *MiniAppController) state(c *gin.Context) {
 		lang = "fa"
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"shopName": cfg.Presentation.BrandName,
-		"botUsername": cfg.BotUsername,
+		"shopName":      cfg.Presentation.BrandName,
+		"botUsername":   cfg.BotUsername,
 		"walletEnabled": cfg.WalletEnabled,
 		"walletBalance": customer.WalletBalanceToman,
-		"language": lang,
-		"customerName": buyer.FirstName,
-		"plans": offers,
+		"language":      lang,
+		"customerName":  buyer.FirstName,
+		"plans":         offers,
 		"subscriptions": summaries,
-		"invoices": invoices,
-		"supportURL": cfg.Presentation.SupportURL,
-		"tutorialURL": cfg.Presentation.TutorialURL,
+		"invoices":      invoices,
+		"supportURL":    cfg.Presentation.SupportURL,
+		"tutorialURL":   cfg.Presentation.TutorialURL,
 	})
 }
