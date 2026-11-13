@@ -35,8 +35,47 @@ const extendedColorIndicators: Record<string, string> = {
   black: '⚫',
 };
 
-function menuButtonDisplayText(text: string, style: string): string {
-  const indicator = extendedColorIndicators[style];
+const defaultAccentStyles: Record<string, string> = {
+  trial: 'yellow',
+  invoices: 'pink',
+  subs: 'purple',
+  account: 'cyan',
+  tutorial: 'orange',
+};
+
+const buttonStylePresets = {
+  rainbow: {
+    buy: 'success',
+    trial: 'yellow',
+    invoices: 'pink',
+    subs: 'purple',
+    account: 'cyan',
+    support: 'danger',
+    tutorial: 'orange',
+  },
+  pastel: {
+    buy: 'cyan',
+    trial: 'yellow',
+    invoices: 'pink',
+    subs: 'purple',
+    account: 'success',
+    support: 'orange',
+    tutorial: 'primary',
+  },
+  classic: {
+    buy: 'success',
+    trial: 'primary',
+    invoices: 'primary',
+    subs: 'success',
+    account: 'primary',
+    support: 'danger',
+    tutorial: 'primary',
+  },
+} as const;
+
+function menuButtonDisplayText(text: string, style: string | undefined, action: string): string {
+  const accent = !style || style === 'auto' ? defaultAccentStyles[action] : style;
+  const indicator = extendedColorIndicators[accent];
   if (!indicator || text.startsWith(`${indicator} `)) return text;
   return `${indicator} ${text}`;
 }
@@ -112,7 +151,7 @@ export default function BotAppearanceEditor({
   const rows =
     p.menuLayout === 'compact'
       ? [['buy', 'subs'], ['trial', 'invoices'], ['account'], ['support', 'tutorial']]
-      : [['buy'], ['trial'], ['invoices', 'subs'], ['account'], ['support', 'tutorial']];
+      : [['buy'], ['subs', 'invoices'], ['trial', 'account'], ['support', 'tutorial']];
   const textField = (
     key: 'brandName' | 'announcement' | 'supportURL' | 'tutorialURL',
     limit: number,
@@ -190,6 +229,29 @@ export default function BotAppearanceEditor({
           </label>
           <p className="bot-field-help">{t('pages.telegramBot.design.nativeColorsHelp')}</p>
           <p className="bot-field-help">{t('pages.telegramBot.design.extendedColorsHelp')}</p>
+          <div className="bot-style-presets">
+            <strong>{language === 'fa' ? '🎨 ترکیب رنگ آماده' : '🎨 Ready-made color themes'}</strong>
+            <Space wrap>
+              <Button
+                size="small"
+                onClick={() => change('buttonStyles', { ...p.buttonStyles, ...buttonStylePresets.rainbow })}
+              >
+                🌈 {language === 'fa' ? 'رنگین‌کمانی' : 'Rainbow'}
+              </Button>
+              <Button
+                size="small"
+                onClick={() => change('buttonStyles', { ...p.buttonStyles, ...buttonStylePresets.pastel })}
+              >
+                🩷 {language === 'fa' ? 'پاستلی' : 'Pastel'}
+              </Button>
+              <Button
+                size="small"
+                onClick={() => change('buttonStyles', { ...p.buttonStyles, ...buttonStylePresets.classic })}
+              >
+                🔵 {language === 'fa' ? 'کلاسیک' : 'Classic'}
+              </Button>
+            </Space>
+          </div>
           <div className="bot-menu-toggles">
             {(['trial', 'support', 'tutorial'] as const).map((key) => {
               const field = {
@@ -321,14 +383,26 @@ export default function BotAppearanceEditor({
           <div className="bot-chat">
             <img className="bot-shop-banner" src={vpnShopBanner} alt="VPN SHOP" />
             <div className="bot-chat-bubble">
-              {p.brandName && <strong>{p.brandName}</strong>}
+              <strong className="bot-preview-welcome-title">✨ {p.brandName || 'VPN SHOP'}</strong>
+              <div className="bot-preview-divider" aria-hidden="true" />
               <p>
                 {(language === 'en' ? p.welcomeEN : welcome) ||
                   (language === 'fa'
                     ? 'لطفاً یکی از گزینه‌های زیر را انتخاب کنید:'
                     : 'Please choose one of the options below:')}
               </p>
-              {p.announcement && <p className="bot-chat-announcement">{p.announcement}</p>}
+              {p.announcement && (
+                <p className="bot-chat-announcement">
+                  <strong>📣 {language === 'fa' ? 'اطلاعیه' : 'Announcement'}</strong>
+                  {p.announcement}
+                </p>
+              )}
+              <div className="bot-preview-divider" aria-hidden="true" />
+              <p className="bot-preview-hint">
+                {language === 'fa'
+                  ? '👇 از دکمه‌های پایین، بخش موردنظرت رو انتخاب کن.'
+                  : '👇 Choose a section using the buttons below.'}
+              </p>
               <span className="bot-message-time">12:00 ✓✓</span>
             </div>
           </div>
@@ -345,6 +419,7 @@ export default function BotAppearanceEditor({
                       {menuButtonDisplayText(
                         label(action as (typeof actions)[number]),
                         p.buttonStyles[action],
+                        action,
                       )}
                     </span>
                   ))}

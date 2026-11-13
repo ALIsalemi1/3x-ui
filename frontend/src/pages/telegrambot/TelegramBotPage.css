@@ -464,3 +464,44 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* These are panel-preview decorations; the real Telegram buttons use
+   only supported native styles plus the matching emoji accent indicators. */
+.bot-style-presets {
+  display: grid;
+  gap: 10px;
+  margin: 10px 0 16px;
+  padding: 13px;
+  border: 1px solid var(--ant-color-border-secondary);
+  border-radius: 13px;
+  background: var(--ant-color-fill-quaternary);
+}
+.bot-style-presets > strong {
+  font-size: 12px;
+}
+.bot-style-presets .ant-btn {
+  border-radius: 9px;
+}
+.bot-preview-welcome-title {
+  display: block;
+  font-size: 16px;
+  line-height: 1.45;
+}
+.bot-preview-divider {
+  margin: 11px 0;
+  height: 1px;
+  background: linear-gradient(90deg, #88d7f200, #88d7f2b0, #88d7f200);
+}
+.bot-chat-bubble .bot-preview-hint {
+  color: #9edcd4;
+  font-size: 12px;
+}
+.bot-chat-bubble .bot-chat-announcement > strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #fdd9a1;
+}
+.bot-phone-menu-row:first-child > span.bot-menu-button {
+  min-height: 48px;
+  font-size: 13px;
+}

@@ -116,3 +116,34 @@ test('editor and saved presentation contain no Telegram Mini App setting', () =>
   fireEvent.click(container.querySelector('.bot-save-bar button')!);
   expect(JSON.parse(screen.getByTestId('saved').textContent!)).not.toHaveProperty('miniAppURL');
 });
+
+test('default colorful home has four usable rows and correct accent markers', () => {
+  const { container } = render(<Editor />);
+  const rows = container.querySelectorAll('.bot-phone-menu-row');
+  expect(rows).toHaveLength(4);
+  expect(rows[0].textContent).toContain('خرید اشتراک جدید');
+  expect(rows[1].textContent).toContain('🟣');
+  expect(rows[1].textContent).toContain('🩷');
+  expect(rows[2].textContent).toContain('🟡');
+  expect(rows[2].textContent).toContain('🩵');
+});
+
+test('one-click rainbow preset changes actual saved Telegram button styles', () => {
+  const { container } = render(<Editor />);
+  fireEvent.click(screen.getByRole('button', { name: /رنگین‌کمانی/ }));
+  const menu = container.querySelector('.bot-phone-menu');
+  expect(menu?.textContent).toContain('🟣');
+  expect(menu?.textContent).toContain('🩷');
+  fireEvent.click(container.querySelector('.bot-save-bar button')!);
+  const saved = JSON.parse(screen.getByTestId('saved').textContent!);
+  expect(saved.buttonStyles).toMatchObject({
+    buy: 'success',
+    trial: 'yellow',
+    invoices: 'pink',
+    subs: 'purple',
+    account: 'cyan',
+    support: 'danger',
+    tutorial: 'orange',
+  });
+  expect(saved).not.toHaveProperty('miniAppURL');
+});
