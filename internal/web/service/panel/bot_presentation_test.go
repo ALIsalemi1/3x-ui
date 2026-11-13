@@ -35,6 +35,9 @@ func TestBotPresentationPersistsWithoutReplacingTokenOrOtherOwners(t *testing.T)
 	if other.Presentation.BrandName != "Other shop" {
 		t.Fatal("modified another owner's shop")
 	}
+	if other.Presentation.ButtonStyles == nil {
+		t.Fatal("legacy shop should return a non-nil buttonStyles object")
+	}
 }
 
 func TestBotPresentationRejectsInvalidInputBeforeSaving(t *testing.T) {
