@@ -162,12 +162,29 @@ func (inst *botInstance) handleCallback(_ *th.Context, query telego.CallbackQuer
 			if len(parts) < 3 {
 				return nil
 			}
-			page, err := strconv.Atoi(parts[2])
+			pageInput, mode := parts[2], "all"
+			if modeInput, pagePart, ok := strings.Cut(parts[2], ":"); ok {
+				if modeInput != "price" && modeInput != "traffic" && modeInput != "duration" {
+					return nil
+				}
+				mode, pageInput = modeInput, pagePart
+			}
+			page, err := strconv.Atoi(pageInput)
 			if err != nil || page < 0 {
 				return nil
 			}
 			inst.states.clear(chatID)
-			inst.sendPlanPage(chatID, lang, page)
+			inst.sendPlanPageMode(chatID, lang, page, mode)
+		case "filter":
+			if len(parts) < 3 {
+				return nil
+			}
+			mode := parts[2]
+			if mode != "all" && mode != "price" && mode != "traffic" && mode != "duration" {
+				return nil
+			}
+			inst.states.clear(chatID)
+			inst.sendPlanPageMode(chatID, lang, 0, mode)
 		case "back":
 			inst.states.clear(chatID)
 			inst.sendMainMenu(chatID, lang)
