@@ -3,6 +3,7 @@ package model
 // BotPresentation is the owner's buyer-facing shop identity and menu preferences.
 type BotPresentation struct {
 	BrandName       string            `json:"brandName"`
+	ButtonStyles    map[string]string `json:"buttonStyles"`
 	WelcomeEN       string            `json:"welcomeEN"`
 	Announcement    string            `json:"announcement"`
 	SupportURL      string            `json:"supportURL"`

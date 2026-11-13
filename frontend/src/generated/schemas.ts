@@ -2058,6 +2058,12 @@ export const SCHEMAS: Record<string, unknown> = {
       "brandName": {
         "type": "string"
       },
+      "buttonStyles": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "type": "object"
+      },
       "defaultLanguage": {
         "type": "string"
       },
@@ -2092,6 +2098,7 @@ export const SCHEMAS: Record<string, unknown> = {
     "required": [
       "announcement",
       "brandName",
+      "buttonStyles",
       "defaultLanguage",
       "hideSupport",
       "hideTrial",

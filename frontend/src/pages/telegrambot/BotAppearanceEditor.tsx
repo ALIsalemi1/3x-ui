@@ -14,6 +14,7 @@ export const emptyPresentation: BotPresentation = {
   tutorialURL: '',
   defaultLanguage: 'auto',
   menuLayout: 'spacious',
+  buttonStyles: {},
   hideTrial: false,
   hideSupport: false,
   hideTutorial: false,
@@ -22,8 +23,14 @@ export const emptyPresentation: BotPresentation = {
 
 const actions = ['buy', 'trial', 'invoices', 'subs', 'account', 'support', 'tutorial'] as const;
 
-function menuButtonStyle(action: string): 'success' | 'primary' | 'danger' {
-  if (action === 'buy' || action === 'subs' || action === 'tutorial') return 'success';
+function menuButtonStyle(
+  action: string,
+  overrides: Record<string, string>,
+): 'success' | 'primary' | 'danger' | 'default' {
+  const custom = overrides[action];
+  if (custom === 'primary' || custom === 'success' || custom === 'danger') return custom;
+  if (custom === 'default') return 'default';
+  if (action === 'buy' || action === 'subs') return 'success';
   if (action === 'support') return 'danger';
   return 'primary';
 }
@@ -70,7 +77,12 @@ export default function BotAppearanceEditor({
   const { t } = useTranslation();
   const { accent, setAccent, compact, setCompact } = useTheme();
   const [language, setLanguage] = useState<'fa' | 'en'>('fa');
-  const p = { ...emptyPresentation, ...value, labels: value.labels || {} };
+  const p = {
+    ...emptyPresentation,
+    ...value,
+    labels: value.labels || {},
+    buttonStyles: value.buttonStyles || {},
+  };
   const change = <K extends keyof BotPresentation>(key: K, next: BotPresentation[K]) =>
     onChange({ ...p, [key]: next });
   const label = (action: (typeof actions)[number]) =>
@@ -158,6 +170,7 @@ export default function BotAppearanceEditor({
               ]}
             />
           </label>
+          <p className="bot-field-help">{t('pages.telegramBot.design.nativeColorsHelp')}</p>
           <div className="bot-menu-toggles">
             {(['trial', 'support', 'tutorial'] as const).map((key) => {
               const field = {
@@ -186,19 +199,38 @@ export default function BotAppearanceEditor({
           </div>
           <div className="bot-field-grid">
             {actions.map((action) => (
-              <label className="bot-field" key={action} htmlFor={`bot-label-${action}`}>
-                <span>{t(`pages.telegramBot.design.${action}`)}</span>
-                <Input
-                  id={`bot-label-${action}`}
-                  dir={language === 'fa' ? 'rtl' : 'ltr'}
-                  value={p.labels[`${language}:${action}`] || ''}
-                  placeholder={fallbackLabels[language][action]}
-                  maxLength={40}
-                  onChange={(e) =>
-                    change('labels', { ...p.labels, [`${language}:${action}`]: e.target.value })
-                  }
-                />
-              </label>
+              <div className="bot-button-settings" key={action}>
+                <label className="bot-field" htmlFor={`bot-label-${action}`}>
+                  <span>{t(`pages.telegramBot.design.${action}`)}</span>
+                  <Input
+                    id={`bot-label-${action}`}
+                    dir={language === 'fa' ? 'rtl' : 'ltr'}
+                    value={p.labels[`${language}:${action}`] || ''}
+                    placeholder={fallbackLabels[language][action]}
+                    maxLength={40}
+                    onChange={(e) =>
+                      change('labels', { ...p.labels, [`${language}:${action}`]: e.target.value })
+                    }
+                  />
+                </label>
+                <label className="bot-field" htmlFor={`bot-style-${action}`}>
+                  <span>{t('pages.telegramBot.design.buttonColor')}</span>
+                  <Select
+                    id={`bot-style-${action}`}
+                    value={p.buttonStyles[action] || 'auto'}
+                    onChange={(style) =>
+                      change('buttonStyles', { ...p.buttonStyles, [action]: style })
+                    }
+                    options={[
+                      { value: 'auto', label: t('pages.telegramBot.design.colorAuto') },
+                      { value: 'success', label: t('pages.telegramBot.design.colorGreen') },
+                      { value: 'primary', label: t('pages.telegramBot.design.colorBlue') },
+                      { value: 'danger', label: t('pages.telegramBot.design.colorRed') },
+                      { value: 'default', label: t('pages.telegramBot.design.colorNeutral') },
+                    ]}
+                  />
+                </label>
+              </div>
             ))}
           </div>
           <Button onClick={() => change('labels', {})}>
@@ -282,7 +314,7 @@ export default function BotAppearanceEditor({
                   {visible.map((action) => (
                     <span
                       key={action}
-                      className={`bot-menu-button bot-menu-button--${menuButtonStyle(action)}`}
+                      className={`bot-menu-button bot-menu-button--${menuButtonStyle(action, p.buttonStyles)}`}
                     >
                       {label(action as (typeof actions)[number])}
                     </span>

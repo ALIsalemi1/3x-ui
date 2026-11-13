@@ -436,3 +436,29 @@
   background: linear-gradient(135deg, #a84e47, #893d38);
   border-color: #d47166;
 }
+
+.bot-button-settings {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(125px, 0.7fr);
+  gap: 12px;
+  padding: 10px 12px 0;
+  border: 1px solid var(--ant-color-border-secondary);
+  border-radius: 12px;
+  background: var(--ant-color-fill-quaternary);
+}
+.bot-button-settings .bot-field {
+  margin-bottom: 10px;
+}
+.bot-button-settings .ant-select {
+  width: 100%;
+}
+.bot-phone-menu-row > span.bot-menu-button--default {
+  color: #e5ebf5;
+  background: #293b50;
+  border-color: #3d5268;
+}
+@media (max-width: 560px) {
+  .bot-button-settings {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

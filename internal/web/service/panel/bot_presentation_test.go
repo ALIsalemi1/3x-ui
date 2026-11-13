@@ -10,7 +10,7 @@ import (
 func TestBotPresentationPersistsWithoutReplacingTokenOrOtherOwners(t *testing.T) {
 	setupBotTestDB(t)
 	svc := BotService{}
-	p := &model.BotPresentation{BrandName: "Salemi", WelcomeEN: "Welcome aboard", Announcement: "New plans", MenuLayout: "compact", DefaultLanguage: "en", SupportURL: "https://t.me/support", Labels: map[string]string{"en:buy": "Browse plans"}}
+	p := &model.BotPresentation{BrandName: "Salemi", WelcomeEN: "Welcome aboard", Announcement: "New plans", MenuLayout: "compact", DefaultLanguage: "en", SupportURL: "https://t.me/support", Labels: map[string]string{"en:buy": "Browse plans"}, ButtonStyles: map[string]string{"buy": "success", "trial": "danger"}}
 	if _, err := svc.SaveConfig(1, BotConfigInput{Token: "saved-token", Presentation: p}); err != nil {
 		t.Fatal(err)
 	}
@@ -25,7 +25,7 @@ func TestBotPresentationPersistsWithoutReplacingTokenOrOtherOwners(t *testing.T)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got.Presentation.BrandName != "Salemi" || got.Presentation.Labels["en:buy"] != "Browse plans" || got.Token != "saved-token" {
+	if got.Presentation.BrandName != "Salemi" || got.Presentation.Labels["en:buy"] != "Browse plans" || got.Presentation.ButtonStyles["trial"] != "danger" || got.Token != "saved-token" {
 		t.Fatalf("lost saved configuration: %+v", got.Presentation)
 	}
 	other, err := svc.GetConfig(2)
@@ -46,6 +46,8 @@ func TestBotPresentationRejectsInvalidInputBeforeSaving(t *testing.T) {
 	}{
 		{model.BotPresentation{SupportURL: "javascript:alert(1)"}, "support URL must use https"},
 		{model.BotPresentation{MenuLayout: "invalid"}, "menu layout must be spacious or compact"},
+		{model.BotPresentation{ButtonStyles: map[string]string{"fake": "success"}}, "invalid menu button style key"},
+		{model.BotPresentation{ButtonStyles: map[string]string{"buy": "purple"}}, "invalid menu button style"},
 		{model.BotPresentation{DefaultLanguage: "zz"}, "default language must be auto, fa or en"},
 		{model.BotPresentation{BrandName: strings.Repeat("a", 81)}, "brand name must be at most 80 characters"},
 		{model.BotPresentation{Labels: map[string]string{"en:buy": "Same", "en:subs": "Same"}}, "menu labels must be unique within each language"},
