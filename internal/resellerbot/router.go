@@ -251,6 +251,14 @@ func (inst *botInstance) handleMessage(_ *th.Context, message telego.Message) er
 		return nil
 	}
 	lang := inst.customerLang(message.From.ID, message.From.Username)
+	// The retired Mini App was once a persistent reply-keyboard button.
+	// Telegram clients can keep sending its text until they receive the new
+	// keyboard. Treat that stale click as a request to refresh the real menu.
+	if !isOwnerChat(inst.ownerId, message.Chat.ID) && isRetiredGraphicalShopButton(message.Text) {
+		inst.states.clear(message.Chat.ID)
+		inst.sendMainMenu(message.Chat.ID, lang)
+		return nil
+	}
 	state, ok := inst.states.get(message.Chat.ID)
 	if ok {
 		switch {

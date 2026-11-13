@@ -236,3 +236,45 @@ func TestShopWelcomeSafeFallbackAndPersianAnnouncement(test *testing.T) {
 		test.Fatalf("HTML escaping broken: %q", got)
 	}
 }
+
+// Obsolete graphical-store buttons are accepted as input for migration but
+// must never be emitted as part of a newly constructed Telegram menu.
+func TestRetiredGraphicalShopButtonCannotReappear(test *testing.T) {
+	legacy := []string{
+		"ورود به فروشگاه گرافیکی",
+		"🛍 ورود به فروشگاه گرافیکی",
+		"🛍️ ورود به فروشگاه گرافیکی",
+		"ورود به فروشگاه گرافیکی 🛍",
+		"🛒 ورود به فروشگاه گرافیکی",
+		"Open graphical shop",
+	}
+	for _, text := range legacy {
+		if !isRetiredGraphicalShopButton(text) {
+			test.Fatalf("retired graphical button not detected: %q", text)
+		}
+	}
+	for _, text := range []string{"🛍 خرید اشتراک جدید", "ورود به فروشگاه", "", "🛒 خرید اشتراک"} {
+		if isRetiredGraphicalShopButton(text) {
+			test.Fatalf("valid or unrelated action was mistaken for the retired button: %q", text)
+		}
+	}
+	for _, lang := range []string{langFA, langEN} {
+		for _, layout := range []string{"spacious", "compact"} {
+			cfg := &model.BotConfig{Presentation: model.BotPresentation{
+				MenuLayout: layout,
+				Labels: map[string]string{lang + ":buy": "🛍 ورود به فروشگاه گرافیکی"},
+			}}
+			kb := shopMenuKeyboard(lang, cfg)
+			if len(kb.Keyboard) == 0 || kb.Keyboard[0][0].Text != t(lang, "menuBuyNew") {
+				test.Fatalf("retired button was persisted as a custom buy label: %+v", kb.Keyboard)
+			}
+			for _, row := range kb.Keyboard {
+				for _, button := range row {
+					if isRetiredGraphicalShopButton(button.Text) || button.WebApp != nil {
+						test.Fatalf("legacy graphical/miniapp button leaked into %s menu: %+v", layout, button)
+					}
+				}
+			}
+		}
+	}
+}

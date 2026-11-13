@@ -20,9 +20,26 @@ func menuHidden(action string, cfg *model.BotConfig) bool {
 	return action == "trial" && p.HideTrial || action == "support" && p.HideSupport || action == "tutorial" && p.HideTutorial
 }
 
+// isRetiredGraphicalShopButton recognizes obsolete reply-keyboard labels that
+// may still be cached by Telegram clients after the Mini App was removed.
+// These are *input only*; never add them to a new keyboard.
+func isRetiredGraphicalShopButton(text string) bool {
+	label := strings.TrimSpace(text)
+	for _, emoji := range []string{"🛍️", "🛍", "🛒", "🎨", "🌈"} {
+		label = strings.TrimSpace(strings.TrimPrefix(label, emoji))
+		label = strings.TrimSpace(strings.TrimSuffix(label, emoji))
+	}
+	switch label {
+	case "ورود به فروشگاه گرافیکی", "Open graphical shop", "Open graphical store":
+		return true
+	default:
+		return false
+	}
+}
+
 func shopMenuLabel(lang, action string, cfg *model.BotConfig) string {
 	if cfg != nil {
-		if label := strings.TrimSpace(cfg.Presentation.Labels[lang+":"+action]); label != "" {
+		if label := strings.TrimSpace(cfg.Presentation.Labels[lang+":"+action]); label != "" && !isRetiredGraphicalShopButton(label) {
 			return label
 		}
 	}
