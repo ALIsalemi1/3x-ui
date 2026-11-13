@@ -75,7 +75,7 @@ const buttonStylePresets = {
 
 function menuButtonDisplayText(text: string, style: string | undefined, action: string): string {
   const accent = !style || style === 'auto' ? defaultAccentStyles[action] : style;
-  const indicator = extendedColorIndicators[accent];
+  const indicator = extendedColorIndicators[accent || ''];
   if (!indicator || text.startsWith(`${indicator} `)) return text;
   return `${indicator} ${text}`;
 }
