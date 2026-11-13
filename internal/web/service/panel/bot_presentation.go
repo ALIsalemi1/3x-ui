@@ -37,7 +37,8 @@ func validateBotPresentation(p *model.BotPresentation) error {
 			return errors.New("invalid menu button style key")
 		}
 		switch style {
-		case "", "auto", "default", "primary", "success", "danger":
+		case "", "auto", "default", "primary", "success", "danger",
+			"pink", "yellow", "purple", "orange", "cyan", "brown", "black":
 		default:
 			return errors.New("invalid menu button style")
 		}

@@ -40,6 +40,19 @@ func TestBotPresentationPersistsWithoutReplacingTokenOrOtherOwners(t *testing.T)
 	}
 }
 
+func TestBotPresentationAcceptsExtendedButtonAccentStyles(t *testing.T) {
+	setupBotTestDB(t)
+	svc := BotService{}
+	for _, style := range []string{"pink", "yellow", "purple", "orange", "cyan", "brown", "black"} {
+		cfg, err := svc.SaveConfig(1, BotConfigInput{Presentation: &model.BotPresentation{
+			ButtonStyles: map[string]string{"buy": style},
+		}})
+		if err != nil || cfg.Presentation.ButtonStyles["buy"] != style {
+			t.Fatalf("style %q not saved: config=%+v, error=%v", style, cfg, err)
+		}
+	}
+}
+
 func TestBotPresentationRejectsInvalidInputBeforeSaving(t *testing.T) {
 	setupBotTestDB(t)
 	svc := BotService{}
@@ -50,7 +63,7 @@ func TestBotPresentationRejectsInvalidInputBeforeSaving(t *testing.T) {
 		{model.BotPresentation{SupportURL: "javascript:alert(1)"}, "support URL must use https"},
 		{model.BotPresentation{MenuLayout: "invalid"}, "menu layout must be spacious or compact"},
 		{model.BotPresentation{ButtonStyles: map[string]string{"fake": "success"}}, "invalid menu button style key"},
-		{model.BotPresentation{ButtonStyles: map[string]string{"buy": "purple"}}, "invalid menu button style"},
+		{model.BotPresentation{ButtonStyles: map[string]string{"buy": "rainbow"}}, "invalid menu button style"},
 		{model.BotPresentation{DefaultLanguage: "zz"}, "default language must be auto, fa or en"},
 		{model.BotPresentation{BrandName: strings.Repeat("a", 81)}, "brand name must be at most 80 characters"},
 		{model.BotPresentation{Labels: map[string]string{"en:buy": "Same", "en:subs": "Same"}}, "menu labels must be unique within each language"},

@@ -112,3 +112,60 @@ func TestShopMenuButtonStylesOverrideDefaultsAndKeepRouting(test *testing.T) {
 		test.Fatalf("custom button label stopped routing: %s", action)
 	}
 }
+
+func TestExtendedShopAccentButtonsAreSafeAndStillRoute(test *testing.T) {
+	for _, tc := range []struct {
+		style     string
+		indicator string
+	}{
+		{"pink", "🩷"},
+		{"yellow", "🟡"},
+		{"purple", "🟣"},
+		{"orange", "🟠"},
+		{"cyan", "🩵"},
+		{"brown", "🟤"},
+		{"black", "⚫"},
+	} {
+		test.Run(tc.style, func(test *testing.T) {
+			cfg := &model.BotConfig{Presentation: model.BotPresentation{
+				ButtonStyles: map[string]string{"buy": tc.style},
+				Labels: map[string]string{"fa:buy": "خرید سریع"},
+			}}
+			button := shopMenuKeyboard(langFA, cfg).Keyboard[0][0]
+			expected := tc.indicator + " خرید سریع"
+			if button.Text != expected {
+				test.Fatalf("button label = %q, want %q", button.Text, expected)
+			}
+			// Extra colors must not be sent as invalid Bot API button styles.
+			if button.Style != "" {
+				test.Fatalf("unsupported Telegram background style: %q", button.Style)
+			}
+			if action := shopMenuAction(langFA, button.Text, cfg); action != "buy" {
+				test.Fatalf("click stopped routing, got %q", action)
+			}
+			if action := shopMenuAction(langFA, "خرید سریع", cfg); action != "buy" {
+				test.Fatalf("existing button stopped routing, got %q", action)
+			}
+			// Old keyboards also work after the configured accent changes.
+			cfg.Presentation.ButtonStyles["buy"] = "success"
+			if action := shopMenuAction(langFA, button.Text, cfg); action != "buy" {
+				test.Fatalf("stale keyboard stopped routing, got %q", action)
+			}
+			cfg.Presentation.HideTrial = true
+			if action := shopMenuAction(langFA, tc.indicator+" "+t(langFA, "menuTrial"), cfg); action != "" {
+				test.Fatalf("hidden menu action routed: %q", action)
+			}
+		})
+	}
+}
+
+func TestExtendedAccentDoesNotDoublePrefixCustomLabel(test *testing.T) {
+	cfg := &model.BotConfig{Presentation: model.BotPresentation{
+		ButtonStyles: map[string]string{"buy": "purple"},
+		Labels: map[string]string{"en:buy": "🟣 My offers"},
+	}}
+	btn := shopMenuKeyboard(langEN, cfg).Keyboard[0][0]
+	if btn.Text != "🟣 My offers" || shopMenuAction(langEN, btn.Text, cfg) != "buy" {
+		test.Fatalf("custom prefixed button did not preserve label or routing: %+v", btn)
+	}
+}

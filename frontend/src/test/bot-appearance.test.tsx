@@ -67,3 +67,44 @@ test('custom native button colors appear in preview and save payload', () => {
     account: 'default',
   });
 });
+
+test('extended button accents render emoji on neutral Telegram buttons and are saved', () => {
+  const { container } = render(
+    <Editor
+      initial={{
+        ...emptyPresentation,
+        buttonStyles: { buy: 'pink', trial: 'yellow', subs: 'purple', support: 'orange' },
+        labels: { 'fa:buy': '🛒 خرید ویژه' },
+      }}
+    />,
+  );
+  const menu = container.querySelector('.bot-phone-menu');
+  const neutral = Array.from(menu?.querySelectorAll('.bot-menu-button--default') || []);
+  expect(neutral.map((button) => button.textContent)).toEqual(
+    expect.arrayContaining([
+      '🩷 🛒 خرید ویژه',
+      '🟡 🆓 دریافت اشتراک تست',
+      '🟣 💎 اشتراک‌های من',
+      '🟠 📞 پشتیبانی',
+    ]),
+  );
+  expect(menu?.querySelector('.bot-menu-button--success')?.textContent).not.toContain('🩷');
+  fireEvent.click(container.querySelector('.bot-save-bar button')!);
+  const saved = JSON.parse(screen.getByTestId('saved').textContent!);
+  expect(saved.buttonStyles.buy).toBe('pink');
+  expect(saved.labels['fa:buy']).toBe('🛒 خرید ویژه');
+});
+
+test('existing color indicator in label is not duplicated', () => {
+  const { container } = render(
+    <Editor
+      initial={{
+        ...emptyPresentation,
+        buttonStyles: { buy: 'purple' },
+        labels: { 'fa:buy': '🟣 پیشنهاد ویژه' },
+      }}
+    />,
+  );
+  const button = container.querySelector('.bot-phone-menu-row .bot-menu-button--default');
+  expect(button?.textContent).toBe('🟣 پیشنهاد ویژه');
+});
