@@ -60,6 +60,7 @@ func (inst *botInstance) handleStart(_ *th.Context, message telego.Message) erro
 
 func (inst *botInstance) sendMainMenu(chatID int64, lang string) {
 	cfg, _ := configFor(inst.ownerId)
+	inst.sendShopBanner(chatID, lang)
 	inst.send(chatID, shopWelcome(lang, cfg), shopMenuKeyboard(lang, cfg))
 }
 

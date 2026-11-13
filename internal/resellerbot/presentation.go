@@ -29,6 +29,17 @@ func shopMenuLabel(lang, action string, cfg *model.BotConfig) string {
 	return t(lang, menuKeys[action])
 }
 
+func shopButtonStyle(action string) string {
+	switch action {
+	case "buy", "subs", "tutorial":
+		return "success"
+	case "trial", "invoices", "account":
+		return "primary"
+	default:
+		return "danger"
+	}
+}
+
 func shopMenuKeyboard(lang string, cfg *model.BotConfig) *telego.ReplyKeyboardMarkup {
 	rows := [][]string{{"buy"}, {"trial"}, {"invoices", "subs"}, {"account"}, {"support", "tutorial"}}
 	if cfg != nil && cfg.Presentation.MenuLayout == "compact" {
@@ -39,7 +50,9 @@ func shopMenuKeyboard(lang string, cfg *model.BotConfig) *telego.ReplyKeyboardMa
 		buttons := []telego.KeyboardButton{}
 		for _, action := range row {
 			if !menuHidden(action, cfg) {
-				buttons = append(buttons, tu.KeyboardButton(shopMenuLabel(lang, action, cfg)))
+				button := tu.KeyboardButton(shopMenuLabel(lang, action, cfg))
+				button.Style = shopButtonStyle(action)
+				buttons = append(buttons, button)
 			}
 		}
 		if len(buttons) > 0 {
