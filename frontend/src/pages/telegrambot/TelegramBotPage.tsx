@@ -962,11 +962,6 @@ export default function TelegramBotPage() {
           welcome={welcomeInput}
           onWelcomeChange={setWelcomeInput}
           username={config?.botUsername || ''}
-          miniAppSuggestedURL={
-            config?.ownerId && window.location.protocol === 'https:'
-              ? window.location.origin + basePath() + '/shop/' + config.ownerId + '/'
-              : ''
-          }
           saving={savingConfig}
           onSave={handleSaveConfig}
         />

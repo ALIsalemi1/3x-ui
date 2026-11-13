@@ -508,7 +508,6 @@ export interface BotPresentation {
   hideTutorial: boolean;
   labels: Record<string, string>;
   menuLayout: string;
-  miniAppURL: string;
   supportURL: string;
   tutorialURL: string;
   welcomeEN: string;

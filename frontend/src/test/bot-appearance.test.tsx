@@ -108,3 +108,11 @@ test('existing color indicator in label is not duplicated', () => {
   const button = container.querySelector('.bot-phone-menu-row .bot-menu-button--default');
   expect(button?.textContent).toBe('🟣 پیشنهاد ویژه');
 });
+
+test('editor and saved presentation contain no Telegram Mini App setting', () => {
+  const { container } = render(<Editor />);
+  expect(container.querySelector('#bot-miniapp-url')).toBeNull();
+  expect(container.querySelector('.bot-phone-menu')?.textContent).not.toContain('Graphical shop');
+  fireEvent.click(container.querySelector('.bot-save-bar button')!);
+  expect(JSON.parse(screen.getByTestId('saved').textContent!)).not.toHaveProperty('miniAppURL');
+});

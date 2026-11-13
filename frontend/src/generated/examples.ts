@@ -421,7 +421,6 @@ export const EXAMPLES: Record<string, unknown> = {
       "hideTutorial": false,
       "labels": {},
       "menuLayout": "",
-      "miniAppURL": "",
       "supportURL": "",
       "tutorialURL": "",
       "welcomeEN": ""
@@ -522,7 +521,6 @@ export const EXAMPLES: Record<string, unknown> = {
     "hideTutorial": false,
     "labels": {},
     "menuLayout": "",
-    "miniAppURL": "",
     "supportURL": "",
     "tutorialURL": "",
     "welcomeEN": ""
