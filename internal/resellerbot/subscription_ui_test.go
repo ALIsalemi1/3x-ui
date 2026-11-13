@@ -12,8 +12,8 @@ import (
 func TestQuotaUsageBarColorsAndBounds(t *testing.T) {
 	for _, tc := range []struct {
 		used, total int64
-		wantPercent  int
-		wantSegment  string
+		wantPercent int
+		wantSegment string
 	}{
 		{0, 100, 0, "⬜"},
 		{25, 100, 25, "🟩"},
@@ -61,9 +61,9 @@ func TestSubscriptionListButtonsUseRealStatus(t *testing.T) {
 func TestSubscriptionCardPlanAndExpiryWarning(t *testing.T) {
 	sub := &model.BotSubscription{Id: 4, ClientEmail: "a<b>"}
 	stats := &panel.SubscriptionStats{
-		Enable: true,
+		Enable:     true,
 		ExpiryTime: time.Now().Add(48 * time.Hour).UnixMilli(),
-		Up: 10, Down: 10, Total: 100,
+		Up:         10, Down: 10, Total: 100,
 	}
 	text, _ := subscriptionCardWithDetails(sub, stats, "", "Pro <Plus>", langEN)
 	for _, want := range []string{"Pro &lt;Plus&gt;", "a&lt;b&gt;", "20%", "Less than 3 days"} {

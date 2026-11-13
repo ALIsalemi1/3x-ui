@@ -1325,7 +1325,7 @@ type BotSubscription struct {
 	LastExpiryAlertFor   int64 `json:"-" gorm:"default:0"`
 	LastExpiryAlertStage int   `json:"-" gorm:"default:0"`
 	LastLowQuotaAlertAt  int64 `json:"-" gorm:"default:0"`
-	CreatedAt           int64 `json:"createdAt" gorm:"autoCreateTime:milli"`
+	CreatedAt            int64 `json:"createdAt" gorm:"autoCreateTime:milli"`
 }
 
 func (BotSubscription) TableName() string { return "bot_subscriptions" }

@@ -16,7 +16,7 @@ func TestCatalogSortingAndFilterNavigation(t *testing.T) {
 		{Id: 3, PriceToman: 200000, TrafficGB: 0, DurationDays: 60},
 	}
 	for _, tc := range []struct {
-		mode string
+		mode    string
 		firstID int
 	}{
 		{"price", 2},
@@ -37,7 +37,7 @@ func TestCatalogSortingAndFilterNavigation(t *testing.T) {
 	}
 	many := make([]model.BotPlan, 10)
 	for i := range many {
-		many[i] = model.BotPlan{Id: i+1, TrafficGB: int64(i+1), PriceToman: int64(i+1) * 1000}
+		many[i] = model.BotPlan{Id: i + 1, TrafficGB: int64(i + 1), PriceToman: int64(i+1) * 1000}
 	}
 	keyboard, _, _ = shopCatalogKeyboardMode(langEN, many, 0, "traffic")
 	foundNext := false
@@ -60,18 +60,18 @@ func TestExpiryAlertStagesAndRestartDeduplication(t *testing.T) {
 		remaining time.Duration
 		wantStage int
 	}{
-		{96*time.Hour, 0},
-		{71*time.Hour, 1},
-		{20*time.Hour, 2},
-		{5*time.Hour, 3},
+		{96 * time.Hour, 0},
+		{71 * time.Hour, 1},
+		{20 * time.Hour, 2},
+		{5 * time.Hour, 3},
 		{-time.Hour, 0},
 	} {
-		expiry := now+tc.remaining.Milliseconds()
+		expiry := now + tc.remaining.Milliseconds()
 		if got := expiryAlertStage(expiry, now); got != tc.wantStage {
 			t.Errorf("%s alert stage = %d, want %d", tc.remaining, got, tc.wantStage)
 		}
 	}
-	expiry := now+(5*time.Hour).Milliseconds()
+	expiry := now + (5 * time.Hour).Milliseconds()
 	if stage, send := expiryAlertDue(sub, expiry, now); !send || stage != 3 {
 		t.Fatal("due reminder was not scheduled")
 	}
@@ -107,10 +107,10 @@ func TestLowQuotaAlertCooldownAndOwnerPreferences(t *testing.T) {
 
 func TestAdminStatsAndReferralCardEscaping(t *testing.T) {
 	stats := &panel.OwnerStats{
-		RevenueTodayToman: 120000,
-		RevenueMonthToman: 1200000,
+		RevenueTodayToman:   120000,
+		RevenueMonthToman:   1200000,
 		ActiveSubscriptions: 12,
-		NewCustomersToday: 3,
+		NewCustomersToday:   3,
 	}
 	text := ownerStatsCard(stats)
 	for _, wanted := range []string{"120,000", "1,200,000", "12", "3", "VPN SHOP"} {

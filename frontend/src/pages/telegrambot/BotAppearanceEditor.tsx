@@ -230,23 +230,31 @@ export default function BotAppearanceEditor({
           <p className="bot-field-help">{t('pages.telegramBot.design.nativeColorsHelp')}</p>
           <p className="bot-field-help">{t('pages.telegramBot.design.extendedColorsHelp')}</p>
           <div className="bot-style-presets">
-            <strong>{language === 'fa' ? '🎨 ترکیب رنگ آماده' : '🎨 Ready-made color themes'}</strong>
+            <strong>
+              {language === 'fa' ? '🎨 ترکیب رنگ آماده' : '🎨 Ready-made color themes'}
+            </strong>
             <Space wrap>
               <Button
                 size="small"
-                onClick={() => change('buttonStyles', { ...p.buttonStyles, ...buttonStylePresets.rainbow })}
+                onClick={() =>
+                  change('buttonStyles', { ...p.buttonStyles, ...buttonStylePresets.rainbow })
+                }
               >
                 🌈 {language === 'fa' ? 'رنگین‌کمانی' : 'Rainbow'}
               </Button>
               <Button
                 size="small"
-                onClick={() => change('buttonStyles', { ...p.buttonStyles, ...buttonStylePresets.pastel })}
+                onClick={() =>
+                  change('buttonStyles', { ...p.buttonStyles, ...buttonStylePresets.pastel })
+                }
               >
                 🩷 {language === 'fa' ? 'پاستلی' : 'Pastel'}
               </Button>
               <Button
                 size="small"
-                onClick={() => change('buttonStyles', { ...p.buttonStyles, ...buttonStylePresets.classic })}
+                onClick={() =>
+                  change('buttonStyles', { ...p.buttonStyles, ...buttonStylePresets.classic })
+                }
               >
                 🔵 {language === 'fa' ? 'کلاسیک' : 'Classic'}
               </Button>

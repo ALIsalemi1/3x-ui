@@ -83,9 +83,12 @@ func TestSubscriptionCardButtonsLinkAndTraffic(t *testing.T) {
 		{kb.InlineKeyboard[3][0].CallbackData, kb.InlineKeyboard[3][0].Style},
 	}
 	want := []struct{ cb, style string }{
-		{"sub:configs:9", "primary"}, {"sub:renew:9", "success"},
-		{"sub:refresh:9", "primary"}, {"sub:autorenew:9", "success"},
-		{"sub:revoke:9", "danger"}, {"sub:list:0", ""},
+		{"sub:configs:9", "primary"},
+		{"sub:renew:9", "success"},
+		{"sub:refresh:9", "primary"},
+		{"sub:autorenew:9", "success"},
+		{"sub:revoke:9", "danger"},
+		{"sub:list:0", ""},
 	}
 	for i := range want {
 		if got[i] != want[i] {

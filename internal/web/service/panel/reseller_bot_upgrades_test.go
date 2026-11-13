@@ -12,12 +12,12 @@ func TestBuyerRepeatClicksReuseUnpaidInvoices(t *testing.T) {
 	setupBotTestDB(t)
 	db := database.GetDB()
 	plan := &model.BotPlan{
-		OwnerId: 710,
-		Name: "Repeated click",
-		PriceToman: 100000,
+		OwnerId:      710,
+		Name:         "Repeated click",
+		PriceToman:   100000,
 		DurationDays: 30,
-		TrafficGB: 20,
-		Enabled: true,
+		TrafficGB:    20,
+		Enabled:      true,
 	}
 	if err := db.Create(plan).Error; err != nil {
 		t.Fatalf("create plan: %v", err)
@@ -62,8 +62,8 @@ func TestSalesDashboardPeriodRevenueAndReferralHistory(t *testing.T) {
 	}
 	for i := range 3 {
 		buyer := &model.BotCustomer{
-			OwnerId: 800, BuyerTgId: 77002+int64(i),
-			ReferralCode: "child00"+string(rune('a'+i)),
+			OwnerId: 800, BuyerTgId: 77002 + int64(i),
+			ReferralCode:         "child00" + string(rune('a'+i)),
 			ReferredByCustomerId: parent.Id,
 		}
 		if err := db.Create(buyer).Error; err != nil {
@@ -71,12 +71,16 @@ func TestSalesDashboardPeriodRevenueAndReferralHistory(t *testing.T) {
 		}
 	}
 	orders := []model.BotOrder{
-		{OwnerId: 800, BuyerTgId: 77001, PublicToken: "sales-purchase-1",
+		{
+			OwnerId: 800, BuyerTgId: 77001, PublicToken: "sales-purchase-1",
 			Kind: model.BotOrderKindPurchase, Status: model.BotOrderApproved,
-			FinalAmountToman: 120000, PaidAt: time.Now().UnixMilli()},
-		{OwnerId: 800, BuyerTgId: 77001, PublicToken: "sales-topup-1",
+			FinalAmountToman: 120000, PaidAt: time.Now().UnixMilli(),
+		},
+		{
+			OwnerId: 800, BuyerTgId: 77001, PublicToken: "sales-topup-1",
 			Kind: model.BotOrderKindTopup, Status: model.BotOrderApproved,
-			FinalAmountToman: 50000, PaidAt: time.Now().UnixMilli()},
+			FinalAmountToman: 50000, PaidAt: time.Now().UnixMilli(),
+		},
 	}
 	if err := db.Create(&orders).Error; err != nil {
 		t.Fatal(err)

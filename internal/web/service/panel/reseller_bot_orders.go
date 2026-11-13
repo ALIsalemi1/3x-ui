@@ -451,13 +451,13 @@ func (s *BotService) RejectOrder(orderId, reviewerId int, reason string) (*model
 
 // OwnerStats is a quick shop-health summary for the bot's admin "Stats" menu.
 type OwnerStats struct {
-	CustomerCount      int64
-	ApprovedOrders     int64
-	PendingReview      int64
-	RevenueToman       int64
-	RevenueTodayToman  int64
-	RevenueMonthToman  int64
-	NewCustomersToday  int64
+	CustomerCount       int64
+	ApprovedOrders      int64
+	PendingReview       int64
+	RevenueToman        int64
+	RevenueTodayToman   int64
+	RevenueMonthToman   int64
+	NewCustomersToday   int64
 	ActiveSubscriptions int64
 }
 

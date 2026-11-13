@@ -206,7 +206,6 @@ func (s *BotService) ApplyReferralBonus(order *model.BotOrder) error {
 		bonus, order.Id, "referral bonus")
 }
 
- 
 // RecentReferrals returns this customer's own referrals, newest first.
 func (s *BotService) RecentReferrals(customerId int) ([]model.BotCustomer, error) {
 	var referred []model.BotCustomer

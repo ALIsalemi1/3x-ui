@@ -186,7 +186,7 @@ func shopCatalogKeyboardMode(lang string, plans []model.BotPlan, page int, mode 
 			for col := range keyboard.InlineKeyboard[row] {
 				button := &keyboard.InlineKeyboard[row][col]
 				if strings.HasPrefix(button.CallbackData, "shop:page:") {
-					button.CallbackData = "shop:page:"+mode+":"+strings.TrimPrefix(button.CallbackData, "shop:page:")
+					button.CallbackData = "shop:page:" + mode + ":" + strings.TrimPrefix(button.CallbackData, "shop:page:")
 				}
 			}
 		}
