@@ -129,7 +129,7 @@ func TestExtendedShopAccentButtonsAreSafeAndStillRoute(test *testing.T) {
 		test.Run(tc.style, func(test *testing.T) {
 			cfg := &model.BotConfig{Presentation: model.BotPresentation{
 				ButtonStyles: map[string]string{"buy": tc.style},
-				Labels: map[string]string{"fa:buy": "خرید سریع"},
+				Labels:       map[string]string{"fa:buy": "خرید سریع"},
 			}}
 			button := shopMenuKeyboard(langFA, cfg).Keyboard[0][0]
 			expected := tc.indicator + " خرید سریع"
@@ -162,7 +162,7 @@ func TestExtendedShopAccentButtonsAreSafeAndStillRoute(test *testing.T) {
 func TestExtendedAccentDoesNotDoublePrefixCustomLabel(test *testing.T) {
 	cfg := &model.BotConfig{Presentation: model.BotPresentation{
 		ButtonStyles: map[string]string{"buy": "purple"},
-		Labels: map[string]string{"en:buy": "🟣 My offers"},
+		Labels:       map[string]string{"en:buy": "🟣 My offers"},
 	}}
 	btn := shopMenuKeyboard(langEN, cfg).Keyboard[0][0]
 	if btn.Text != "🟣 My offers" || shopMenuAction(langEN, btn.Text, cfg) != "buy" {
