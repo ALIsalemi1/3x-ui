@@ -258,6 +258,8 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 	g.GET("/service-worker.js", controller.ServePWAServiceWorker)
 	g.GET("/icons/:name", controller.ServePWAIcon)
 
+	controller.NewMiniAppController(g)
+
 	s.index = controller.NewIndexController(g)
 	s.panel = controller.NewXUIController(g)
 	s.api = controller.NewAPIController(g)

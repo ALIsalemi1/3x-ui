@@ -19,6 +19,12 @@ func validateBotPresentation(p *model.BotPresentation) error {
 	if p.DefaultLanguage != "" && p.DefaultLanguage != "auto" && p.DefaultLanguage != "fa" && p.DefaultLanguage != "en" {
 		return errors.New("default language must be auto, fa or en")
 	}
+	if p.MiniAppURL != "" {
+		u, err := url.Parse(p.MiniAppURL)
+		if err != nil || u.Scheme != "https" || u.Hostname() == "" || u.User != nil || u.RawQuery != "" || u.Fragment != "" || len(p.MiniAppURL) > 512 {
+			return errors.New("Mini App URL must be an HTTPS link to this panel")
+		}
+	}
 	if p.MenuLayout != "" && p.MenuLayout != "spacious" && p.MenuLayout != "compact" {
 		return errors.New("menu layout must be spacious or compact")
 	}

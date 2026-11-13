@@ -77,6 +77,7 @@ func (a *ResellerBotController) getConfig(c *gin.Context) {
 	}
 	jsonObj(c, gin.H{
 		"presentation":    cfg.Presentation,
+		"ownerId":         cfg.OwnerId,
 		"enabled":         cfg.Enabled,
 		"botUsername":     cfg.BotUsername,
 		"welcomeMessage":  cfg.WelcomeMessage,

@@ -50,6 +50,7 @@ import BotAppearanceEditor, { emptyPresentation } from './BotAppearanceEditor';
 import './TelegramBotPage.css';
 
 interface BotConfigInfo {
+  ownerId: number;
   presentation: BotPresentation;
   enabled: boolean;
   botUsername: string;
@@ -961,6 +962,11 @@ export default function TelegramBotPage() {
           welcome={welcomeInput}
           onWelcomeChange={setWelcomeInput}
           username={config?.botUsername || ''}
+          miniAppSuggestedURL={
+            config?.ownerId && window.location.protocol === 'https:'
+              ? window.location.origin + basePath() + '/shop/' + config.ownerId + '/'
+              : ''
+          }
           saving={savingConfig}
           onSave={handleSaveConfig}
         />

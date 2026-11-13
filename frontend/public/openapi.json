@@ -2111,6 +2111,11 @@
           "menuLayout": {
             "type": "string"
           },
+
+          "miniAppURL": {
+            "type": "string"
+
+          },
           "supportURL": {
             "type": "string"
           },
@@ -2131,6 +2136,7 @@
           "hideTutorial",
           "labels",
           "menuLayout",
+          "miniAppURL",
           "supportURL",
           "tutorialURL",
           "welcomeEN"

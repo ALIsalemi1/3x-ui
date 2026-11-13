@@ -1,0 +1,42 @@
+name: Publish VPN SHOP v1.5.0
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/publish-vpn-shop-v1.5.0.yml"
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  create-tag-and-start-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the release source
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Create v1.5.0 tag and start tagged release build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: v1.5.0
+        run: |
+          set -euo pipefail
+          test "$(tr -d '[:space:]' < internal/config/version)" = "1.5.0"
+          test -s internal/web/controller/miniapp/index.html
+          test -s internal/web/controller/miniapp/app.js
+          test -s internal/web/controller/miniapp/app.css
+          existing="$(git ls-remote origin "refs/tags/${RELEASE_TAG}" | cut -f1)"
+          if [[ -n "${existing}" ]]; then
+            if [[ "${existing}" != "${GITHUB_SHA}" ]]; then
+              echo "Tag ${RELEASE_TAG} already targets a different commit" >&2
+              exit 1
+            fi
+          else
+            git tag "${RELEASE_TAG}" "${GITHUB_SHA}"
+            git push origin "refs/tags/${RELEASE_TAG}"
+          fi
+          gh workflow run release.yml --ref "${RELEASE_TAG}" --repo "${GITHUB_REPOSITORY}"

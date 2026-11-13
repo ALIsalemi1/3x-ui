@@ -81,3 +81,30 @@ func TestBotPresentationRejectsInvalidInputBeforeSaving(t *testing.T) {
 		t.Fatal("invalid presentation created a config row")
 	}
 }
+
+func TestMiniAppURLMustPointToTheCurrentOwnerAndUseHTTPS(t *testing.T) {
+	setupBotTestDB(t)
+	svc := BotService{}
+	for _, bad := range []string{
+		"http://panel.example/shop/1/",
+		"https://panel.example/shop/2/",
+		"https://panel.example/shop/1/",
+		"https://panel.example/shop/1/?token=stolen",
+		"https://user:secret@panel.example/shop/1/",
+		"https://panel.example/not-the-store/1/",
+	} {
+		// A valid URL is tested separately below.
+		if bad == "https://panel.example/shop/1/" {
+			continue
+		}
+		_, err := svc.SaveConfig(1, BotConfigInput{Presentation: &model.BotPresentation{MiniAppURL: bad}})
+		if err == nil {
+			t.Fatalf("unsafe miniapp address accepted: %q", bad)
+		}
+	}
+	const good = "https://panel.example/my-base/shop/1/"
+	cfg, err := svc.SaveConfig(1, BotConfigInput{Presentation: &model.BotPresentation{MiniAppURL: good}})
+	if err != nil || cfg.Presentation.MiniAppURL != good {
+		t.Fatalf("valid miniapp URL was not saved: cfg=%+v, err=%v", cfg, err)
+	}
+}
