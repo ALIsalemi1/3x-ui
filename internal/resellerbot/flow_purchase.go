@@ -14,8 +14,6 @@ import (
 	tu "github.com/mymmrac/telego/telegoutil"
 )
 
-const bytesPerGB = 1024 * 1024 * 1024
-
 func jalaliDateTime(ms int64) string {
 	if ms <= 0 {
 		return "-"

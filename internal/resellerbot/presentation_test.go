@@ -47,12 +47,12 @@ func TestShopWelcomeEscapesBrandAndUsesEnglishGreeting(test *testing.T) {
 func TestShopButtonsHaveDistinctTelegramColors(test *testing.T) {
 	kb := shopMenuKeyboard(langFA, nil)
 	expected := map[string]string{
-		t(langFA, "menuBuyNew"): "success",
-		t(langFA, "menuTrial"): "primary",
+		t(langFA, "menuBuyNew"):   "success",
+		t(langFA, "menuTrial"):    "primary",
 		t(langFA, "menuInvoices"): "primary",
-		t(langFA, "menuSubs"): "success",
-		t(langFA, "menuAccount"): "primary",
-		t(langFA, "menuSupport"): "danger",
+		t(langFA, "menuSubs"):     "success",
+		t(langFA, "menuAccount"):  "primary",
+		t(langFA, "menuSupport"):  "danger",
 		t(langFA, "menuTutorial"): "success",
 	}
 	for _, row := range kb.Keyboard {
