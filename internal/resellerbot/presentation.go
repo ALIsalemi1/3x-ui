@@ -52,12 +52,35 @@ func shopAccentIndicator(style string) string {
 	}
 }
 
+// Default accents make the standard menu colorful while preserving owners'
+// explicit choices and supported native Telegram button backgrounds.
+func shopDefaultAccent(action string) string {
+	switch action {
+	case "trial":
+		return "yellow"
+	case "invoices":
+		return "pink"
+	case "subs":
+		return "purple"
+	case "account":
+		return "cyan"
+	case "tutorial":
+		return "orange"
+	default:
+		return ""
+	}
+}
+
 func shopMenuDisplayLabel(lang, action string, cfg *model.BotConfig) string {
 	label := shopMenuLabel(lang, action, cfg)
-	if cfg == nil {
-		return label
+	style := ""
+	if cfg != nil {
+		style = cfg.Presentation.ButtonStyles[action]
 	}
-	indicator := shopAccentIndicator(cfg.Presentation.ButtonStyles[action])
+	if style == "" || style == "auto" {
+		style = shopDefaultAccent(action)
+	}
+	indicator := shopAccentIndicator(style)
 	if indicator == "" || strings.HasPrefix(label, indicator+" ") {
 		return label
 	}
@@ -95,7 +118,7 @@ func shopButtonStyle(action string, cfg *model.BotConfig) string {
 }
 
 func shopMenuKeyboard(lang string, cfg *model.BotConfig) *telego.ReplyKeyboardMarkup {
-	rows := [][]string{{"buy"}, {"trial"}, {"invoices", "subs"}, {"account"}, {"support", "tutorial"}}
+	rows := [][]string{{"buy"}, {"subs", "invoices"}, {"trial", "account"}, {"support", "tutorial"}}
 	if cfg != nil && cfg.Presentation.MenuLayout == "compact" {
 		rows = [][]string{{"buy", "subs"}, {"trial", "invoices"}, {"account"}, {"support", "tutorial"}}
 	}
@@ -130,25 +153,38 @@ func shopMenuAction(lang, text string, cfg *model.BotConfig) string {
 	return action
 }
 
+// shopWelcome builds an HTML-safe, attractive landing message.
 func shopWelcome(lang string, cfg *model.BotConfig) string {
 	if cfg == nil {
-		return t(lang, "welcome")
+		cfg = &model.BotConfig{}
 	}
 	p := cfg.Presentation
-	parts := []string{}
-	if p.BrandName != "" {
-		parts = append(parts, "<b>"+html.EscapeString(p.BrandName)+"</b>")
+	brand := strings.TrimSpace(p.BrandName)
+	if brand == "" {
+		brand = "VPN SHOP"
 	}
 	welcome := cfg.WelcomeMessage
 	if lang == langEN {
 		welcome = p.WelcomeEN
 	}
+	welcome = strings.TrimSpace(welcome)
 	if welcome == "" {
 		welcome = t(lang, "welcome")
 	}
-	parts = append(parts, html.EscapeString(welcome))
-	if p.Announcement != "" {
-		parts = append(parts, html.EscapeString(p.Announcement))
+	hint := "👇 از دکمه‌های پایین، بخش موردنظرت رو انتخاب کن."
+	notice := "اطلاعیه"
+	if lang == langEN {
+		hint = "👇 Choose a section using the buttons below."
+		notice = "Announcement"
 	}
+	parts := []string{
+		"<b>✨ " + html.EscapeString(brand) + "</b>",
+		"━━━━━━━━━━━━━━",
+		html.EscapeString(welcome),
+	}
+	if announcement := strings.TrimSpace(p.Announcement); announcement != "" {
+		parts = append(parts, "<b>📣 "+notice+"</b>\n"+html.EscapeString(announcement))
+	}
+	parts = append(parts, "━━━━━━━━━━━━━━\n"+hint)
 	return strings.Join(parts, "\n\n")
 }

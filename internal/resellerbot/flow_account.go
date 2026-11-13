@@ -23,7 +23,8 @@ func (inst *botInstance) sendAccountCard(chatID, buyerTgID int64, buyerUsername,
 		joined = fmt.Sprintf("%d/%02d/%02d", y, m, d)
 	}
 
-	text := t(lang, "accountId", customer.BuyerTgId) + "\n" +
+	text := "<b>" + t(lang, "menuAccount") + "</b>\n━━━━━━━━━━━━━━\n" +
+		t(lang, "accountId", customer.BuyerTgId) + "\n" +
 		t(lang, "accountBalance", customer.WalletBalanceToman) + "\n" +
 		t(lang, "accountJoined", joined)
 
@@ -35,8 +36,10 @@ func (inst *botInstance) sendAccountCard(chatID, buyerTgID int64, buyerUsername,
 	var rows [][]telego.InlineKeyboardButton
 	cfg, _ := botSvc.GetConfig(inst.ownerId)
 	if cfg != nil && cfg.WalletEnabled {
-		rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, "btnTopup")).WithCallbackData("acct:topup")))
-		rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, "btnRedeem")).WithCallbackData("acct:redeem")))
+		rows = append(rows, tu.InlineKeyboardRow(
+			tu.InlineKeyboardButton(t(lang, "btnTopup")).WithCallbackData("acct:topup"),
+			tu.InlineKeyboardButton(t(lang, "btnRedeem")).WithCallbackData("acct:redeem"),
+		))
 	}
 	rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, notifLabel)).WithCallbackData("acct:notif")))
 	if cfg != nil && cfg.ReferralEnabled {
