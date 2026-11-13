@@ -414,6 +414,7 @@ export const EXAMPLES: Record<string, unknown> = {
     "presentation": {
       "announcement": "",
       "brandName": "",
+      "buttonStyles": {},
       "defaultLanguage": "",
       "hideSupport": false,
       "hideTrial": false,

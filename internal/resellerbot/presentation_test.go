@@ -83,8 +83,8 @@ func TestShopBannerIsValidPhoto(test *testing.T) {
 func TestShopMenuButtonStylesOverrideDefaultsAndKeepRouting(test *testing.T) {
 	cfg := &model.BotConfig{Presentation: model.BotPresentation{
 		ButtonStyles: map[string]string{
-			"buy": "danger",
-			"trial": "success",
+			"buy":     "danger",
+			"trial":   "success",
 			"account": "default",
 			"support": "primary",
 		},
@@ -98,10 +98,10 @@ func TestShopMenuButtonStylesOverrideDefaultsAndKeepRouting(test *testing.T) {
 		}
 	}
 	for label, want := range map[string]string{
-		"🛒 خرید ویژه": "danger",
-		t(langFA, "menuTrial"): "success",
-		t(langFA, "menuAccount"): "",
-		t(langFA, "menuSupport"): "primary",
+		"🛒 خرید ویژه":             "danger",
+		t(langFA, "menuTrial"):    "success",
+		t(langFA, "menuAccount"):  "",
+		t(langFA, "menuSupport"):  "primary",
 		t(langFA, "menuInvoices"): "primary",
 	} {
 		if got := styles[label]; got != want {
