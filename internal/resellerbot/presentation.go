@@ -29,10 +29,55 @@ func shopMenuLabel(lang, action string, cfg *model.BotConfig) string {
 	return t(lang, menuKeys[action])
 }
 
+// Telegram only supports the three native background styles. Extended
+// accent choices use a visible emoji in the button label instead.
+func shopAccentIndicator(style string) string {
+	switch style {
+	case "pink":
+		return "🩷"
+	case "yellow":
+		return "🟡"
+	case "purple":
+		return "🟣"
+	case "orange":
+		return "🟠"
+	case "cyan":
+		return "🩵"
+	case "brown":
+		return "🟤"
+	case "black":
+		return "⚫"
+	default:
+		return ""
+	}
+}
+
+func shopMenuDisplayLabel(lang, action string, cfg *model.BotConfig) string {
+	label := shopMenuLabel(lang, action, cfg)
+	if cfg == nil {
+		return label
+	}
+	indicator := shopAccentIndicator(cfg.Presentation.ButtonStyles[action])
+	if indicator == "" || strings.HasPrefix(label, indicator+" ") {
+		return label
+	}
+	return indicator + " " + label
+}
+
+func stripShopAccent(text string) string {
+	for _, style := range []string{"pink", "yellow", "purple", "orange", "cyan", "brown", "black"} {
+		indicator := shopAccentIndicator(style) + " "
+		if strings.HasPrefix(text, indicator) {
+			return strings.TrimPrefix(text, indicator)
+		}
+	}
+	return text
+}
+
 func shopButtonStyle(action string, cfg *model.BotConfig) string {
 	if cfg != nil {
 		switch style := cfg.Presentation.ButtonStyles[action]; style {
-		case "default":
+		case "default", "pink", "yellow", "purple", "orange", "cyan", "brown", "black":
 			return ""
 		case "primary", "success", "danger":
 			return style
@@ -59,7 +104,7 @@ func shopMenuKeyboard(lang string, cfg *model.BotConfig) *telego.ReplyKeyboardMa
 		buttons := []telego.KeyboardButton{}
 		for _, action := range row {
 			if !menuHidden(action, cfg) {
-				button := tu.KeyboardButton(shopMenuLabel(lang, action, cfg))
+				button := tu.KeyboardButton(shopMenuDisplayLabel(lang, action, cfg))
 				button.Style = shopButtonStyle(action, cfg)
 				buttons = append(buttons, button)
 			}
@@ -72,12 +117,13 @@ func shopMenuKeyboard(lang string, cfg *model.BotConfig) *telego.ReplyKeyboardMa
 }
 
 func shopMenuAction(lang, text string, cfg *model.BotConfig) string {
+	normalized := stripShopAccent(text)
 	for _, action := range []string{"buy", "trial", "invoices", "subs", "account", "support", "tutorial"} {
-		if !menuHidden(action, cfg) && text == shopMenuLabel(lang, action, cfg) {
+		if !menuHidden(action, cfg) && (text == shopMenuDisplayLabel(lang, action, cfg) || normalized == shopMenuLabel(lang, action, cfg)) {
 			return action
 		}
 	}
-	action := menuAction(lang, text)
+	action := menuAction(lang, normalized)
 	if menuHidden(action, cfg) {
 		return ""
 	}

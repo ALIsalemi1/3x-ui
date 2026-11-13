@@ -23,13 +23,31 @@ export const emptyPresentation: BotPresentation = {
 
 const actions = ['buy', 'trial', 'invoices', 'subs', 'account', 'support', 'tutorial'] as const;
 
+// Non-native accent colors are indicated with emoji in the real Telegram button
+// text. The Telegram Bot API cannot render these as background colors.
+const extendedColorIndicators: Record<string, string> = {
+  pink: '🩷',
+  yellow: '🟡',
+  purple: '🟣',
+  orange: '🟠',
+  cyan: '🩵',
+  brown: '🟤',
+  black: '⚫',
+};
+
+function menuButtonDisplayText(text: string, style: string): string {
+  const indicator = extendedColorIndicators[style];
+  if (!indicator || text.startsWith(`${indicator} `)) return text;
+  return `${indicator} ${text}`;
+}
+
 function menuButtonStyle(
   action: string,
   overrides: Record<string, string>,
 ): 'success' | 'primary' | 'danger' | 'default' {
   const custom = overrides[action];
   if (custom === 'primary' || custom === 'success' || custom === 'danger') return custom;
-  if (custom === 'default') return 'default';
+  if (custom === 'default' || extendedColorIndicators[custom]) return 'default';
   if (action === 'buy' || action === 'subs') return 'success';
   if (action === 'support') return 'danger';
   return 'primary';
@@ -171,6 +189,7 @@ export default function BotAppearanceEditor({
             />
           </label>
           <p className="bot-field-help">{t('pages.telegramBot.design.nativeColorsHelp')}</p>
+          <p className="bot-field-help">{t('pages.telegramBot.design.extendedColorsHelp')}</p>
           <div className="bot-menu-toggles">
             {(['trial', 'support', 'tutorial'] as const).map((key) => {
               const field = {
@@ -227,6 +246,13 @@ export default function BotAppearanceEditor({
                       { value: 'primary', label: t('pages.telegramBot.design.colorBlue') },
                       { value: 'danger', label: t('pages.telegramBot.design.colorRed') },
                       { value: 'default', label: t('pages.telegramBot.design.colorNeutral') },
+                      { value: 'pink', label: t('pages.telegramBot.design.colorPink') },
+                      { value: 'yellow', label: t('pages.telegramBot.design.colorYellow') },
+                      { value: 'purple', label: t('pages.telegramBot.design.colorPurple') },
+                      { value: 'orange', label: t('pages.telegramBot.design.colorOrange') },
+                      { value: 'cyan', label: t('pages.telegramBot.design.colorCyan') },
+                      { value: 'brown', label: t('pages.telegramBot.design.colorBrown') },
+                      { value: 'black', label: t('pages.telegramBot.design.colorBlack') },
                     ]}
                   />
                 </label>
@@ -316,7 +342,10 @@ export default function BotAppearanceEditor({
                       key={action}
                       className={`bot-menu-button bot-menu-button--${menuButtonStyle(action, p.buttonStyles)}`}
                     >
-                      {label(action as (typeof actions)[number])}
+                      {menuButtonDisplayText(
+                        label(action as (typeof actions)[number]),
+                        p.buttonStyles[action],
+                      )}
                     </span>
                   ))}
                 </div>
