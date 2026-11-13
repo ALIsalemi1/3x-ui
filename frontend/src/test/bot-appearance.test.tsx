@@ -88,7 +88,7 @@ test('extended button accents render emoji on neutral Telegram buttons and are s
       '🟠 📞 پشتیبانی',
     ]),
   );
-  expect(menu?.querySelector('.bot-menu-button--success')?.textContent).not.toContain('🩷');
+  expect(menu?.querySelector('.bot-menu-button--success')).toBeNull();
   fireEvent.click(container.querySelector('.bot-save-bar button')!);
   const saved = JSON.parse(screen.getByTestId('saved').textContent!);
   expect(saved.buttonStyles.buy).toBe('pink');
