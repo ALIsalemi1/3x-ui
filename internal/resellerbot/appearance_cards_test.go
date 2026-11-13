@@ -40,8 +40,10 @@ func TestInvoiceCardNativeButtonsAndEscapedDetails(t *testing.T) {
 }
 
 func TestInvoiceReviewHasRefreshWithoutPaymentActions(t *testing.T) {
-	order := &model.BotOrder{Id: 71, Kind: model.BotOrderKindPurchase,
-		Status: model.BotOrderPendingReview, PublicToken: "test-71"}
+	order := &model.BotOrder{
+		Id: 71, Kind: model.BotOrderKindPurchase,
+		Status: model.BotOrderPendingReview, PublicToken: "test-71",
+	}
 	text, kb := invoiceCard(order, "Starter", langFA)
 	if !strings.Contains(text, "بررسی") || kb == nil || len(kb.InlineKeyboard) != 1 ||
 		kb.InlineKeyboard[0][0].CallbackData != "inv:refresh:71" {
