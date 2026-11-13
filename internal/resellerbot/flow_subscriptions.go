@@ -3,6 +3,7 @@ package resellerbot
 import (
 	"html"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
@@ -55,9 +56,10 @@ func (inst *botInstance) sendSubscriptionList(chatID, buyerTgID int64, buyerUser
 		if plan, pErr := botSvc.GetPlan(inst.ownerId, sub.PlanId); pErr == nil {
 			label = plan.Name
 		}
-		rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(label).WithCallbackData("sub:view:"+strconv.Itoa(sub.Id))))
+		rows = append(rows, tu.InlineKeyboardRow(shopCatalogButton("💎 "+label, "sub:view:"+strconv.Itoa(sub.Id), "primary")))
 	}
-	inst.send(chatID, t(lang, "menuSubs"), tu.InlineKeyboard(rows...))
+	caption := "<b>" + t(lang, "menuSubs") + "</b>\n━━━━━━━━━━━━━━\n" + t(lang, "subscriptionListHint")
+	inst.send(chatID, caption, tu.InlineKeyboard(rows...))
 }
 
 // clientStatusLabel collapses enable/expiry into the same three states the
@@ -73,39 +75,57 @@ func clientStatusLabel(lang string, stats *panel.SubscriptionStats) string {
 	}
 }
 
-// subscriptionCard renders the full subscription-detail message (status,
-// username, usage, remaining time, sub link) and its action buttons -
-// shared by "my subscriptions" and the post-purchase/renewal delivery card.
-func subscriptionCard(sub *model.BotSubscription, lang string) (string, *telego.InlineKeyboardMarkup) {
-	stats, _ := botSvc.GetSubscriptionStats(sub.ClientEmail)
-	subURL, _ := botSvc.GetSubscriptionConfigs(sub.ClientEmail)
-
-	text := t(lang, "subStatus", clientStatusLabel(lang, stats)) + "\n" + t(lang, "subUsername", sub.ClientEmail)
+// subscriptionCardWithStats assembles an HTML-safe detail card with the
+// existing callback IDs. A separate renderer keeps live DB access out of tests.
+func subscriptionCardWithStats(sub *model.BotSubscription, stats *panel.SubscriptionStats, subURL, lang string) (string, *telego.InlineKeyboardMarkup) {
+	lines := []string{
+		"<b>" + t(lang, "subscriptionCardTitle") + "</b>",
+		"━━━━━━━━━━━━━━",
+		t(lang, "subStatus", clientStatusLabel(lang, stats)),
+		t(lang, "subUsername", html.EscapeString(sub.ClientEmail)),
+	}
 	if stats != nil {
 		used := common.FormatTraffic(stats.Up + stats.Down)
 		remaining := t(lang, "unlimited")
 		if stats.Total > 0 {
-			remaining = common.FormatTraffic(stats.Total - stats.Up - stats.Down)
+			left := stats.Total - stats.Up - stats.Down
+			if left < 0 {
+				left = 0
+			}
+			remaining = common.FormatTraffic(left)
 		}
-		text += "\n" + t(lang, "subUsed", used) + "\n" + t(lang, "subRemainingQuota", remaining) +
-			"\n" + t(lang, "subRemaining", timeLeftLabel(stats.ExpiryTime, lang))
+		lines = append(lines,
+			"━━━━━━━━━━━━━━",
+			t(lang, "subUsed", used),
+			t(lang, "subRemainingQuota", remaining),
+			t(lang, "subRemaining", timeLeftLabel(stats.ExpiryTime, lang)))
 	}
 	if subURL != "" {
-		text += "\n\n" + t(lang, "subLink", subURL)
+		lines = append(lines, "━━━━━━━━━━━━━━", t(lang, "subLink", "<code>"+html.EscapeString(subURL)+"</code>"))
 	}
-
 	autoLabel := "autoRenewOff"
+	autoStyle := "primary"
 	if sub.AutoRenewEnabled {
 		autoLabel = "autoRenewOn"
+		autoStyle = "success"
 	}
-	idStr := strconv.Itoa(sub.Id)
+	id := strconv.Itoa(sub.Id)
 	rows := [][]telego.InlineKeyboardButton{
-		tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, "btnGetConfigs")).WithCallbackData("sub:configs:" + idStr)),
-		tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, "btnRevoke")).WithCallbackData("sub:revoke:" + idStr)),
-		tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, "btnRenew")).WithCallbackData("sub:renew:" + idStr)),
-		tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, autoLabel)).WithCallbackData("sub:autorenew:" + idStr)),
+		tu.InlineKeyboardRow(
+			shopCatalogButton(t(lang, "btnGetConfigs"), "sub:configs:"+id, "primary"),
+			shopCatalogButton(t(lang, "btnRenew"), "sub:renew:"+id, "success"),
+		),
+		tu.InlineKeyboardRow(shopCatalogButton(t(lang, autoLabel), "sub:autorenew:"+id, autoStyle)),
+		tu.InlineKeyboardRow(shopCatalogButton(t(lang, "btnRevoke"), "sub:revoke:"+id, "danger")),
 	}
-	return text, tu.InlineKeyboard(rows...)
+	return strings.Join(lines, "\n"), tu.InlineKeyboard(rows...)
+}
+
+// subscriptionCard is also used after wallet payment and order approval.
+func subscriptionCard(sub *model.BotSubscription, lang string) (string, *telego.InlineKeyboardMarkup) {
+	stats, _ := botSvc.GetSubscriptionStats(sub.ClientEmail)
+	subURL, _ := botSvc.GetSubscriptionConfigs(sub.ClientEmail)
+	return subscriptionCardWithStats(sub, stats, subURL, lang)
 }
 
 func (inst *botInstance) sendSubscriptionDetail(chatID int64, subID int, lang string) {

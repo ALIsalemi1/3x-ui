@@ -2,6 +2,7 @@ package resellerbot
 
 import (
 	"fmt"
+	"html"
 	"strconv"
 	"strings"
 	"time"
@@ -146,65 +147,64 @@ func (inst *botInstance) handleTrial(chatID, buyerTgID int64, buyerUsername, lan
 	inst.send(chatID, t(lang, "orderApproved", email))
 }
 
-// sendInvoiceCard renders an order as the multi-field invoice message the
-// reference design shows, with Pay/Apply-discount/Cancel buttons - reused
-// for a freshly created order, "my invoices" list taps, and post-discount
-// re-renders.
+// invoiceCard renders an HTML-safe invoice and its native Telegram buttons.
+// Kept separate from DB lookup so statuses and callbacks are easy to test.
+func invoiceCard(order *model.BotOrder, planName, lang string) (string, *telego.InlineKeyboardMarkup) {
+	lines := []string{
+		"<b>" + t(lang, "invoiceCardTitle") + "</b>",
+		"━━━━━━━━━━━━━━",
+		t(lang, "invoiceId", html.EscapeString(order.PublicToken)),
+		t(lang, "invoiceStatus", statusLabel(lang, order.Status)),
+		"<b>" + t(lang, "invoiceAmountPretty", groupedToman(order.FinalAmountToman)) + "</b>",
+		t(lang, "invoiceKind", kindLabel(lang, order.Kind)),
+	}
+	if order.Kind != model.BotOrderKindTopup {
+		lines = append(lines, t(lang, "invoicePlan", html.EscapeString(planName)))
+	}
+	if order.DiscountAmountToman > 0 {
+		lines = append(lines, t(lang, "invoiceDiscount", groupedToman(order.DiscountAmountToman)))
+	}
+	lines = append(lines, "━━━━━━━━━━━━━━", t(lang, "invoiceCreatedAt", jalaliDateTime(order.CreatedAt)))
+	if order.PaidAt > 0 {
+		lines = append(lines, t(lang, "invoicePaidAt", jalaliDateTime(order.PaidAt)))
+	}
+	if order.TransactionRef != "" {
+		lines = append(lines, t(lang, "invoiceTxRef", html.EscapeString(order.TransactionRef)))
+	}
+	text := strings.Join(lines, "\n")
+	if order.Status != model.BotOrderPendingPayment {
+		return text, nil
+	}
+	id := strconv.Itoa(order.Id)
+	rows := [][]telego.InlineKeyboardButton{
+		tu.InlineKeyboardRow(shopCatalogButton(t(lang, "btnPay"), "inv:pay:"+id, "success")),
+	}
+	if order.DiscountCodeId == 0 && order.Kind != model.BotOrderKindTopup {
+		rows = append(rows, tu.InlineKeyboardRow(shopCatalogButton(t(lang, "btnApplyDiscount"), "inv:disc:"+id, "primary")))
+	}
+	rows = append(rows, tu.InlineKeyboardRow(shopCatalogButton(t(lang, "btnCancel"), "inv:cancel:"+id, "danger")))
+	return text, tu.InlineKeyboard(rows...)
+}
+
+// sendInvoiceCard is used by purchase, renewal, wallet top-up and review flows.
 func (inst *botInstance) sendInvoiceCard(chatID int64, orderID int, lang string) {
 	order, err := botSvc.GetOrder(inst.ownerId, orderID)
 	if err != nil {
 		inst.send(chatID, t(lang, "error"))
 		return
 	}
-	plan, _ := botSvc.GetPlan(inst.ownerId, order.PlanId)
 	planName := "-"
-	if plan != nil {
-		planName = plan.Name
-	}
-
-	discount := t(lang, "none")
-	if order.DiscountAmountToman > 0 {
-		discount = t(lang, "money", order.DiscountAmountToman)
-	}
-
-	lines := []string{
-		t(lang, "invoiceTitle"),
-		"",
-		t(lang, "invoiceId", order.PublicToken),
-		t(lang, "invoiceStatus", statusLabel(lang, order.Status)),
-		t(lang, "invoiceAmount", order.FinalAmountToman),
-		t(lang, "invoiceDiscount", discount),
-		t(lang, "invoiceKind", kindLabel(lang, order.Kind)),
-		t(lang, "invoiceCreatedAt", jalaliDateTime(order.CreatedAt)),
-		t(lang, "invoicePaidAt", jalaliDateTime(order.PaidAt)),
-	}
-	if order.TransactionRef != "" {
-		lines = append(lines, t(lang, "invoiceTxRef", order.TransactionRef))
-	}
 	if order.Kind != model.BotOrderKindTopup {
-		lines = append(lines, t(lang, "invoicePlan", planName))
-	}
-	text := ""
-	for i, l := range lines {
-		if i > 0 {
-			text += "\n"
+		if plan, pErr := botSvc.GetPlan(inst.ownerId, order.PlanId); pErr == nil {
+			planName = plan.Name
 		}
-		text += l
 	}
-
-	var rows [][]telego.InlineKeyboardButton
-	if order.Status == model.BotOrderPendingPayment {
-		rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, "btnPay")).WithCallbackData("inv:pay:"+strconv.Itoa(order.Id))))
-		if order.DiscountCodeId == 0 && order.Kind != model.BotOrderKindTopup {
-			rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, "btnApplyDiscount")).WithCallbackData("inv:disc:"+strconv.Itoa(order.Id))))
-		}
-		rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(t(lang, "btnCancel")).WithCallbackData("inv:cancel:"+strconv.Itoa(order.Id))))
+	text, buttons := invoiceCard(order, planName, lang)
+	if buttons != nil {
+		inst.send(chatID, text, buttons)
+	} else {
+		inst.send(chatID, text)
 	}
-	if len(rows) > 0 {
-		inst.send(chatID, text, tu.InlineKeyboard(rows...))
-		return
-	}
-	inst.send(chatID, text)
 }
 
 // sendInvoiceList shows the buyer's own invoices as tappable buttons (each
@@ -212,15 +212,23 @@ func (inst *botInstance) sendInvoiceCard(chatID int64, orderID int, lang string)
 func (inst *botInstance) sendInvoiceList(chatID, buyerTgID int64, buyerUsername, lang string) {
 	orders, err := botSvc.ListOrdersForBuyer(inst.ownerId, buyerTgID)
 	if err != nil || len(orders) == 0 {
-		inst.send(chatID, t(lang, "subListEmpty"))
+		inst.send(chatID, t(lang, "invoiceListEmpty"))
 		return
 	}
 	var rows [][]telego.InlineKeyboardButton
 	for _, o := range orders {
-		label := fmt.Sprintf("#%s - %s", o.PublicToken, statusLabel(lang, o.Status))
-		rows = append(rows, tu.InlineKeyboardRow(tu.InlineKeyboardButton(label).WithCallbackData("inv:view:"+strconv.Itoa(o.Id))))
+		label := fmt.Sprintf("🧾 #%s · %s", o.PublicToken, statusLabel(lang, o.Status))
+		style := "primary"
+		switch o.Status {
+		case model.BotOrderApproved:
+			style = "success"
+		case model.BotOrderRejected, model.BotOrderCanceled, model.BotOrderExpired:
+			style = "danger"
+		}
+		rows = append(rows, tu.InlineKeyboardRow(shopCatalogButton(label, "inv:view:"+strconv.Itoa(o.Id), style)))
 	}
-	inst.send(chatID, t(lang, "menuInvoices"), tu.InlineKeyboard(rows...))
+	caption := "<b>" + t(lang, "menuInvoices") + "</b>\n━━━━━━━━━━━━━━\n" + t(lang, "invoiceListHint")
+	inst.send(chatID, caption, tu.InlineKeyboard(rows...))
 }
 
 func (inst *botInstance) handleInvoiceDiscountPrompt(chatID int64, orderIDStr, lang string) {
