@@ -346,6 +346,59 @@ html[data-panel-brand='salihost'] .subscription-page .sub-footer {
   border-color: var(--sh-stroke);
 }
 
+
+/* API documentation relies on Swagger's own token set. Bring its custom UI
+ * into the same palette without overriding HTTP method meaning (GET/POST/DELETE). */
+html[data-panel-brand='salihost'] .api-docs-page,
+html[data-panel-brand='salihost'] .api-docs-page.is-dark {
+  --sw-bg: var(--sh-surface);
+  --sw-bg-soft: var(--sh-raised);
+  --sw-bg-input: var(--sh-canvas);
+  --sw-bg-code: var(--sh-canvas);
+  --sw-border: var(--sh-stroke);
+  --sw-border-strong: var(--sh-stroke-strong);
+  --sw-text: var(--ant-color-text);
+  --sw-text-muted: var(--ant-color-text-secondary);
+  --sw-text-dim: var(--ant-color-text-tertiary);
+  --sw-accent: var(--ant-color-primary);
+}
+
+html[data-panel-brand='salihost'] .api-docs-page :is(.docs-wrapper, .websocket-events) {
+  border-radius: 16px;
+  border-color: var(--sh-stroke);
+  background: var(--sh-surface);
+  box-shadow: var(--sh-shadow);
+}
+
+html[data-panel-brand='salihost'] .api-docs-page .swagger-ui :is(.model-box, .scheme-container) {
+  border-color: var(--sh-stroke);
+  border-radius: 12px;
+}
+
+/* Search-command overlay has a separate non-Ant component skin. */
+html[data-panel-brand='salihost']
+  :is(.command-palette-modal.light, .command-palette-modal.dark, .command-palette-modal.ultra) {
+  background: var(--sh-surface);
+  border: 1px solid var(--sh-stroke-strong);
+}
+
+html[data-panel-brand='salihost']
+  :is(.command-palette-modal.light, .command-palette-modal.dark, .command-palette-modal.ultra)
+  :is(.command-palette-header, .command-palette-footer) {
+  border-color: var(--sh-stroke);
+}
+
+html[data-panel-brand='salihost'] .command-palette-backdrop {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+html[data-panel-brand='salihost']
+  :is(.command-palette-modal.light, .command-palette-modal.dark, .command-palette-modal.ultra)
+  .command-palette-item.active {
+  background: var(--sh-shade);
+}
+
 /* Responsive dialogs and mobile navigation; no horizontal overflow. */
 @media (max-width: 768px) {
   html[data-panel-brand='salihost'] :is(.ant-modal, .ant-drawer) .ant-modal-content {
