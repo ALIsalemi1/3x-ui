@@ -49,10 +49,10 @@ import './AppSidebar.css';
 // Mac glyph to the Linux and Windows operators who are most of this panel's.
 const SHORTCUT_MODIFIER = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent) ? '⌘' : 'Ctrl';
 const DOCS_URL = 'https://docs.sanaei.dev/';
-const REPO_URL = 'https://github.com/MHSanaei/3x-ui';
+const REPO_URL = 'https://github.com/ALIsalemi1/3x-ui';
 const LOGOUT_KEY = '__logout__';
 const RAIL_WIDTH = 72;
-const SIDER_WIDTH = 220;
+const SIDER_WIDTH = 248;
 const SIDEBAR_PINNED_KEY = 'sidebar-pinned';
 
 let hoveredAcrossRemounts = false;
@@ -87,6 +87,21 @@ const iconByName: Record<IconName, ComponentType> = {
   routing: SwapOutlined,
   bot: RobotOutlined,
 };
+
+// Compact typographic identity avoids a remote logo dependency in the panel.
+function SaliHostBrand({ collapsed = false }: { collapsed?: boolean }) {
+  return (
+    <span className="salihost-identity" aria-label="SaliHost.ir">
+      <span className="salihost-symbol" aria-hidden="true">S</span>
+      {!collapsed && (
+        <span className="salihost-wordmark">
+          <strong>Sali<span>Host</span></strong>
+          <small>salihost.ir</small>
+        </span>
+      )}
+    </span>
+  );
+}
 
 function DocsButton({ ariaLabel }: { ariaLabel: string }) {
   return (
@@ -394,7 +409,7 @@ export default function AppSidebar() {
       >
         <div className="sider-brand">
           <div className="brand-block">
-            <span className="brand-text">{railCollapsed ? '3X' : '3X-UI'}</span>
+            <SaliHostBrand collapsed={railCollapsed} />
           </div>
           {!railCollapsed && (
             <div className="brand-actions">
@@ -481,7 +496,7 @@ export default function AppSidebar() {
       >
         <div className="drawer-header">
           <div className="brand-block">
-            <span className="drawer-brand">3X-UI</span>
+            <SaliHostBrand />
           </div>
           <div className="drawer-header-actions">
             <DocsButton ariaLabel={t('menu.docs') || 'Documentation'} />

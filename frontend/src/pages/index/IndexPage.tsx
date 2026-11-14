@@ -199,6 +199,15 @@ export default function IndexPage() {
                 />
               ) : (
                 <div className="ov-page">
+                  <header className="salihost-overview-banner">
+                    <div className="salihost-overview-icon" aria-hidden="true">S</div>
+                    <div className="salihost-overview-copy">
+                      <span className="salihost-overview-eyebrow">SALIHOST.IR / CONTROL CENTER</span>
+                      <h1>SaliHost <span>Infrastructure</span></h1>
+                      <p>{t('menu.dashboard')} · Xray & VPN SHOP</p>
+                    </div>
+                    <span className="salihost-overview-indicator" aria-label="SaliHost">SALIHOST</span>
+                  </header>
                   <OverviewActionBar
                     status={status}
                     isMobile={isMobile}
