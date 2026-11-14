@@ -77,7 +77,9 @@ export default function SaliHostSectionHeader({ section }: { section: Section })
 
   return (
     <header className="salihost-section-header" data-section={section}>
-      <div className="salihost-section-number" aria-hidden="true">{current.number}</div>
+      <div className="salihost-section-number" aria-hidden="true">
+        {current.number}
+      </div>
       <div className="salihost-section-details">
         <div className="salihost-section-eyebrow">SALIHOST.IR / {current.category}</div>
         <h1>{persian ? current.fa : current.en}</h1>

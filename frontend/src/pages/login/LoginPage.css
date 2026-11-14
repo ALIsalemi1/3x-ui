@@ -551,9 +551,17 @@
 
 .salihost-story-brand,
 .salihost-story-main,
-.salihost-story-foot { position: relative; z-index: 2; margin-inline: 48px; }
+.salihost-story-foot {
+  position: relative;
+  z-index: 2;
+  margin-inline: 48px;
+}
 
-.salihost-story-brand { display: flex; align-items: center; gap: 14px; }
+.salihost-story-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 .salihost-story-logo {
   width: 55px;
   height: 55px;
@@ -568,12 +576,30 @@
   letter-spacing: -3px;
   direction: ltr;
 }
-.salihost-story-logo span { color: #b2fff0; }
-.salihost-story-brandtext { display: flex; flex-direction: column; gap: 3px; }
-.salihost-story-brandtext strong { font-size: 23px; line-height: 1; font-weight: 800; letter-spacing: -1px; }
-.salihost-story-brandtext small { color: #79cfd6; font-size: 9px; letter-spacing: 2px; }
+.salihost-story-logo span {
+  color: #b2fff0;
+}
+.salihost-story-brandtext {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.salihost-story-brandtext strong {
+  font-size: 23px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.salihost-story-brandtext small {
+  color: #79cfd6;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
 
-.salihost-story-main { margin-block: 75px 90px; max-width: 480px; }
+.salihost-story-main {
+  margin-block: 75px 90px;
+  max-width: 480px;
+}
 .salihost-story-eyebrow {
   display: flex;
   align-items: center;
@@ -600,7 +626,10 @@
   letter-spacing: -1.35px;
   margin: 21px 0 17px;
 }
-.salihost-story-main h1 span { display: block; color: #74edda; }
+.salihost-story-main h1 span {
+  display: block;
+  color: #74edda;
+}
 .salihost-story-main > p {
   color: #b4d2db;
   font-size: 15px;
@@ -608,7 +637,12 @@
   margin: 0;
   max-width: 440px;
 }
-.salihost-story-capabilities { display: flex; flex-direction: column; gap: 13px; margin-top: 32px; }
+.salihost-story-capabilities {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin-top: 32px;
+}
 .salihost-story-capabilities > span {
   display: flex;
   gap: 13px;
@@ -617,12 +651,33 @@
   color: #58cbbb;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
-.salihost-story-capabilities b { color: #e5f8f8; font-size: 13px; font-weight: 600; font-family: inherit; }
+.salihost-story-capabilities b {
+  color: #e5f8f8;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+}
 
-.salihost-story-foot { color: #70a9b7; font-size: 10px; letter-spacing: 1.8px; direction: ltr; }
-.salihost-story-foot span { color: #27c9c1; padding-inline: 6px; }
+.salihost-story-foot {
+  color: #70a9b7;
+  font-size: 10px;
+  letter-spacing: 1.8px;
+  direction: ltr;
+}
+.salihost-story-foot span {
+  color: #27c9c1;
+  padding-inline: 6px;
+}
 
-.salihost-story-visual { position: absolute; bottom: 17%; inset-inline-end: -4%; width: 225px; height: 225px; opacity: 0.36; pointer-events: none; }
+.salihost-story-visual {
+  position: absolute;
+  bottom: 17%;
+  inset-inline-end: -4%;
+  width: 225px;
+  height: 225px;
+  opacity: 0.36;
+  pointer-events: none;
+}
 .salihost-story-visual-center {
   position: absolute;
   top: 85px;
@@ -632,17 +687,43 @@
   width: 55px;
   height: 55px;
   color: #b2fff0;
-  font: 900 18px ui-monospace, monospace;
+  font:
+    900 18px ui-monospace,
+    monospace;
   border-radius: 18px;
   border: 1px solid #30b7b9;
   background: rgba(3, 45, 59, 0.85);
 }
-.salihost-story-orbit { position: absolute; inset: 20px; border: 1px dashed rgba(89, 221, 206, 0.7); border-radius: 50%; }
-.salihost-story-orbit.orbit-two { inset: 0; transform: rotate(-20deg) scaleX(0.6); }
-.salihost-story-node { position: absolute; width: 12px; height: 12px; border-radius: 4px; background: #21e4c8; box-shadow: 0 0 0 6px rgba(33, 228, 200, 0.13); }
-.salihost-story-node.node-a { top: 25px; left: 115px; }
-.salihost-story-node.node-b { bottom: 37px; left: 18px; }
-.salihost-story-node.node-c { right: 14px; bottom: 70px; }
+.salihost-story-orbit {
+  position: absolute;
+  inset: 20px;
+  border: 1px dashed rgba(89, 221, 206, 0.7);
+  border-radius: 50%;
+}
+.salihost-story-orbit.orbit-two {
+  inset: 0;
+  transform: rotate(-20deg) scaleX(0.6);
+}
+.salihost-story-node {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background: #21e4c8;
+  box-shadow: 0 0 0 6px rgba(33, 228, 200, 0.13);
+}
+.salihost-story-node.node-a {
+  top: 25px;
+  left: 115px;
+}
+.salihost-story-node.node-b {
+  bottom: 37px;
+  left: 18px;
+}
+.salihost-story-node.node-c {
+  right: 14px;
+  bottom: 70px;
+}
 
 .login-app .salihost-auth-shell .login-wrapper {
   min-height: auto;
@@ -654,8 +735,15 @@
   padding: clamp(28px, 3vw, 46px);
   border: 1px solid rgba(15, 140, 160, 0.18);
 }
-.login-app .salihost-auth-shell .login-card .salihost-login-mark { width: 52px; height: 52px; border-radius: 15px; font-size: 35px; }
-.login-app .salihost-auth-shell .login-card .brand-name { font-size: 27px; }
+.login-app .salihost-auth-shell .login-card .salihost-login-mark {
+  width: 52px;
+  height: 52px;
+  border-radius: 15px;
+  font-size: 35px;
+}
+.login-app .salihost-auth-shell .login-card .brand-name {
+  font-size: 27px;
+}
 .login-app .salihost-auth-shell .login-form .ant-input-affix-wrapper {
   min-height: 49px;
   border-radius: 12px;
@@ -678,19 +766,41 @@
     justify-content: center;
     padding-block: 70px 28px;
   }
-  .login-app .salihost-login-story { min-height: 0; width: 100%; padding: 16px 0 0; }
+  .login-app .salihost-login-story {
+    min-height: 0;
+    width: 100%;
+    padding: 16px 0 0;
+  }
   .login-app .salihost-login-story::before,
   .login-app .salihost-login-story::after,
   .salihost-story-main,
   .salihost-story-visual,
-  .salihost-story-foot { display: none; }
-  .salihost-story-brand { margin-inline: 4px; }
-  .salihost-story-logo { width: 42px; height: 42px; border-radius: 13px; font-size: 18px; }
-  .salihost-story-brandtext strong { color: var(--color-text); font-size: 20px; }
-  .salihost-story-brandtext small { color: var(--color-text-subtle); }
-  .login-app .salihost-auth-shell .login-wrapper { padding-block: 20px; }
+  .salihost-story-foot {
+    display: none;
+  }
+  .salihost-story-brand {
+    margin-inline: 4px;
+  }
+  .salihost-story-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    font-size: 18px;
+  }
+  .salihost-story-brandtext strong {
+    color: var(--color-text);
+    font-size: 20px;
+  }
+  .salihost-story-brandtext small {
+    color: var(--color-text-subtle);
+  }
+  .login-app .salihost-auth-shell .login-wrapper {
+    padding-block: 20px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .salihost-story-beacon { animation: none; }
+  .salihost-story-beacon {
+    animation: none;
+  }
 }

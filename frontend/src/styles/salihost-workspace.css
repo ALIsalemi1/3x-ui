@@ -25,10 +25,17 @@ html[data-panel-brand='salihost'] .salihost-section-number {
   border-radius: 19px;
   background: rgba(21, 165, 173, 0.15);
   color: #6fefdc;
-  font: 800 24px ui-monospace, SFMono-Regular, Menlo, monospace;
+  font:
+    800 24px ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
   letter-spacing: -1px;
 }
-html[data-panel-brand='salihost'] .salihost-section-details { flex: 1; min-width: 0; }
+html[data-panel-brand='salihost'] .salihost-section-details {
+  flex: 1;
+  min-width: 0;
+}
 html[data-panel-brand='salihost'] .salihost-section-eyebrow {
   font-size: 10px;
   letter-spacing: 1.55px;
@@ -73,19 +80,39 @@ html[data-panel-brand='salihost'] .salihost-section-wordmark small {
   letter-spacing: 0.9px;
 }
 html[data-panel-brand='salihost']
-  :is(.clients-page, .inbounds-page, .nodes-page, .hosts-page, .groups-page, .settings-page, .reseller-page)
+  :is(
+    .clients-page,
+    .inbounds-page,
+    .nodes-page,
+    .hosts-page,
+    .groups-page,
+    .settings-page,
+    .reseller-page
+  )
   :is(.summary-card, .ant-card) {
   border-radius: 17px;
 }
 html[data-panel-brand='salihost']
-  :is(.clients-page, .inbounds-page, .nodes-page, .hosts-page, .groups-page, .settings-page, .reseller-page)
+  :is(
+    .clients-page,
+    .inbounds-page,
+    .nodes-page,
+    .hosts-page,
+    .groups-page,
+    .settings-page,
+    .reseller-page
+  )
   :is(.summary-card, .ant-card:hover) {
   border-color: color-mix(in srgb, var(--ant-color-primary) 18%, var(--ant-color-border-secondary));
 }
 html[data-panel-brand='salihost'] .telegram-bot-page .bot-workspace-header {
   border: 1px solid color-mix(in srgb, var(--ant-color-primary) 22%, var(--ant-color-border));
   border-radius: 20px;
-  background: linear-gradient(115deg, color-mix(in srgb, var(--ant-color-primary) 10%, var(--ant-color-bg-container)), var(--ant-color-bg-container));
+  background: linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--ant-color-primary) 10%, var(--ant-color-bg-container)),
+    var(--ant-color-bg-container)
+  );
   padding: 20px;
 }
 @media (max-width: 768px) {
@@ -101,7 +128,13 @@ html[data-panel-brand='salihost'] .telegram-bot-page .bot-workspace-header {
     border-radius: 12px;
     font-size: 16px;
   }
-  html[data-panel-brand='salihost'] .salihost-section-wordmark { display: none; }
-  html[data-panel-brand='salihost'] .salihost-section-details h1 { font-size: 18px; }
-  html[data-panel-brand='salihost'] .salihost-section-details p { font-size: 11px; }
+  html[data-panel-brand='salihost'] .salihost-section-wordmark {
+    display: none;
+  }
+  html[data-panel-brand='salihost'] .salihost-section-details h1 {
+    font-size: 18px;
+  }
+  html[data-panel-brand='salihost'] .salihost-section-details p {
+    font-size: 11px;
+  }
 }

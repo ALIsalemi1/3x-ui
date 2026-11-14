@@ -155,7 +155,13 @@ function AccentPicker({ collapsed = false }: { collapsed?: boolean }) {
 
 function DocsButton({ ariaLabel, onClick }: { ariaLabel: string; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="sidebar-docs" aria-label={ariaLabel} title={ariaLabel}>
+    <button
+      type="button"
+      onClick={onClick}
+      className="sidebar-docs"
+      aria-label={ariaLabel}
+      title={ariaLabel}
+    >
       <ReadOutlined />
     </button>
   );
@@ -196,13 +202,16 @@ function VersionBadge({ version, collapsed }: { version: string; collapsed?: boo
           <details className="salihost-legal-notice">
             <summary>Open-source credits &amp; licenses</summary>
             <p>
-              This modified distribution is based on 3X-UI by MHSanaei and
-              distributed under the GNU GPL version 3. Original copyright
-              notices and license terms remain in effect.
+              This modified distribution is based on 3X-UI by MHSanaei and distributed under the GNU
+              GPL version 3. Original copyright notices and license terms remain in effect.
             </p>
             <p className="salihost-legal-links">
-              <a href={UPSTREAM_URL} target="_blank" rel="noopener noreferrer">Upstream project</a>
-              <a href={REPO_URL} target="_blank" rel="noopener noreferrer">SaliHost source</a>
+              <a href={UPSTREAM_URL} target="_blank" rel="noopener noreferrer">
+                Upstream project
+              </a>
+              <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
+                SaliHost source
+              </a>
               <a href={`${REPO_URL}/blob/main/LICENSE`} target="_blank" rel="noopener noreferrer">
                 GPL-3.0 license
               </a>
@@ -439,17 +448,35 @@ export default function AppSidebar() {
   const groupedMenuItems = useMemo<MenuProps['items']>(() => {
     const persian = i18n.language.startsWith('fa');
     const groups = [
-      { id: 'workspace', title: persian ? 'فضای کاری' : 'WORKSPACE', routes: ['/', '/inbounds', '/clients', '/groups'] },
-      { id: 'commerce', title: persian ? 'فروش و مشتریان' : 'COMMERCE', routes: ['/reseller', '/telegram-bot'] },
-      { id: 'infrastructure', title: persian ? 'زیرساخت و شبکه' : 'INFRASTRUCTURE', routes: ['/nodes', '/hosts', '/outbound', '/routing', '/xray', '/multiply'] },
-      { id: 'management', title: persian ? 'مدیریت و ابزارها' : 'MANAGEMENT', routes: ['/settings', '/admins', '/api-docs'] },
+      {
+        id: 'workspace',
+        title: persian ? 'فضای کاری' : 'WORKSPACE',
+        routes: ['/', '/inbounds', '/clients', '/groups'],
+      },
+      {
+        id: 'commerce',
+        title: persian ? 'فروش و مشتریان' : 'COMMERCE',
+        routes: ['/reseller', '/telegram-bot'],
+      },
+      {
+        id: 'infrastructure',
+        title: persian ? 'زیرساخت و شبکه' : 'INFRASTRUCTURE',
+        routes: ['/nodes', '/hosts', '/outbound', '/routing', '/xray', '/multiply'],
+      },
+      {
+        id: 'management',
+        title: persian ? 'مدیریت و ابزارها' : 'MANAGEMENT',
+        routes: ['/settings', '/admins', '/api-docs'],
+      },
     ];
-    return groups.map((group) => ({
-      type: 'group' as const,
-      key: `salihost-${group.id}`,
-      label: <span className="salihost-nav-heading">{group.title}</span>,
-      children: toMenuItems(navItems.filter((tab) => group.routes.includes(tab.key))) ?? [],
-    })).filter((group) => group.children.length > 0);
+    return groups
+      .map((group) => ({
+        type: 'group' as const,
+        key: `salihost-${group.id}`,
+        label: <span className="salihost-nav-heading">{group.title}</span>,
+        children: toMenuItems(navItems.filter((tab) => group.routes.includes(tab.key))) ?? [],
+      }))
+      .filter((group) => group.children.length > 0);
   }, [i18n.language, navItems, toMenuItems]);
 
   const openLink = useCallback(
@@ -517,7 +544,10 @@ export default function AppSidebar() {
               >
                 {pinned ? <PushpinFilled /> : <PushpinOutlined />}
               </button>
-              <DocsButton ariaLabel={t('menu.docs') || 'Documentation'} onClick={() => navigate('/api-docs')} />
+              <DocsButton
+                ariaLabel={t('menu.docs') || 'Documentation'}
+                onClick={() => navigate('/api-docs')}
+              />
               <ThemeCycleButton
                 id="theme-cycle"
                 isDark={isDark}
@@ -594,7 +624,10 @@ export default function AppSidebar() {
             <SaliHostBrand />
           </div>
           <div className="drawer-header-actions">
-            <DocsButton ariaLabel={t('menu.docs') || 'Documentation'} onClick={() => navigate('/api-docs')} />
+            <DocsButton
+              ariaLabel={t('menu.docs') || 'Documentation'}
+              onClick={() => navigate('/api-docs')}
+            />
             <ThemeCycleButton
               id="theme-cycle-drawer"
               isDark={isDark}

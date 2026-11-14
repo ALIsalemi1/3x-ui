@@ -177,13 +177,15 @@ export default function IndexPage() {
       caption: persian ? 'فروش و سفارش‌ها' : 'Sales & orders',
     },
     ...(isAdmin
-      ? [{
-          key: 'settings',
-          route: '/settings',
-          icon: <SettingOutlined />,
-          title: t('menu.settings'),
-          caption: persian ? 'تنظیمات و امنیت' : 'Settings & security',
-        }]
+      ? [
+          {
+            key: 'settings',
+            route: '/settings',
+            icon: <SettingOutlined />,
+            title: t('menu.settings'),
+            caption: persian ? 'تنظیمات و امنیت' : 'Settings & security',
+          },
+        ]
       : []),
   ];
 
@@ -261,7 +263,10 @@ export default function IndexPage() {
                       SALIHOST
                     </span>
                   </header>
-                  <nav className="salihost-quicknav" aria-label={persian ? 'دسترسی سریع' : 'Quick navigation'}>
+                  <nav
+                    className="salihost-quicknav"
+                    aria-label={persian ? 'دسترسی سریع' : 'Quick navigation'}
+                  >
                     {quickLinks.map((link) => (
                       <button
                         type="button"
