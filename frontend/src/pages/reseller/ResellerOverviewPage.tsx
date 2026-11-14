@@ -1,3 +1,4 @@
+import SaliHostSectionHeader from '@/components/ui/SaliHostSectionHeader';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Card, Col, ConfigProvider, Layout, Result, Row, Spin, Statistic } from 'antd';
@@ -89,6 +90,7 @@ export default function ResellerOverviewPage() {
 
         <Layout className="content-shell">
           <Layout.Content id="content-layout" className="content-area">
+            <SaliHostSectionHeader section="reseller" />
             <Spin spinning={!fetched} delay={200} description={t('loading')} size="large">
               {!fetched ? (
                 <div className="loading-spacer" />

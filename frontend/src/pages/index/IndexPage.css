@@ -485,3 +485,118 @@
 .index-page .ip-hidden {
   filter: blur(6px);
 }
+
+/* SaliHost workspace navigation: live route actions, not placeholder cards. */
+.salihost-quicknav {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin: 4px 0 8px;
+}
+.salihost-quicklink {
+  display: flex;
+  align-items: center;
+  min-height: 81px;
+  min-width: 0;
+  gap: 13px;
+  padding: 15px 16px;
+  border: 1px solid
+    color-mix(in srgb, var(--ant-color-primary) 14%, var(--ant-color-border-secondary));
+  border-radius: 17px;
+  color: var(--ant-color-text);
+  background: var(--ant-color-bg-container);
+  box-shadow: 0 12px 26px rgba(5, 39, 61, 0.045);
+  cursor: pointer;
+  text-align: start;
+  transition:
+    transform 170ms ease,
+    border-color 170ms ease,
+    box-shadow 170ms ease;
+}
+.salihost-quicklink:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--ant-color-primary) 46%, transparent);
+  box-shadow: 0 18px 31px rgba(8, 127, 145, 0.1);
+}
+.salihost-quicklink:focus-visible {
+  outline: 2px solid var(--ant-color-primary);
+  outline-offset: 3px;
+}
+.salihost-quicklink-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 14px;
+  font-size: 21px;
+  color: var(--ant-color-primary);
+  background: color-mix(in srgb, var(--ant-color-primary) 12%, var(--ant-color-bg-container));
+}
+.salihost-quicklink-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 5px;
+  min-width: 0;
+}
+.salihost-quicklink-text strong {
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+.salihost-quicklink-text small {
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--ant-color-text-secondary);
+}
+.salihost-quicklink-arrow {
+  opacity: 0.52;
+  font-size: 12px;
+  transform: rotate(180deg);
+}
+[dir='ltr'] .salihost-quicklink-arrow {
+  transform: none;
+}
+
+@media (max-width: 1200px) {
+  .salihost-quicknav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .salihost-quicknav {
+    gap: 8px;
+  }
+  .salihost-quicklink {
+    padding: 10px;
+    gap: 8px;
+    min-height: 73px;
+    border-radius: 12px;
+  }
+  .salihost-quicklink-icon {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+  .salihost-quicklink-text strong {
+    font-size: 11px;
+  }
+  .salihost-quicklink-text small {
+    font-size: 10px;
+  }
+  .salihost-quicklink-arrow {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .salihost-quicklink {
+    transition: none;
+  }
+  .salihost-quicklink:hover {
+    transform: none;
+  }
+}

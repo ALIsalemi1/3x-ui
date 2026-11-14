@@ -7,6 +7,7 @@ import '@/styles/page-shell.css';
 import '@/styles/page-cards.css';
 import '@/styles/salihost-theme.css';
 import '@/styles/salihost-universal.css';
+import '@/styles/salihost-workspace.css';
 
 import { setupHttp } from '@/api/http-init';
 import { readyI18n } from '@/i18n/react';

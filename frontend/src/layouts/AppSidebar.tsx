@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentType, CSSProperties } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { Drawer, Dropdown, Layout, Menu, Tooltip } from 'antd';
+import { Drawer, Dropdown, Layout, Menu, Modal, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   ApiOutlined,
@@ -16,8 +16,8 @@ import {
   DatabaseOutlined,
   DiscordOutlined,
   ExportOutlined,
-  GithubOutlined,
   GlobalOutlined,
+  InfoCircleOutlined,
   ImportOutlined,
   LogoutOutlined,
   MailOutlined,
@@ -50,8 +50,8 @@ import './AppSidebar.css';
 // The palette listens for Ctrl as well as Cmd, so the chip must not show a
 // Mac glyph to the Linux and Windows operators who are most of this panel's.
 const SHORTCUT_MODIFIER = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent) ? '⌘' : 'Ctrl';
-const DOCS_URL = 'https://docs.sanaei.dev/';
 const REPO_URL = 'https://github.com/ALIsalemi1/3x-ui';
+const UPSTREAM_URL = 'https://github.com/MHSanaei/3x-ui';
 const LOGOUT_KEY = '__logout__';
 const RAIL_WIDTH = 72;
 const SIDER_WIDTH = 248;
@@ -102,7 +102,7 @@ function SaliHostBrand({ collapsed = false }: { collapsed?: boolean }) {
           <strong>
             Sali<span>Host</span>
           </strong>
-          <small>salihost.ir</small>
+          <small>CONTROL CENTER · salihost.ir</small>
         </span>
       )}
     </span>
@@ -153,36 +153,73 @@ function AccentPicker({ collapsed = false }: { collapsed?: boolean }) {
   );
 }
 
-function DocsButton({ ariaLabel }: { ariaLabel: string }) {
+function DocsButton({ ariaLabel, onClick }: { ariaLabel: string; onClick: () => void }) {
   return (
-    <a
-      href={DOCS_URL}
-      target="_blank"
-      rel="noopener noreferrer"
+    <button
+      type="button"
+      onClick={onClick}
       className="sidebar-docs"
       aria-label={ariaLabel}
       title={ariaLabel}
     >
       <ReadOutlined />
-    </a>
+    </button>
   );
 }
 
 function VersionBadge({ version, collapsed }: { version: string; collapsed?: boolean }) {
-  if (!version) return null;
-  const label = formatPanelVersion(version);
+  const [aboutOpen, setAboutOpen] = useState(false);
+  const label = version ? formatPanelVersion(version) : 'Beta';
   return (
-    <a
-      href={REPO_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="sider-version"
-      aria-label={`GitHub ${label}`}
-      title={label}
-    >
-      <GithubOutlined />
-      {!collapsed && <span className="sider-version-text">{label}</span>}
-    </a>
+    <>
+      <button
+        type="button"
+        className="sider-version salihost-about-trigger"
+        aria-label="About SaliHost Control Center"
+        title="About SaliHost Control Center"
+        onClick={() => setAboutOpen(true)}
+      >
+        <InfoCircleOutlined />
+        {!collapsed && (
+          <span className="sider-version-text">
+            SaliHost <span className="salihost-build-label">{label}</span>
+          </span>
+        )}
+      </button>
+      <Modal
+        open={aboutOpen}
+        title="SaliHost Control Center"
+        onCancel={() => setAboutOpen(false)}
+        footer={null}
+        width={500}
+        centered
+        destroyOnHidden
+      >
+        <div className="salihost-about">
+          <div className="salihost-about-kicker">SALIHOST.IR / NETWORK OPERATIONS</div>
+          <p>Integrated network operations, subscription management and customer sales.</p>
+          <div className="salihost-about-version">Build {label}</div>
+          <details className="salihost-legal-notice">
+            <summary>Open-source credits &amp; licenses</summary>
+            <p>
+              This modified distribution is based on 3X-UI by MHSanaei and distributed under the GNU
+              GPL version 3. Original copyright notices and license terms remain in effect.
+            </p>
+            <p className="salihost-legal-links">
+              <a href={UPSTREAM_URL} target="_blank" rel="noopener noreferrer">
+                Upstream project
+              </a>
+              <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
+                SaliHost source
+              </a>
+              <a href={`${REPO_URL}/blob/main/LICENSE`} target="_blank" rel="noopener noreferrer">
+                GPL-3.0 license
+              </a>
+            </p>
+          </details>
+        </div>
+      </Modal>
+    </>
   );
 }
 
@@ -229,7 +266,7 @@ function saveSidebarPinned(pinned: boolean) {
 }
 
 export default function AppSidebar() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isDark, isUltra, toggleTheme, toggleUltra } = useTheme();
   const { open: openCommandPalette } = useCommandPalette();
   const navigate = useNavigate();
@@ -408,6 +445,40 @@ export default function AppSidebar() {
     [settingsChildren, xrayChildren],
   );
 
+  const groupedMenuItems = useMemo<MenuProps['items']>(() => {
+    const persian = i18n.language.startsWith('fa');
+    const groups = [
+      {
+        id: 'workspace',
+        title: persian ? 'فضای کاری' : 'WORKSPACE',
+        routes: ['/', '/inbounds', '/clients', '/groups'],
+      },
+      {
+        id: 'commerce',
+        title: persian ? 'فروش و مشتریان' : 'COMMERCE',
+        routes: ['/reseller', '/telegram-bot'],
+      },
+      {
+        id: 'infrastructure',
+        title: persian ? 'زیرساخت و شبکه' : 'INFRASTRUCTURE',
+        routes: ['/nodes', '/hosts', '/outbound', '/routing', '/xray', '/multiply'],
+      },
+      {
+        id: 'management',
+        title: persian ? 'مدیریت و ابزارها' : 'MANAGEMENT',
+        routes: ['/settings', '/admins', '/api-docs'],
+      },
+    ];
+    return groups
+      .map((group) => ({
+        type: 'group' as const,
+        key: `salihost-${group.id}`,
+        label: <span className="salihost-nav-heading">{group.title}</span>,
+        children: toMenuItems(navItems.filter((tab) => group.routes.includes(tab.key))) ?? [],
+      }))
+      .filter((group) => group.children.length > 0);
+  }, [i18n.language, navItems, toMenuItems]);
+
   const openLink = useCallback(
     async (key: string) => {
       if (key === LOGOUT_KEY) {
@@ -473,7 +544,10 @@ export default function AppSidebar() {
               >
                 {pinned ? <PushpinFilled /> : <PushpinOutlined />}
               </button>
-              <DocsButton ariaLabel={t('menu.docs') || 'Documentation'} />
+              <DocsButton
+                ariaLabel={t('menu.docs') || 'Documentation'}
+                onClick={() => navigate('/api-docs')}
+              />
               <ThemeCycleButton
                 id="theme-cycle"
                 isDark={isDark}
@@ -515,7 +589,7 @@ export default function AppSidebar() {
           openKeys={railCollapsed ? undefined : openKeys}
           onOpenChange={(keys) => setOpenKeys(keys as string[])}
           className="sider-nav"
-          items={toMenuItems(navItems)}
+          items={groupedMenuItems}
           onClick={onMenuClick}
         />
         <Menu
@@ -550,7 +624,10 @@ export default function AppSidebar() {
             <SaliHostBrand />
           </div>
           <div className="drawer-header-actions">
-            <DocsButton ariaLabel={t('menu.docs') || 'Documentation'} />
+            <DocsButton
+              ariaLabel={t('menu.docs') || 'Documentation'}
+              onClick={() => navigate('/api-docs')}
+            />
             <ThemeCycleButton
               id="theme-cycle-drawer"
               isDark={isDark}
@@ -594,7 +671,7 @@ export default function AppSidebar() {
           openKeys={openKeys}
           onOpenChange={(keys) => setOpenKeys(keys as string[])}
           className="drawer-menu drawer-nav"
-          items={toMenuItems(navItems)}
+          items={groupedMenuItems}
           onClick={(info) => {
             onMenuClick(info);
             setDrawerOpen(false);

@@ -1,0 +1,140 @@
+/* SaliHost Control Cloud: application-wide section headers and product surfaces. */
+html[data-panel-brand='salihost'] .salihost-section-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 134px;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 22px 28px;
+  border: 1px solid rgba(16, 168, 174, 0.23);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 94% 15%, rgba(41, 225, 201, 0.22), transparent 34%),
+    linear-gradient(112deg, #102e45, #071d2b 78%);
+  color: #eaffff;
+  box-shadow: 0 16px 36px rgba(4, 38, 54, 0.14);
+  overflow: hidden;
+}
+html[data-panel-brand='salihost'] .salihost-section-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 64px;
+  height: 64px;
+  border: 1px solid rgba(125, 237, 229, 0.25);
+  border-radius: 19px;
+  background: rgba(21, 165, 173, 0.15);
+  color: #6fefdc;
+  font:
+    800 24px ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  letter-spacing: -1px;
+}
+html[data-panel-brand='salihost'] .salihost-section-details {
+  flex: 1;
+  min-width: 0;
+}
+html[data-panel-brand='salihost'] .salihost-section-eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.55px;
+  font-weight: 800;
+  color: #85d7da;
+  direction: ltr;
+  text-align: start;
+}
+html[data-panel-brand='salihost'] .salihost-section-details h1 {
+  color: #f9ffff;
+  font-size: clamp(19px, 2vw, 26px);
+  font-weight: 820;
+  line-height: 1.35;
+  margin: 7px 0 4px;
+}
+html[data-panel-brand='salihost'] .salihost-section-details p {
+  color: #b1c9d3;
+  margin: 0;
+  line-height: 1.7;
+  font-size: 12px;
+}
+html[data-panel-brand='salihost'] .salihost-section-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  min-width: 108px;
+  padding: 12px;
+  border: 1px solid rgba(136, 236, 224, 0.15);
+  border-radius: 15px;
+  color: #88e6d9;
+  background: rgba(15, 113, 128, 0.11);
+  direction: ltr;
+}
+html[data-panel-brand='salihost'] .salihost-section-wordmark span {
+  font-weight: 900;
+  font-size: 25px;
+  letter-spacing: -2px;
+}
+html[data-panel-brand='salihost'] .salihost-section-wordmark small {
+  font-size: 8px;
+  letter-spacing: 0.9px;
+}
+html[data-panel-brand='salihost']
+  :is(
+    .clients-page,
+    .inbounds-page,
+    .nodes-page,
+    .hosts-page,
+    .groups-page,
+    .settings-page,
+    .reseller-page
+  )
+  :is(.summary-card, .ant-card) {
+  border-radius: 17px;
+}
+html[data-panel-brand='salihost']
+  :is(
+    .clients-page,
+    .inbounds-page,
+    .nodes-page,
+    .hosts-page,
+    .groups-page,
+    .settings-page,
+    .reseller-page
+  )
+  :is(.summary-card, .ant-card:hover) {
+  border-color: color-mix(in srgb, var(--ant-color-primary) 18%, var(--ant-color-border-secondary));
+}
+html[data-panel-brand='salihost'] .telegram-bot-page .bot-workspace-header {
+  border: 1px solid color-mix(in srgb, var(--ant-color-primary) 22%, var(--ant-color-border));
+  border-radius: 20px;
+  background: linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--ant-color-primary) 10%, var(--ant-color-bg-container)),
+    var(--ant-color-bg-container)
+  );
+  padding: 20px;
+}
+@media (max-width: 768px) {
+  html[data-panel-brand='salihost'] .salihost-section-header {
+    gap: 12px;
+    min-height: 108px;
+    padding: 16px;
+    border-radius: 15px;
+  }
+  html[data-panel-brand='salihost'] .salihost-section-number {
+    flex-basis: 43px;
+    height: 43px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+  html[data-panel-brand='salihost'] .salihost-section-wordmark {
+    display: none;
+  }
+  html[data-panel-brand='salihost'] .salihost-section-details h1 {
+    font-size: 18px;
+  }
+  html[data-panel-brand='salihost'] .salihost-section-details p {
+    font-size: 11px;
+  }
+}

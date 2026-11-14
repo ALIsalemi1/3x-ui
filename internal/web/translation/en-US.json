@@ -154,7 +154,7 @@
       "xrayUpdates": "Xray Updates",
       "xraySwitchClickDesk": "Choose carefully, as older versions may not be compatible with current configurations.",
       "updatePanel": "Update Panel",
-      "panelUpdateDesc": "This will update 3X-UI itself to the latest release and restart the panel service.",
+      "panelUpdateDesc": "This will update SaliHost Control Center itself to the latest release and restart the panel service.",
       "currentPanelVersion": "Current panel version",
       "latestPanelVersion": "Latest panel version",
       "panelUpToDate": "Panel is up to date",
@@ -218,7 +218,7 @@
       "xraySwitchVersionDialogDesc": "This will change the Xray version to #version#.",
       "xraySwitchVersionPopover": "Xray updated successfully",
       "panelUpdateDialog": "Do you really want to update the panel?",
-      "panelUpdateDialogDesc": "This will update 3X-UI to #version# and restart the panel service.",
+      "panelUpdateDialogDesc": "This will update SaliHost Control Center to #version# and restart the panel service.",
       "panelUpdateStartedPopover": "Panel update started",
       "panelUpdateFailedTitle": "Panel update failed",
       "panelUpdateFailedDesc": "The update did not finish successfully. Check the server logs, or run 'x-ui update' from the command line.",
@@ -2732,7 +2732,7 @@
       "report": "🕰 Scheduled Reports: {{ .RunTime }}\r\n",
       "datetime": "⏰ Date&Time: {{ .DateTime }}\r\n",
       "hostname": "💻 Host: {{ .Hostname }}\r\n",
-      "version": "🚀 3X-UI Version: {{ .Version }}\r\n",
+      "version": "🚀 SaliHost Control Center Version: {{ .Version }}\r\n",
       "xrayVersion": "📡 Xray Version: {{ .XrayVersion }}\r\n",
       "ipv6": "🌐 IPv6: {{ .IPv6 }}\r\n",
       "ipv4": "🌐 IPv4: {{ .IPv4 }}\r\n",
@@ -2880,10 +2880,10 @@
   },
   "discord": {
     "test": {
-      "title": "3x-ui Discord Notification Test",
+      "title": "SaliHost Discord Notification Test",
       "body": "This is a test notification confirming that Discord notifications are configured correctly."
     },
-    "footer": "3x-ui Panel",
+    "footer": "SaliHost Control Center",
     "fields": {
       "panelVersion": "Panel Version",
       "xrayCore": "Xray Core",
@@ -2918,13 +2918,13 @@
       "loginFailed": "Login Failed"
     },
     "report": {
-      "title": "📊 3x-ui Status Report",
+      "title": "📊 SaliHost Status Report",
       "summary": "Periodic server and proxy status report for **{{ .Host }}**",
-      "footer": "3x-ui Scheduled Report • Schedule: {{ .RunTime }}"
+      "footer": "SaliHost Scheduled Report • Schedule: {{ .RunTime }}"
     },
     "commands": {
-      "helpTitle": "🤖 3x-ui Discord Bot Commands",
-      "helpDescription": "Available commands for monitoring and managing the 3x-ui server:",
+      "helpTitle": "🤖 SaliHost Discord Bot Commands",
+      "helpDescription": "Available commands for monitoring and managing the SaliHost server:",
       "helpStatus": "Display system load, RAM, CPU, connections, and online users",
       "helpReport": "Generate a full status report (with DB backup if configured)",
       "helpBackup": "Send the database backup file immediately",
@@ -2932,10 +2932,10 @@
       "helpInbounds": "List all configured inbounds with ports and client stats",
       "helpRestart": "Restart the Xray core",
       "helpHelp": "Display this list of available commands",
-      "statusTitle": "⚡ 3x-ui Server Status",
+      "statusTitle": "⚡ SaliHost Server Status",
       "statusDescription": "Current operational metrics for **{{ .Host }}**",
       "backupTitle": "🗄️ Database Backup",
-      "backupDescription": "Backup archive for 3x-ui generated at `{{ .Time }}`",
+      "backupDescription": "Backup archive for SaliHost generated at `{{ .Time }}`",
       "backupUnavailable": "❌ Backup service unavailable",
       "backupFailed": "❌ Failed to read database backup: {{ .Error }}",
       "usageHint": "⚠️ Usage: `!usage <email>` or `/usage <email>`",

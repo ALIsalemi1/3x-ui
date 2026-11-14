@@ -128,6 +128,7 @@ export default function LoginPage() {
   );
 
   const themeIcon = !isDark ? <SunOutlined /> : !isUltra ? <MoonOutlined /> : <MoonFilled />;
+  const isPersian = lang.toLowerCase().startsWith('fa');
 
   return (
     <ConfigProvider theme={antdThemeConfig}>
@@ -171,90 +172,140 @@ export default function LoginPage() {
             </Popover>
           </div>
 
-          <div className="login-wrapper">
-            {!fetched ? (
-              <div className="login-loading">
-                <Spin size="large" />
-              </div>
-            ) : (
-              <div className="login-card">
-                <div className="brand">
-                  <span className="salihost-login-mark" aria-hidden="true">
-                    S
-                  </span>
-                  <span className="brand-name">SaliHost</span>
-                  <span className="salihost-login-subtitle">
-                    salihost.ir · Hosting & Infrastructure
-                  </span>
-                  <span className="brand-accent" aria-hidden="true" />
+          <div className="salihost-auth-shell">
+            <aside className="salihost-login-story" dir={isPersian ? 'rtl' : 'ltr'}>
+              <div className="salihost-story-brand">
+                <div className="salihost-story-logo" aria-hidden="true">
+                  SH<span>.</span>
                 </div>
-                <h2 className="welcome">
-                  <b key={headlineIndex}>{headlineWords[headlineIndex]}</b>
-                </h2>
+                <div className="salihost-story-brandtext">
+                  <strong>SaliHost</strong>
+                  <small>PRIVATE CONTROL CLOUD</small>
+                </div>
+              </div>
+              <div className="salihost-story-main">
+                <div className="salihost-story-eyebrow">
+                  <span className="salihost-story-beacon" aria-hidden="true" />
+                  SALIHOST.IR · CONTROL CENTER
+                </div>
+                <h1>
+                  {isPersian ? 'یک مرکز فرماندهی' : 'Your command center'}
+                  <span>{isPersian ? ' برای تمام زیرساخت.' : ' for everything.'}</span>
+                </h1>
+                <p>
+                  {isPersian
+                    ? 'از مدیریت شبکه و سرویس‌ها تا مشتریان، اشتراک‌ها و فروش؛ همه‌چیز در فضای کاری اختصاصی شما.'
+                    : 'From network operations to customers, subscriptions and sales — your entire infrastructure in one workspace.'}
+                </p>
+                <div className="salihost-story-capabilities">
+                  <span>
+                    01 <b>{isPersian ? 'مدیریت شبکه' : 'Network operations'}</b>
+                  </span>
+                  <span>
+                    02 <b>{isPersian ? 'مدیریت مشتریان' : 'Customer management'}</b>
+                  </span>
+                  <span>
+                    03 <b>{isPersian ? 'فروش و خودکارسازی' : 'Sales automation'}</b>
+                  </span>
+                </div>
+              </div>
+              <div className="salihost-story-visual" aria-hidden="true">
+                <div className="salihost-story-visual-center">SH</div>
+                <span className="salihost-story-node node-a" />
+                <span className="salihost-story-node node-b" />
+                <span className="salihost-story-node node-c" />
+                <span className="salihost-story-orbit orbit-one" />
+                <span className="salihost-story-orbit orbit-two" />
+              </div>
+              <div className="salihost-story-foot">
+                SALIHOST.IR <span>—</span> YOUR CLOUD. YOUR CONTROL.
+              </div>
+            </aside>
+            <div className="login-wrapper">
+              {!fetched ? (
+                <div className="login-loading">
+                  <Spin size="large" />
+                </div>
+              ) : (
+                <div className="login-card">
+                  <div className="brand">
+                    <span className="salihost-login-mark" aria-hidden="true">
+                      S
+                    </span>
+                    <span className="brand-name">SaliHost</span>
+                    <span className="salihost-login-subtitle">
+                      salihost.ir · Hosting & Infrastructure
+                    </span>
+                    <span className="brand-accent" aria-hidden="true" />
+                  </div>
+                  <h2 className="welcome">
+                    <b key={headlineIndex}>{headlineWords[headlineIndex]}</b>
+                  </h2>
 
-                <FormProvider {...methods}>
-                  <Form
-                    layout="vertical"
-                    className="login-form"
-                    onFinish={methods.handleSubmit(onSubmit)}
-                  >
-                    <FormField
-                      name="username"
-                      label={t('username')}
-                      rules={{ validate: rhfZodValidate(LoginFormSchema.shape.username) }}
+                  <FormProvider {...methods}>
+                    <Form
+                      layout="vertical"
+                      className="login-form"
+                      onFinish={methods.handleSubmit(onSubmit)}
                     >
-                      <Input
-                        prefix={<UserOutlined />}
-                        autoComplete="username"
-                        size="large"
-                        placeholder={t('username')}
-                        autoFocus
-                      />
-                    </FormField>
-
-                    <FormField
-                      name="password"
-                      label={t('password')}
-                      rules={{ validate: rhfZodValidate(LoginFormSchema.shape.password) }}
-                    >
-                      <Input.Password
-                        prefix={<LockOutlined />}
-                        autoComplete="current-password"
-                        size="large"
-                        placeholder={t('password')}
-                      />
-                    </FormField>
-
-                    {twoFactorEnable && (
                       <FormField
-                        name="twoFactorCode"
-                        label={t('twoFactorCode')}
-                        rules={{ validate: rhfZodValidate(TwoFactorCodeSchema) }}
+                        name="username"
+                        label={t('username')}
+                        rules={{ validate: rhfZodValidate(LoginFormSchema.shape.username) }}
                       >
                         <Input
-                          prefix={<KeyOutlined />}
-                          autoComplete="one-time-code"
+                          prefix={<UserOutlined />}
+                          autoComplete="username"
                           size="large"
-                          placeholder={t('twoFactorCode')}
+                          placeholder={t('username')}
+                          autoFocus
                         />
                       </FormField>
-                    )}
 
-                    <Form.Item className="submit-row">
-                      <Button
-                        type="primary"
-                        htmlType="submit"
-                        loading={submitting}
-                        size="large"
-                        block
+                      <FormField
+                        name="password"
+                        label={t('password')}
+                        rules={{ validate: rhfZodValidate(LoginFormSchema.shape.password) }}
                       >
-                        {t('login')}
-                      </Button>
-                    </Form.Item>
-                  </Form>
-                </FormProvider>
-              </div>
-            )}
+                        <Input.Password
+                          prefix={<LockOutlined />}
+                          autoComplete="current-password"
+                          size="large"
+                          placeholder={t('password')}
+                        />
+                      </FormField>
+
+                      {twoFactorEnable && (
+                        <FormField
+                          name="twoFactorCode"
+                          label={t('twoFactorCode')}
+                          rules={{ validate: rhfZodValidate(TwoFactorCodeSchema) }}
+                        >
+                          <Input
+                            prefix={<KeyOutlined />}
+                            autoComplete="one-time-code"
+                            size="large"
+                            placeholder={t('twoFactorCode')}
+                          />
+                        </FormField>
+                      )}
+
+                      <Form.Item className="submit-row">
+                        <Button
+                          type="primary"
+                          htmlType="submit"
+                          loading={submitting}
+                          size="large"
+                          block
+                        >
+                          {t('login')}
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                  </FormProvider>
+                </div>
+              )}
+            </div>
           </div>
         </Layout.Content>
       </Layout>
