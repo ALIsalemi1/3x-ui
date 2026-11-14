@@ -1,10 +1,16 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, test } from 'vitest';
 
-import globalSkin from '@/styles/salihost-universal.css?raw';
-import oldSkin from '@/styles/salihost-theme.css?raw';
 import panelEntry from '@/main.tsx?raw';
 import loginEntry from '@/entries/login.tsx?raw';
 import subscriptionEntry from '@/entries/subpage.tsx?raw';
+
+// Vitest stubs CSS imports in unit mode; read the actual tracked stylesheets.
+const globalSkin = readFileSync(
+  new URL('../styles/salihost-universal.css', import.meta.url),
+  'utf8',
+);
+const oldSkin = readFileSync(new URL('../styles/salihost-theme.css', import.meta.url), 'utf8');
 
 describe('SaliHost complete frontend theme coverage', () => {
   test('every Vite entry point loads the shared skin', () => {
