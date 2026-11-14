@@ -1,0 +1,38 @@
+name: SaliHost frontend theme formatting (temporary)
+
+on:
+  push:
+    branches:
+      - salihost-panel-theme-2026-11-14
+    paths:
+      - .github/workflows/salihost-theme-format-temp.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Format SaliHost panel files
+        working-directory: frontend
+        run: |
+          npm ci
+          npx oxfmt             src/hooks/useTheme.tsx             src/layouts/AppSidebar.tsx             src/layouts/AppSidebar.css             src/pages/login/LoginPage.tsx             src/pages/login/LoginPage.css             src/pages/index/IndexPage.tsx             src/styles/salihost-theme.css             src/test/salihost-theme.test.tsx             src/main.tsx             src/entries/login.tsx
+      - name: Commit formatted theme
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add frontend/src
+          if ! git diff --cached --quiet; then
+            git commit -m "Format SaliHost panel theme source"
+            git push
+          fi
