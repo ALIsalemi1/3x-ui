@@ -1,3 +1,4 @@
+import SaliHostSectionHeader from '@/components/ui/SaliHostSectionHeader';
 import { lazy, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -727,6 +728,7 @@ export default function InboundsPage() {
 
         <Layout className="content-shell">
           <Layout.Content id="content-layout" className="content-area">
+            <SaliHostSectionHeader section="inbounds" />
             <Spin
               spinning={!fetched || !hostsFetched}
               delay={200}
