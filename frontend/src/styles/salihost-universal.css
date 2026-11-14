@@ -152,7 +152,7 @@ html[data-panel-brand='salihost'] .ant-segmented {
 }
 
 html[data-panel-brand='salihost'] .ant-segmented-item-selected {
-  box-shadow: 0 3px 11px var(--sh-shadow);
+  box-shadow: var(--sh-shadow);
 }
 
 /* Shared native input surfaces include all settings, all protocol forms,
@@ -191,22 +191,18 @@ html[data-panel-brand='salihost'] .ant-btn:not(.ant-btn-circle) {
   border-radius: 10px;
 }
 
-html[data-panel-brand='salihost'] .ant-btn-primary:not(:disabled) {
-  background: var(--ant-color-primary);
-  border-color: var(--ant-color-primary);
+/* Preserve the red/danger palette, ghost buttons and native disabled states. */
+html[data-panel-brand='salihost']
+  .ant-btn-primary:not(.ant-btn-dangerous):not(.ant-btn-background-ghost):not(:disabled) {
   box-shadow: 0 5px 15px var(--sh-spotlight);
-}
-
-html[data-panel-brand='salihost'] .ant-btn-primary:not(:disabled):hover {
-  background: var(--ant-color-primary-hover);
-  border-color: var(--ant-color-primary-hover);
 }
 
 html[data-panel-brand='salihost'] :is(.ant-tag, .ant-badge-count) {
   border-radius: 7px;
 }
 
-html[data-panel-brand='salihost'] .ant-tag:not([class*='ant-tag-']) {
+html[data-panel-brand='salihost']
+  .ant-tag:not(.ant-tag-error):not(.ant-tag-warning):not(.ant-tag-success):not(.ant-tag-processing):not(.ant-tag-blue):not(.ant-tag-geekblue):not(.ant-tag-gold):not(.ant-tag-red):not(.ant-tag-green) {
   background: var(--sh-shade);
   border-color: var(--sh-stroke);
 }
