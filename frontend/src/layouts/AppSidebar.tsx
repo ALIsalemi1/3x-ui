@@ -2,10 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentType, CSSProperties } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { Drawer, Layout, Menu, Tooltip } from 'antd';
+import { Drawer, Dropdown, Layout, Menu, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   ApiOutlined,
+  BgColorsOutlined,
   ApartmentOutlined,
   CloseOutlined,
   CloudServerOutlined,
@@ -40,7 +41,8 @@ import {
 
 import { HttpUtil } from '@/utils';
 import { formatPanelVersion } from '@/lib/panel-version';
-import { pauseAnimationsUntilLeave, useTheme } from '@/hooks/useTheme';
+import { PANEL_ACCENTS, pauseAnimationsUntilLeave, useTheme } from '@/hooks/useTheme';
+import type { PanelAccent } from '@/hooks/useTheme';
 import { useAllSettings } from '@/api/queries/useAllSettings';
 import { useCommandPalette } from '@/components/command-palette/useCommandPalette';
 import './AppSidebar.css';
@@ -100,6 +102,50 @@ function SaliHostBrand({ collapsed = false }: { collapsed?: boolean }) {
         </span>
       )}
     </span>
+  );
+}
+
+const ACCENT_NAMES: Record<PanelAccent, string> = {
+  salihost: 'SaliHost',
+  ocean: 'Ocean',
+  lagoon: 'Lagoon',
+  violet: 'Violet',
+  rose: 'Rose',
+  amber: 'Amber',
+};
+
+function AccentPicker({ collapsed = false }: { collapsed?: boolean }) {
+  const { accent, setAccent } = useTheme();
+  const options = (Object.keys(PANEL_ACCENTS) as PanelAccent[]).map((key) => ({
+    key,
+    label: (
+      <span className="salihost-accent-option">
+        <span className="salihost-accent-swatch" style={{ background: PANEL_ACCENTS[key] }} />
+        {ACCENT_NAMES[key]}
+      </span>
+    ),
+  }));
+  return (
+    <Dropdown
+      trigger={['click']}
+      placement="topLeft"
+      menu={{
+        items: options,
+        selectedKeys: [accent],
+        onClick: ({ key }) => setAccent(key as PanelAccent),
+      }}
+    >
+      <button
+        type="button"
+        className={`salihost-accent-toggle${collapsed ? ' is-collapsed' : ''}`}
+        aria-label="رنگ پنل / Panel accent color"
+        title={`Panel accent: ${ACCENT_NAMES[accent]}`}
+      >
+        <BgColorsOutlined />
+        {!collapsed && <span>Theme · {ACCENT_NAMES[accent]}</span>}
+        <span className="salihost-current-accent" style={{ background: PANEL_ACCENTS[accent] }} />
+      </button>
+    </Dropdown>
   );
 }
 
@@ -477,6 +523,7 @@ export default function AppSidebar() {
           onClick={onMenuClick}
         />
         <div className="sider-footer">
+          <AccentPicker collapsed={railCollapsed} />
           <VersionBadge version={panelVersion} collapsed={railCollapsed} />
         </div>
       </Layout.Sider>
@@ -561,6 +608,7 @@ export default function AppSidebar() {
           }}
         />
         <div className="drawer-footer">
+          <AccentPicker />
           <VersionBadge version={panelVersion} />
         </div>
       </Drawer>
