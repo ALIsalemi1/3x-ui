@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client';
 import { message } from 'antd';
 import 'antd/dist/reset.css';
 import '@/styles/salihost-theme.css';
+import '@/styles/salihost-universal.css';
 
 import { setupHttp } from '@/api/http-init';
 import { applyDocumentTitle } from '@/utils';

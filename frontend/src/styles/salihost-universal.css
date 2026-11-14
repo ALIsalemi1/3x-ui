@@ -1,0 +1,425 @@
+/*
+ * SaliHost — universal skin for all dashboard routes and portalled overlays.
+ * Uses Ant Design variables so the same interface remains readable in the
+ * light, dark, and ultra-dark modes. Semantic danger/success colors stay intact.
+ */
+html[data-panel-brand='salihost'] body {
+  --sh-canvas: #edf6f9;
+  --sh-surface: #fff;
+  --sh-raised: #f8fcfd;
+  --sh-stroke: rgba(17, 127, 145, 0.15);
+  --sh-stroke-strong: rgba(17, 127, 145, 0.25);
+  --sh-shade: rgba(9, 125, 145, 0.065);
+  --sh-muted: #526977;
+  --sh-shadow: 0 12px 38px rgba(14, 70, 89, 0.065);
+  --sh-shadow-hover: 0 18px 42px rgba(14, 70, 89, 0.11);
+  --sh-spotlight: rgba(10, 161, 178, 0.13);
+  background-color: var(--sh-canvas);
+}
+
+html[data-panel-brand='salihost'] body.dark {
+  --sh-canvas: #081522;
+  --sh-surface: #112437;
+  --sh-raised: #192e42;
+  --sh-stroke: rgba(118, 213, 221, 0.14);
+  --sh-stroke-strong: rgba(118, 213, 221, 0.25);
+  --sh-shade: rgba(17, 171, 181, 0.085);
+  --sh-muted: #9ab6c3;
+  --sh-shadow: 0 14px 42px rgba(0, 0, 0, 0.22);
+  --sh-shadow-hover: 0 22px 54px rgba(0, 0, 0, 0.32);
+  --sh-spotlight: rgba(10, 191, 185, 0.13);
+}
+
+html[data-panel-brand='salihost'][data-theme='ultra-dark'] body.dark {
+  --sh-canvas: #000;
+  --sh-surface: #101013;
+  --sh-raised: #191b20;
+  --sh-stroke: rgba(118, 213, 221, 0.11);
+  --sh-stroke-strong: rgba(118, 213, 221, 0.22);
+  --sh-shadow: 0 12px 40px rgba(0, 0, 0, 0.48);
+  --sh-shadow-hover: 0 19px 50px rgba(0, 0, 0, 0.64);
+}
+
+/* Main route backgrounds and content hierarchy. Keep every app route listed
+ * here: clients, inbounds, outbounds/routing via xray, settings, nodes, hosts,
+ * groups, admins, reseller, Telegram bot, API docs, multiply, and overview. */
+html[data-panel-brand='salihost']
+  :is(
+    .index-page, .clients-page, .inbounds-page, .xray-page,
+    .settings-page, .nodes-page, .hosts-page, .groups-page,
+    .api-docs-page, .admins-page, .multiply-page,
+    .reseller-page, .telegram-bot-page
+  ) {
+  --bg-page: var(--sh-canvas);
+  --bg-card: var(--sh-surface);
+  color: var(--ant-color-text);
+}
+
+html[data-panel-brand='salihost']
+  :is(
+    .index-page, .clients-page, .inbounds-page, .xray-page,
+    .settings-page, .nodes-page, .hosts-page, .groups-page,
+    .api-docs-page, .admins-page, .multiply-page,
+    .reseller-page, .telegram-bot-page
+  )
+  :is(.content-shell, .content-area, .ant-layout-content) {
+  min-width: 0;
+}
+
+/* Consistent cards, panels, statistics, and expandable sections across pages. */
+html[data-panel-brand='salihost']
+  :is(
+    .index-page, .clients-page, .inbounds-page, .xray-page,
+    .settings-page, .nodes-page, .hosts-page, .groups-page,
+    .api-docs-page, .admins-page, .multiply-page,
+    .reseller-page, .telegram-bot-page
+  )
+  :is(.ant-card, .ant-collapse, .ant-descriptions-bordered) {
+  border-radius: 16px;
+  border-color: var(--sh-stroke);
+  box-shadow: var(--sh-shadow);
+}
+
+html[data-panel-brand='salihost']
+  :is(.ant-card, .ant-collapse, .ant-descriptions-bordered)
+  :is(.ant-card-head, .ant-collapse-header, .ant-descriptions-item-label) {
+  border-color: var(--sh-stroke);
+}
+
+html[data-panel-brand='salihost']
+  :is(.ant-statistic-title, .ant-descriptions-item-label, .ant-form-item-extra) {
+  color: var(--ant-color-text-secondary);
+}
+
+html[data-panel-brand='salihost'] :is(.ant-card-head-title, .ant-collapse-header-text) {
+  font-weight: 650;
+}
+
+html[data-panel-brand='salihost'] .ant-collapse {
+  overflow: hidden;
+}
+
+html[data-panel-brand='salihost'] .ant-collapse > .ant-collapse-item {
+  border-color: var(--sh-stroke);
+}
+
+html[data-panel-brand='salihost'] :is(.ant-divider, .ant-divider-horizontal) {
+  border-color: var(--sh-stroke);
+}
+
+/* Tables, pagination, segmented controls, and tabs. No fake data or changes to
+ * table row behavior: these rules are strictly presentation. */
+html[data-panel-brand='salihost'] .ant-table-wrapper .ant-table-container {
+  border-color: var(--sh-stroke);
+  border-radius: 12px;
+}
+
+html[data-panel-brand='salihost'] .ant-table-wrapper .ant-table-thead > tr > th {
+  background: color-mix(in srgb, var(--ant-color-primary) 8%, var(--ant-color-bg-container));
+  color: var(--ant-color-text);
+  border-color: var(--sh-stroke);
+}
+
+html[data-panel-brand='salihost'] .ant-table-wrapper .ant-table-tbody > tr > td {
+  border-color: var(--sh-stroke);
+}
+
+html[data-panel-brand='salihost']
+  .ant-table-wrapper .ant-table-tbody > tr:not(.ant-table-row-selected):hover > td {
+  background: var(--sh-shade);
+}
+
+html[data-panel-brand='salihost'] :is(.ant-pagination-item, .ant-pagination-prev, .ant-pagination-next) {
+  border-radius: 9px;
+}
+
+html[data-panel-brand='salihost'] .ant-pagination-item-active {
+  border-color: var(--ant-color-primary);
+  background: var(--sh-shade);
+}
+
+html[data-panel-brand='salihost'] .ant-tabs .ant-tabs-nav::before {
+  border-color: var(--sh-stroke);
+}
+
+html[data-panel-brand='salihost'] .ant-tabs .ant-tabs-tab {
+  transition: color 160ms ease;
+}
+
+html[data-panel-brand='salihost'] .ant-segmented {
+  border: 1px solid var(--sh-stroke);
+  border-radius: 12px;
+}
+
+html[data-panel-brand='salihost'] .ant-segmented-item-selected {
+  box-shadow: var(--sh-shadow);
+}
+
+/* Shared native input surfaces include all settings, all protocol forms,
+ * search/filter bars, client editing, payment settings and bot configuration. */
+html[data-panel-brand='salihost']
+  :is(
+    .ant-input, .ant-input-affix-wrapper, .ant-input-number,
+    .ant-select-selector, .ant-picker, .ant-input-group-addon,
+    .ant-input-search-button, .ant-mentions, .ant-cascader-picker
+  ) {
+  border-color: var(--sh-stroke-strong);
+  border-radius: 10px;
+}
+
+html[data-panel-brand='salihost']
+  :is(.ant-input, .ant-input-affix-wrapper, .ant-input-number, .ant-select, .ant-picker, .ant-btn):focus-visible {
+  outline-color: var(--ant-color-primary);
+  outline-offset: 2px;
+}
+
+html[data-panel-brand='salihost'] :is(.ant-input-affix-wrapper-focused, .ant-input-number-focused, .ant-picker-focused) {
+  border-color: var(--ant-color-primary);
+  box-shadow: 0 0 0 2px var(--sh-spotlight);
+}
+
+html[data-panel-brand='salihost'] .ant-switch.ant-switch-checked {
+  background: var(--ant-color-primary);
+}
+
+html[data-panel-brand='salihost'] .ant-slider .ant-slider-track,
+html[data-panel-brand='salihost'] .ant-slider:hover .ant-slider-track {
+  background: var(--ant-color-primary);
+}
+
+html[data-panel-brand='salihost'] .ant-btn:not(.ant-btn-circle) {
+  border-radius: 10px;
+}
+
+/* Preserve the red/danger palette, ghost buttons and native disabled states. */
+html[data-panel-brand='salihost']
+  .ant-btn-primary:not(.ant-btn-dangerous):not(.ant-btn-background-ghost):not(:disabled) {
+  box-shadow: 0 5px 15px var(--sh-spotlight);
+}
+
+html[data-panel-brand='salihost'] :is(.ant-tag, .ant-badge-count) {
+  border-radius: 7px;
+}
+
+html[data-panel-brand='salihost']
+  .ant-tag:not(.ant-tag-error):not(.ant-tag-warning):not(.ant-tag-success):not(.ant-tag-processing):not(.ant-tag-blue):not(.ant-tag-geekblue):not(.ant-tag-gold):not(.ant-tag-red):not(.ant-tag-green) {
+  background: var(--sh-shade);
+  border-color: var(--sh-stroke);
+}
+
+/* Dialogs, popovers and overlay menus are rendered into a body-level portal,
+ * outside each page class, and therefore must have global brand selectors. */
+html[data-panel-brand='salihost'] .ant-modal .ant-modal-content {
+  overflow: hidden;
+  border: 1px solid var(--sh-stroke-strong);
+  border-radius: 19px;
+  box-shadow: var(--sh-shadow-hover);
+}
+
+html[data-panel-brand='salihost'] .ant-modal .ant-modal-header {
+  border-bottom: 1px solid var(--sh-stroke);
+  padding-bottom: 13px;
+  margin-bottom: 17px;
+}
+
+html[data-panel-brand='salihost'] .ant-modal .ant-modal-title {
+  font-size: 16px;
+  font-weight: 720;
+}
+
+html[data-panel-brand='salihost'] .ant-modal .ant-modal-footer {
+  border-top: 1px solid var(--sh-stroke);
+  padding-top: 15px;
+  margin-top: 18px;
+}
+
+html[data-panel-brand='salihost'] .ant-drawer-content {
+  border-inline-start: 1px solid var(--sh-stroke);
+}
+
+html[data-panel-brand='salihost'] :is(.ant-drawer-header, .ant-drawer-footer) {
+  border-color: var(--sh-stroke);
+}
+
+html[data-panel-brand='salihost'] .ant-drawer-title {
+  font-weight: 700;
+}
+
+html[data-panel-brand='salihost']
+  :is(
+    .ant-popover-inner, .ant-dropdown-menu, .ant-select-dropdown,
+    .ant-picker-dropdown .ant-picker-panel-container, .ant-cascader-dropdown,
+    .ant-tooltip-inner, .ant-color-picker-panel
+  ) {
+  border: 1px solid var(--sh-stroke);
+  border-radius: 13px;
+  box-shadow: var(--sh-shadow-hover);
+}
+
+html[data-panel-brand='salihost'] .ant-dropdown-menu .ant-dropdown-menu-item:not(.ant-dropdown-menu-item-danger):hover {
+  background: var(--sh-shade);
+}
+
+html[data-panel-brand='salihost'] .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: var(--sh-shade);
+}
+
+html[data-panel-brand='salihost'] .ant-popconfirm-title {
+  font-weight: 680;
+}
+
+html[data-panel-brand='salihost'] .ant-notification-notice {
+  border-radius: 14px;
+  border: 1px solid var(--sh-stroke);
+  box-shadow: var(--sh-shadow-hover);
+}
+
+html[data-panel-brand='salihost'] .ant-message-notice-content {
+  border: 1px solid var(--sh-stroke);
+  border-radius: 12px;
+  box-shadow: var(--sh-shadow);
+}
+
+html[data-panel-brand='salihost'] :is(.ant-alert, .ant-result, .ant-empty) {
+  border-radius: 12px;
+}
+
+/* Shared non-Ant components: client and inbound cards, filtering, node lists,
+ * custom editor tools and command palette retain their behaviors. */
+html[data-panel-brand='salihost']
+  :is(.client-card, .inbound-card, .external-link-card, .sub-row, .sub-qr-card, .card-bulk-bar) {
+  border-radius: 13px;
+  border-color: var(--sh-stroke);
+}
+
+html[data-panel-brand='salihost']
+  :is(.client-card.is-selected, .inbound-card.is-selected) {
+  border-color: var(--ant-color-primary);
+  box-shadow: inset 0 0 0 1px var(--ant-color-primary);
+}
+
+html[data-panel-brand='salihost'] .command-palette-modal {
+  border-color: var(--sh-stroke-strong);
+  border-radius: 20px;
+  box-shadow: var(--sh-shadow-hover);
+}
+
+html[data-panel-brand='salihost'] .command-palette-item.active {
+  border-radius: 11px;
+}
+
+html[data-panel-brand='salihost'] :is(.code-editor, .cm-editor) {
+  border-radius: 11px;
+}
+
+/* Public subscription view uses a separate Vite entry; keep customer names,
+ * their configured subscription titles and connection data untouched. */
+html[data-panel-brand='salihost'] .subscription-page {
+  --bg-page: var(--sh-canvas);
+  --bg-card: var(--sh-surface);
+  background-color: var(--bg-page);
+  background-image: radial-gradient(ellipse at 86% 4%, var(--sh-spotlight), transparent 46%);
+}
+
+html[data-panel-brand='salihost'] .subscription-page .sub-card {
+  background: var(--bg-card);
+  border: 1px solid var(--sh-stroke);
+  border-radius: 20px;
+  box-shadow: var(--sh-shadow-hover);
+}
+
+html[data-panel-brand='salihost'] .subscription-page .sub-brand-mark {
+  background: linear-gradient(135deg, #087f91, #12bca9);
+  box-shadow: 0 8px 22px rgba(8, 127, 145, 0.19);
+}
+
+html[data-panel-brand='salihost'] .subscription-page .sub-row {
+  border-color: var(--sh-stroke);
+  background: var(--sh-raised);
+}
+
+html[data-panel-brand='salihost'] .subscription-page .sub-row:hover {
+  border-color: var(--ant-color-primary);
+}
+
+html[data-panel-brand='salihost'] .subscription-page .sub-footer {
+  border-color: var(--sh-stroke);
+}
+
+
+/* API documentation relies on Swagger's own token set. Bring its custom UI
+ * into the same palette without overriding HTTP method meaning (GET/POST/DELETE). */
+html[data-panel-brand='salihost'] .api-docs-page,
+html[data-panel-brand='salihost'] .api-docs-page.is-dark {
+  --sw-bg: var(--sh-surface);
+  --sw-bg-soft: var(--sh-raised);
+  --sw-bg-input: var(--sh-canvas);
+  --sw-bg-code: var(--sh-canvas);
+  --sw-border: var(--sh-stroke);
+  --sw-border-strong: var(--sh-stroke-strong);
+  --sw-text: var(--ant-color-text);
+  --sw-text-muted: var(--ant-color-text-secondary);
+  --sw-text-dim: var(--ant-color-text-tertiary);
+  --sw-accent: var(--ant-color-primary);
+}
+
+html[data-panel-brand='salihost'] .api-docs-page :is(.docs-wrapper, .websocket-events) {
+  border-radius: 16px;
+  border-color: var(--sh-stroke);
+  background: var(--sh-surface);
+  box-shadow: var(--sh-shadow);
+}
+
+html[data-panel-brand='salihost'] .api-docs-page .swagger-ui :is(.model-box, .scheme-container) {
+  border-color: var(--sh-stroke);
+  border-radius: 12px;
+}
+
+/* Search-command overlay has a separate non-Ant component skin. */
+html[data-panel-brand='salihost']
+  :is(.command-palette-modal.light, .command-palette-modal.dark, .command-palette-modal.ultra) {
+  background: var(--sh-surface);
+  border: 1px solid var(--sh-stroke-strong);
+}
+
+html[data-panel-brand='salihost']
+  :is(.command-palette-modal.light, .command-palette-modal.dark, .command-palette-modal.ultra)
+  :is(.command-palette-header, .command-palette-footer) {
+  border-color: var(--sh-stroke);
+}
+
+html[data-panel-brand='salihost'] .command-palette-backdrop {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+html[data-panel-brand='salihost']
+  :is(.command-palette-modal.light, .command-palette-modal.dark, .command-palette-modal.ultra)
+  .command-palette-item.active {
+  background: var(--sh-shade);
+}
+
+/* Responsive dialogs and mobile navigation; no horizontal overflow. */
+@media (max-width: 768px) {
+  html[data-panel-brand='salihost'] :is(.ant-modal, .ant-drawer) .ant-modal-content {
+    border-radius: 15px;
+  }
+  html[data-panel-brand='salihost'] .ant-modal .ant-modal-body {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  html[data-panel-brand='salihost']
+    :is(.ant-table-wrapper, .ant-tabs, .ant-form, .ant-card, .sub-card) {
+    min-width: 0;
+    max-width: 100%;
+  }
+  html[data-panel-brand='salihost'] .subscription-page .sub-card {
+    border-radius: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-panel-brand='salihost'] :is(.ant-btn, .ant-tabs-tab, .ant-card, .ant-modal-content) {
+    transition: none;
+  }
+}

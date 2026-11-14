@@ -27,6 +27,18 @@ function readBool(key: string, fallback: boolean): boolean {
 
 function applyDom(isDark: boolean, isUltra: boolean) {
   document.documentElement.setAttribute('data-panel-brand', 'salihost');
+  // Every entry point may be served beneath a custom webBasePath. Build the
+  // favicon path from that base instead of assuming the site lives at '/'.
+  let favicon = document.querySelector<HTMLLinkElement>('link[data-salihost-favicon]');
+  if (!favicon) {
+    favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    favicon.type = 'image/svg+xml';
+    favicon.setAttribute('data-salihost-favicon', 'true');
+    document.head.appendChild(favicon);
+  }
+  const root = window.X_UI_BASE_PATH || '/';
+  favicon.href = `${root.endsWith('/') ? root : root + '/'}icons/salihost-mark.svg`;
   document.body.classList.remove('dark', 'light');
   document.body.classList.add(isDark ? 'dark' : 'light');
   // Native scrollbars read color-scheme, not the body class.
