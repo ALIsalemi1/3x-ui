@@ -38,3 +38,20 @@ test('SaliHost identity marker is applied without removing accessibility theme s
   expect(document.documentElement.style.colorScheme).toMatch(/^(dark|light)$/);
   unmount();
 });
+
+test('SaliHost favicon follows a custom web base path', () => {
+  const previousBasePath = window.X_UI_BASE_PATH;
+  try {
+    window.X_UI_BASE_PATH = '/custom-panel/';
+    const { unmount } = render(
+      <ThemeProvider>
+        <span>Control Center</span>
+      </ThemeProvider>,
+    );
+    const icon = document.head.querySelector<HTMLLinkElement>('link[data-salihost-favicon]');
+    expect(icon?.getAttribute('href')).toBe('/custom-panel/icons/salihost-mark.svg');
+    unmount();
+  } finally {
+    window.X_UI_BASE_PATH = previousBasePath;
+  }
+});

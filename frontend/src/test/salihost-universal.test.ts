@@ -53,6 +53,8 @@ describe('SaliHost complete frontend theme coverage', () => {
       '.ant-switch',
       '.ant-pagination-item',
       '.command-palette-modal',
+      '.swagger-ui',
+      '.docs-wrapper',
     ];
     for (const widget of widgets) {
       expect(globalSkin, 'missing themed widget: ' + widget).toContain(widget);
