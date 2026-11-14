@@ -179,9 +179,13 @@ export default function LoginPage() {
             ) : (
               <div className="login-card">
                 <div className="brand">
-                  <span className="salihost-login-mark" aria-hidden="true">S</span>
+                  <span className="salihost-login-mark" aria-hidden="true">
+                    S
+                  </span>
                   <span className="brand-name">SaliHost</span>
-                  <span className="salihost-login-subtitle">salihost.ir · Hosting & Infrastructure</span>
+                  <span className="salihost-login-subtitle">
+                    salihost.ir · Hosting & Infrastructure
+                  </span>
                   <span className="brand-accent" aria-hidden="true" />
                 </div>
                 <h2 className="welcome">

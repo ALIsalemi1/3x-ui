@@ -64,7 +64,9 @@ describe('SaliHost complete frontend theme coverage', () => {
   test('all color modes are defined and danger actions retain native styling', () => {
     expect(globalSkin).toContain("html[data-panel-brand='salihost'] body");
     expect(globalSkin).toContain("html[data-panel-brand='salihost'] body.dark");
-    expect(globalSkin).toContain("html[data-panel-brand='salihost'][data-theme='ultra-dark'] body.dark");
+    expect(globalSkin).toContain(
+      "html[data-panel-brand='salihost'][data-theme='ultra-dark'] body.dark",
+    );
     expect(globalSkin).toContain('.ant-btn-dangerous');
     expect(globalSkin).toContain('.ant-tag-error');
     expect(globalSkin).toContain('@media (max-width: 768px)');
