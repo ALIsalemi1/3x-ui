@@ -1,7 +1,10 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, test } from 'vitest';
 
-import globalSkin from '@/styles/salihost-universal.css?raw';
-import oldSkin from '@/styles/salihost-theme.css?raw';
+// Vitest's CSS transformer stubs .css?raw imports in unit mode. Read the
+// checked-in stylesheet directly so these assertions inspect real selectors.
+const globalSkin = readFileSync(new URL('../styles/salihost-universal.css', import.meta.url), 'utf8');
+const oldSkin = readFileSync(new URL('../styles/salihost-theme.css', import.meta.url), 'utf8');
 import panelEntry from '@/main.tsx?raw';
 import loginEntry from '@/entries/login.tsx?raw';
 import subscriptionEntry from '@/entries/subpage.tsx?raw';
