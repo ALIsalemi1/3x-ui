@@ -1,0 +1,54 @@
+name: SaliHost v2 formatting (temporary)
+
+on:
+  push:
+    branches:
+      - salihost-control-center-rebrand-2026-11-14
+    paths:
+      - .github/workflows/salihost-v2-format-temp.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Format changed frontend files
+        working-directory: frontend
+        run: |
+          npm ci
+          npx oxfmt \
+            src/components/ui/SaliHostSectionHeader.tsx \
+            src/layouts/AppSidebar.css \
+            src/layouts/AppSidebar.tsx \
+            src/pages/login/LoginPage.tsx \
+            src/pages/login/LoginPage.css \
+            src/pages/index/IndexPage.tsx \
+            src/pages/index/IndexPage.css \
+            src/pages/clients/ClientsPage.tsx \
+            src/pages/inbounds/InboundsPage.tsx \
+            src/pages/nodes/NodesPage.tsx \
+            src/pages/hosts/HostsPage.tsx \
+            src/pages/groups/GroupsPage.tsx \
+            src/pages/settings/SettingsPage.tsx \
+            src/pages/reseller/ResellerOverviewPage.tsx \
+            src/styles/salihost-workspace.css \
+            src/test/salihost-rebrand.test.tsx
+      - name: Save formatting to branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add frontend/src
+          if ! git diff --cached --quiet; then
+            git commit -m "Format SaliHost Control Center v2 frontend"
+            git push
+          fi
