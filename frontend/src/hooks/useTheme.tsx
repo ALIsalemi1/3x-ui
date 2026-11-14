@@ -199,11 +199,7 @@ export function buildAntdThemeConfig(
     ...SHARED_STYLE_CONFIG,
     algorithm: antdTheme.darkAlgorithm,
     token: {
-      ...(isUltra
-        ? ULTRA_DARK_TOKENS
-        : accent === 'salihost'
-          ? SALIHOST_DARK_TOKENS
-          : DARK_TOKENS),
+      ...(isUltra ? ULTRA_DARK_TOKENS : accent === 'salihost' ? SALIHOST_DARK_TOKENS : DARK_TOKENS),
       ...sharedTokens,
     },
     components: {

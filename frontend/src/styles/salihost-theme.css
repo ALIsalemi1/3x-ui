@@ -101,9 +101,7 @@ html[data-panel-brand='salihost'] body.light .ant-sidebar > .ant-layout-sider {
   border-inline-end-color: rgba(7, 127, 145, 0.13);
 }
 
-html[data-panel-brand='salihost'][data-theme='ultra-dark']
-  .ant-sidebar
-  > .ant-layout-sider {
+html[data-panel-brand='salihost'][data-theme='ultra-dark'] .ant-sidebar > .ant-layout-sider {
   background: linear-gradient(174deg, #07171e, #030608 85%);
 }
 
@@ -162,7 +160,8 @@ html[data-panel-brand='salihost']
     .hosts-page
   )
   .ant-card {
-  border: 1px solid color-mix(in srgb, var(--ant-color-primary) 11%, var(--ant-color-border-secondary));
+  border: 1px solid
+    color-mix(in srgb, var(--ant-color-primary) 11%, var(--ant-color-border-secondary));
   border-radius: 16px;
   box-shadow: 0 10px 35px rgba(5, 39, 61, 0.045);
 }
@@ -190,7 +189,11 @@ html[data-panel-brand='salihost']
 }
 
 html[data-panel-brand='salihost'] .ant-card-head {
-  border-block-end-color: color-mix(in srgb, var(--ant-color-primary) 11%, var(--ant-color-border-secondary));
+  border-block-end-color: color-mix(
+    in srgb,
+    var(--ant-color-primary) 11%,
+    var(--ant-color-border-secondary)
+  );
 }
 
 html[data-panel-brand='salihost'] .ant-table-wrapper .ant-table-thead > tr > th {
@@ -206,7 +209,8 @@ html[data-panel-brand='salihost'] .ant-btn-primary {
   box-shadow: 0 5px 14px color-mix(in srgb, var(--ant-color-primary) 20%, transparent);
 }
 
-html[data-panel-brand='salihost'] :is(.ant-input, .ant-input-affix-wrapper, .ant-select-selector):focus-within {
+html[data-panel-brand='salihost']
+  :is(.ant-input, .ant-input-affix-wrapper, .ant-select-selector):focus-within {
   border-color: var(--ant-color-primary);
 }
 
@@ -307,7 +311,9 @@ html[data-panel-brand='salihost'] :is(.ant-input, .ant-input-affix-wrapper, .ant
   .salihost-overview-indicator {
     display: none;
   }
-  html[data-panel-brand='salihost'] :is(.clients-page, .inbounds-page, .telegram-bot-page) .ant-card {
+  html[data-panel-brand='salihost']
+    :is(.clients-page, .inbounds-page, .telegram-bot-page)
+    .ant-card {
     border-radius: 12px;
   }
 }

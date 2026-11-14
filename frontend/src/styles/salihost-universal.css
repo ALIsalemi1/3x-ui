@@ -45,10 +45,19 @@ html[data-panel-brand='salihost'][data-theme='ultra-dark'] body.dark {
  * groups, admins, reseller, Telegram bot, API docs, multiply, and overview. */
 html[data-panel-brand='salihost']
   :is(
-    .index-page, .clients-page, .inbounds-page, .xray-page,
-    .settings-page, .nodes-page, .hosts-page, .groups-page,
-    .api-docs-page, .admins-page, .multiply-page,
-    .reseller-page, .telegram-bot-page
+    .index-page,
+    .clients-page,
+    .inbounds-page,
+    .xray-page,
+    .settings-page,
+    .nodes-page,
+    .hosts-page,
+    .groups-page,
+    .api-docs-page,
+    .admins-page,
+    .multiply-page,
+    .reseller-page,
+    .telegram-bot-page
   ) {
   --bg-page: var(--sh-canvas);
   --bg-card: var(--sh-surface);
@@ -57,10 +66,19 @@ html[data-panel-brand='salihost']
 
 html[data-panel-brand='salihost']
   :is(
-    .index-page, .clients-page, .inbounds-page, .xray-page,
-    .settings-page, .nodes-page, .hosts-page, .groups-page,
-    .api-docs-page, .admins-page, .multiply-page,
-    .reseller-page, .telegram-bot-page
+    .index-page,
+    .clients-page,
+    .inbounds-page,
+    .xray-page,
+    .settings-page,
+    .nodes-page,
+    .hosts-page,
+    .groups-page,
+    .api-docs-page,
+    .admins-page,
+    .multiply-page,
+    .reseller-page,
+    .telegram-bot-page
   )
   :is(.content-shell, .content-area, .ant-layout-content) {
   min-width: 0;
@@ -69,10 +87,19 @@ html[data-panel-brand='salihost']
 /* Consistent cards, panels, statistics, and expandable sections across pages. */
 html[data-panel-brand='salihost']
   :is(
-    .index-page, .clients-page, .inbounds-page, .xray-page,
-    .settings-page, .nodes-page, .hosts-page, .groups-page,
-    .api-docs-page, .admins-page, .multiply-page,
-    .reseller-page, .telegram-bot-page
+    .index-page,
+    .clients-page,
+    .inbounds-page,
+    .xray-page,
+    .settings-page,
+    .nodes-page,
+    .hosts-page,
+    .groups-page,
+    .api-docs-page,
+    .admins-page,
+    .multiply-page,
+    .reseller-page,
+    .telegram-bot-page
   )
   :is(.ant-card, .ant-collapse, .ant-descriptions-bordered) {
   border-radius: 16px;
@@ -125,11 +152,15 @@ html[data-panel-brand='salihost'] .ant-table-wrapper .ant-table-tbody > tr > td 
 }
 
 html[data-panel-brand='salihost']
-  .ant-table-wrapper .ant-table-tbody > tr:not(.ant-table-row-selected):hover > td {
+  .ant-table-wrapper
+  .ant-table-tbody
+  > tr:not(.ant-table-row-selected):hover
+  > td {
   background: var(--sh-shade);
 }
 
-html[data-panel-brand='salihost'] :is(.ant-pagination-item, .ant-pagination-prev, .ant-pagination-next) {
+html[data-panel-brand='salihost']
+  :is(.ant-pagination-item, .ant-pagination-prev, .ant-pagination-next) {
   border-radius: 9px;
 }
 
@@ -159,21 +190,35 @@ html[data-panel-brand='salihost'] .ant-segmented-item-selected {
  * search/filter bars, client editing, payment settings and bot configuration. */
 html[data-panel-brand='salihost']
   :is(
-    .ant-input, .ant-input-affix-wrapper, .ant-input-number,
-    .ant-select-selector, .ant-picker, .ant-input-group-addon,
-    .ant-input-search-button, .ant-mentions, .ant-cascader-picker
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-number,
+    .ant-select-selector,
+    .ant-picker,
+    .ant-input-group-addon,
+    .ant-input-search-button,
+    .ant-mentions,
+    .ant-cascader-picker
   ) {
   border-color: var(--sh-stroke-strong);
   border-radius: 10px;
 }
 
 html[data-panel-brand='salihost']
-  :is(.ant-input, .ant-input-affix-wrapper, .ant-input-number, .ant-select, .ant-picker, .ant-btn):focus-visible {
+  :is(
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-number,
+    .ant-select,
+    .ant-picker,
+    .ant-btn
+  ):focus-visible {
   outline-color: var(--ant-color-primary);
   outline-offset: 2px;
 }
 
-html[data-panel-brand='salihost'] :is(.ant-input-affix-wrapper-focused, .ant-input-number-focused, .ant-picker-focused) {
+html[data-panel-brand='salihost']
+  :is(.ant-input-affix-wrapper-focused, .ant-input-number-focused, .ant-picker-focused) {
   border-color: var(--ant-color-primary);
   box-shadow: 0 0 0 2px var(--sh-spotlight);
 }
@@ -202,7 +247,11 @@ html[data-panel-brand='salihost'] :is(.ant-tag, .ant-badge-count) {
 }
 
 html[data-panel-brand='salihost']
-  .ant-tag:not(.ant-tag-error):not(.ant-tag-warning):not(.ant-tag-success):not(.ant-tag-processing):not(.ant-tag-blue):not(.ant-tag-geekblue):not(.ant-tag-gold):not(.ant-tag-red):not(.ant-tag-green) {
+  .ant-tag:not(.ant-tag-error):not(.ant-tag-warning):not(.ant-tag-success):not(
+    .ant-tag-processing
+  ):not(.ant-tag-blue):not(.ant-tag-geekblue):not(.ant-tag-gold):not(.ant-tag-red):not(
+    .ant-tag-green
+  ) {
   background: var(--sh-shade);
   border-color: var(--sh-stroke);
 }
@@ -247,20 +296,27 @@ html[data-panel-brand='salihost'] .ant-drawer-title {
 
 html[data-panel-brand='salihost']
   :is(
-    .ant-popover-inner, .ant-dropdown-menu, .ant-select-dropdown,
-    .ant-picker-dropdown .ant-picker-panel-container, .ant-cascader-dropdown,
-    .ant-tooltip-inner, .ant-color-picker-panel
+    .ant-popover-inner,
+    .ant-dropdown-menu,
+    .ant-select-dropdown,
+    .ant-picker-dropdown .ant-picker-panel-container,
+    .ant-cascader-dropdown,
+    .ant-tooltip-inner,
+    .ant-color-picker-panel
   ) {
   border: 1px solid var(--sh-stroke);
   border-radius: 13px;
   box-shadow: var(--sh-shadow-hover);
 }
 
-html[data-panel-brand='salihost'] .ant-dropdown-menu .ant-dropdown-menu-item:not(.ant-dropdown-menu-item-danger):hover {
+html[data-panel-brand='salihost']
+  .ant-dropdown-menu
+  .ant-dropdown-menu-item:not(.ant-dropdown-menu-item-danger):hover {
   background: var(--sh-shade);
 }
 
-html[data-panel-brand='salihost'] .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+html[data-panel-brand='salihost']
+  .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
   background: var(--sh-shade);
 }
 
@@ -292,8 +348,7 @@ html[data-panel-brand='salihost']
   border-color: var(--sh-stroke);
 }
 
-html[data-panel-brand='salihost']
-  :is(.client-card.is-selected, .inbound-card.is-selected) {
+html[data-panel-brand='salihost'] :is(.client-card.is-selected, .inbound-card.is-selected) {
   border-color: var(--ant-color-primary);
   box-shadow: inset 0 0 0 1px var(--ant-color-primary);
 }
@@ -345,7 +400,6 @@ html[data-panel-brand='salihost'] .subscription-page .sub-row:hover {
 html[data-panel-brand='salihost'] .subscription-page .sub-footer {
   border-color: var(--sh-stroke);
 }
-
 
 /* API documentation relies on Swagger's own token set. Bring its custom UI
  * into the same palette without overriding HTTP method meaning (GET/POST/DELETE). */

@@ -94,10 +94,14 @@ const iconByName: Record<IconName, ComponentType> = {
 function SaliHostBrand({ collapsed = false }: { collapsed?: boolean }) {
   return (
     <span className="salihost-identity" aria-label="SaliHost.ir">
-      <span className="salihost-symbol" aria-hidden="true">S</span>
+      <span className="salihost-symbol" aria-hidden="true">
+        S
+      </span>
       {!collapsed && (
         <span className="salihost-wordmark">
-          <strong>Sali<span>Host</span></strong>
+          <strong>
+            Sali<span>Host</span>
+          </strong>
           <small>salihost.ir</small>
         </span>
       )}
