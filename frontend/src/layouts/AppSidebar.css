@@ -339,7 +339,7 @@ body.dark .ant-drawer-body .drawer-menu .ant-menu-item-group-list {
   color: var(--ant-color-primary) !important;
 }
 
-// SaliHost: compact identity works in pinned, hover-expanded and mobile menus.
+/* SaliHost compact identity: works in pinned, expanded and mobile menus. */
 .sider-brand {
   height: 70px;
   padding-inline: 14px 10px;

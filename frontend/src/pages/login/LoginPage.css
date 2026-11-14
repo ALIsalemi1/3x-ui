@@ -412,7 +412,7 @@
   margin-bottom: 0;
 }
 
-// SaliHost login identity — no extra image requests and compatible with dark modes.
+/* SaliHost login identity: no remote images, compatible with dark modes. */
 .login-app {
   --color-accent: #087f91;
   --blob-1: rgba(9, 167, 183, 0.3);
