@@ -411,3 +411,84 @@
 .submit-row {
   margin-bottom: 0;
 }
+
+// SaliHost login identity — no extra image requests and compatible with dark modes.
+.login-app {
+  --color-accent: #087f91;
+  --blob-1: rgba(9, 167, 183, 0.3);
+  --blob-2: rgba(26, 189, 152, 0.2);
+  --blob-3: rgba(10, 123, 145, 0.26);
+  --blob-4: rgba(54, 199, 202, 0.15);
+  --blob-5: rgba(19, 177, 160, 0.19);
+  --grid-color: rgba(7, 127, 145, 0.08);
+  background: linear-gradient(135deg, #eaf5f8 0%, #f7fbfd 52%, #e6f5f3 100%);
+}
+
+.login-app.is-dark {
+  --color-accent: #21bfc2;
+  --blob-1: rgba(10, 167, 181, 0.38);
+  --blob-2: rgba(7, 99, 127, 0.34);
+  --blob-3: rgba(19, 192, 167, 0.2);
+  --blob-4: rgba(30, 103, 138, 0.2);
+  --blob-5: rgba(8, 148, 139, 0.22);
+  background: radial-gradient(ellipse at 25% 18%, #123c4a, #071524 62%);
+}
+
+.login-app.is-dark.is-ultra {
+  background: radial-gradient(ellipse at 25% 18%, #10262d, #000 66%);
+}
+
+.login-app .login-card {
+  max-width: 426px;
+  border-radius: 24px;
+  box-shadow: 0 24px 78px rgba(3, 53, 72, 0.16);
+}
+
+.login-app.is-dark .login-card {
+  box-shadow: 0 24px 85px rgba(0, 0, 0, 0.48), 0 0 45px rgba(12, 164, 155, 0.09);
+}
+
+.salihost-login-mark {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: linear-gradient(140deg, #087f91, #0ac4a5);
+  box-shadow: 0 12px 36px rgba(5, 137, 151, 0.3);
+  font-size: 43px;
+  font-weight: 900;
+  font-style: italic;
+  color: #fff;
+  line-height: 1;
+}
+
+.login-app .brand-name,
+.login-app.is-dark .brand-name {
+  background: linear-gradient(110deg, #0aa4b2, #21c1a6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 32px;
+  letter-spacing: -1px;
+}
+
+.salihost-login-subtitle {
+  color: var(--color-text-subtle);
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0.4px;
+  text-align: center;
+}
+
+.login-app .brand-accent,
+.login-app.is-dark .brand-accent {
+  width: 78px;
+  background: linear-gradient(90deg, #087f91, #12bba5);
+}
+
+.login-app .login-card::before,
+.login-app.is-dark .login-card::before {
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(9, 165, 181, 0.33), transparent 45%, rgba(19, 195, 162, 0.2));
+}

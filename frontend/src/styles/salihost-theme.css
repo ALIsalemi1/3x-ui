@@ -1,0 +1,320 @@
+/*
+ * SALIHOST.IR panel skin
+ *
+ * Inspired by hosting/infrastructure visuals, not a copied site stylesheet.
+ * The rules decorate the existing Ant Design interface without changing
+ * navigation or business logic. Light, dark and ultra-dark are all supported.
+ */
+html[data-panel-brand='salihost'] {
+  --salihost-navy: #081522;
+  --salihost-teal: #087f91;
+  --salihost-mint: #12bca9;
+  --salihost-sky: #32bed1;
+}
+
+/* Shared page surface: quiet infrastructure grid and cool ambient glow. */
+html[data-panel-brand='salihost']
+  :is(
+    .index-page,
+    .clients-page,
+    .inbounds-page,
+    .xray-page,
+    .settings-page,
+    .nodes-page,
+    .groups-page,
+    .api-docs-page,
+    .admins-page,
+    .multiply-page,
+    .reseller-page,
+    .telegram-bot-page,
+    .hosts-page
+  ) {
+  --bg-page: #f0f6f8;
+  --bg-card: #fff;
+  background-color: var(--bg-page);
+  background-image:
+    radial-gradient(ellipse 60% 42% at 94% 0%, rgba(25, 166, 181, 0.11), transparent 75%),
+    linear-gradient(transparent 39px, rgba(22, 127, 148, 0.028) 40px),
+    linear-gradient(90deg, transparent 39px, rgba(22, 127, 148, 0.028) 40px);
+  background-size:
+    auto,
+    40px 40px,
+    40px 40px;
+}
+
+html[data-panel-brand='salihost']
+  :is(
+    .index-page,
+    .clients-page,
+    .inbounds-page,
+    .xray-page,
+    .settings-page,
+    .nodes-page,
+    .groups-page,
+    .api-docs-page,
+    .admins-page,
+    .multiply-page,
+    .reseller-page,
+    .telegram-bot-page,
+    .hosts-page
+  ).is-dark {
+  --bg-page: #081522;
+  --bg-card: #112437;
+  background-image:
+    radial-gradient(ellipse 78% 52% at 95% 0%, rgba(9, 136, 150, 0.14), transparent 70%),
+    linear-gradient(transparent 39px, rgba(103, 202, 213, 0.023) 40px),
+    linear-gradient(90deg, transparent 39px, rgba(103, 202, 213, 0.023) 40px);
+}
+
+html[data-panel-brand='salihost']
+  :is(
+    .index-page,
+    .clients-page,
+    .inbounds-page,
+    .xray-page,
+    .settings-page,
+    .nodes-page,
+    .groups-page,
+    .api-docs-page,
+    .admins-page,
+    .multiply-page,
+    .reseller-page,
+    .telegram-bot-page,
+    .hosts-page
+  ).is-dark.is-ultra {
+  --bg-page: #000;
+  --bg-card: #101013;
+  background-image:
+    radial-gradient(ellipse 70% 46% at 92% 0%, rgba(6, 133, 135, 0.09), transparent 70%),
+    linear-gradient(transparent 39px, rgba(103, 202, 213, 0.016) 40px),
+    linear-gradient(90deg, transparent 39px, rgba(103, 202, 213, 0.016) 40px);
+}
+
+/* Dark navy sidebar with a subtle cyan edge; inherits theme-aware text. */
+html[data-panel-brand='salihost'] .ant-sidebar > .ant-layout-sider {
+  background: linear-gradient(174deg, #0c2335 0%, #0b1b2c 58%, #071522 100%);
+  border-inline-end: 1px solid rgba(51, 176, 189, 0.15);
+}
+
+html[data-panel-brand='salihost'] body.light .ant-sidebar > .ant-layout-sider {
+  background: linear-gradient(177deg, #fff 0%, #f1f9fb 100%);
+  border-inline-end-color: rgba(7, 127, 145, 0.13);
+}
+
+html[data-panel-brand='salihost'][data-theme='ultra-dark']
+  .ant-sidebar
+  > .ant-layout-sider {
+  background: linear-gradient(174deg, #07171e, #030608 85%);
+}
+
+html[data-panel-brand='salihost'] .sider-nav,
+html[data-panel-brand='salihost'] .sider-utility,
+html[data-panel-brand='salihost'] .sider-nav .ant-menu-sub,
+html[data-panel-brand='salihost'] .drawer-nav,
+html[data-panel-brand='salihost'] .drawer-utility {
+  background: transparent;
+}
+
+html[data-panel-brand='salihost']
+  :is(.sider-nav, .sider-utility, .drawer-menu)
+  :is(.ant-menu-item, .ant-menu-submenu-title) {
+  border-radius: 12px;
+  margin-block: 3px;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+html[data-panel-brand='salihost']
+  :is(.sider-nav, .sider-utility, .drawer-menu)
+  .ant-menu-item-selected {
+  background: color-mix(in srgb, var(--ant-color-primary) 18%, transparent) !important;
+  box-shadow: inset 3px 0 0 var(--ant-color-primary);
+}
+
+html[data-panel-brand='salihost'] .sidebar-command-trigger {
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--ant-color-primary) 14%, transparent);
+  background: color-mix(in srgb, var(--ant-color-primary) 7%, transparent);
+}
+
+html[data-panel-brand='salihost'] .sidebar-command-trigger:focus-visible,
+html[data-panel-brand='salihost'] .salihost-overview-banner a:focus-visible {
+  outline: 2px solid var(--ant-color-primary);
+  outline-offset: 3px;
+}
+
+/* Universal card and table polish keeps existing AntD structure unchanged. */
+html[data-panel-brand='salihost']
+  :is(
+    .index-page,
+    .clients-page,
+    .inbounds-page,
+    .xray-page,
+    .settings-page,
+    .nodes-page,
+    .groups-page,
+    .api-docs-page,
+    .admins-page,
+    .multiply-page,
+    .reseller-page,
+    .telegram-bot-page,
+    .hosts-page
+  )
+  .ant-card {
+  border: 1px solid color-mix(in srgb, var(--ant-color-primary) 11%, var(--ant-color-border-secondary));
+  border-radius: 16px;
+  box-shadow: 0 10px 35px rgba(5, 39, 61, 0.045);
+}
+
+html[data-panel-brand='salihost']
+  :is(
+    .index-page,
+    .clients-page,
+    .inbounds-page,
+    .xray-page,
+    .settings-page,
+    .nodes-page,
+    .groups-page,
+    .api-docs-page,
+    .admins-page,
+    .multiply-page,
+    .reseller-page,
+    .telegram-bot-page,
+    .hosts-page
+  ).is-dark
+  .ant-card {
+  box-shadow:
+    0 10px 34px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(106, 221, 219, 0.025);
+}
+
+html[data-panel-brand='salihost'] .ant-card-head {
+  border-block-end-color: color-mix(in srgb, var(--ant-color-primary) 11%, var(--ant-color-border-secondary));
+}
+
+html[data-panel-brand='salihost'] .ant-table-wrapper .ant-table-thead > tr > th {
+  background: color-mix(in srgb, var(--ant-color-primary) 7%, var(--ant-color-bg-container));
+  font-weight: 650;
+}
+
+html[data-panel-brand='salihost'] .ant-table-wrapper .ant-table-tbody > tr:hover > td {
+  background: color-mix(in srgb, var(--ant-color-primary) 6%, var(--ant-color-bg-container));
+}
+
+html[data-panel-brand='salihost'] .ant-btn-primary {
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--ant-color-primary) 20%, transparent);
+}
+
+html[data-panel-brand='salihost'] :is(.ant-input, .ant-input-affix-wrapper, .ant-select-selector):focus-within {
+  border-color: var(--ant-color-primary);
+}
+
+/* Dashboard identity: a welcoming headline without fake usage metrics. */
+.salihost-overview-banner {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 108px;
+  margin-block: 0 20px;
+  padding: 21px 26px;
+  border: 1px solid rgba(16, 159, 166, 0.25);
+  border-radius: 20px;
+  color: #eafcff;
+  background:
+    radial-gradient(circle at 92% 5%, rgba(39, 210, 189, 0.23), transparent 36%),
+    linear-gradient(115deg, #102e45, #0a1c30 73%);
+  box-shadow: 0 18px 34px rgba(6, 49, 66, 0.14);
+  overflow: hidden;
+}
+
+.salihost-overview-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 58px;
+  height: 58px;
+  border-radius: 17px;
+  font-size: 38px;
+  font-weight: 900;
+  font-style: italic;
+  background: linear-gradient(135deg, #098da0, #16c6a5);
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(7, 193, 187, 0.25);
+}
+
+.salihost-overview-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.salihost-overview-eyebrow {
+  color: #7ad8d9;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.salihost-overview-copy h1 {
+  margin: 4px 0 3px;
+  font-size: clamp(19px, 2.2vw, 27px);
+  font-weight: 800;
+  line-height: 1.2;
+  color: #fff;
+  letter-spacing: -0.6px;
+}
+
+.salihost-overview-copy h1 span {
+  color: #6ee3d0;
+}
+
+.salihost-overview-copy p {
+  margin: 0;
+  color: #a6c4d0;
+  font-size: 12px;
+}
+
+.salihost-overview-indicator {
+  align-self: center;
+  padding: 7px 12px;
+  border: 1px solid rgba(113, 229, 214, 0.26);
+  border-radius: 999px;
+  color: #a3f2e6;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 1.3px;
+  background: rgba(25, 160, 153, 0.12);
+}
+
+/* Mobile layouts and accessibility. */
+@media (max-width: 768px) {
+  .salihost-overview-banner {
+    min-height: 90px;
+    gap: 12px;
+    margin-block: 0 14px;
+    padding: 16px;
+    border-radius: 16px;
+  }
+  .salihost-overview-icon {
+    flex-basis: 44px;
+    height: 44px;
+    border-radius: 13px;
+    font-size: 29px;
+  }
+  .salihost-overview-eyebrow {
+    font-size: 8px;
+    letter-spacing: 0.8px;
+  }
+  .salihost-overview-indicator {
+    display: none;
+  }
+  html[data-panel-brand='salihost'] :is(.clients-page, .inbounds-page, .telegram-bot-page) .ant-card {
+    border-radius: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-panel-brand='salihost'] .sider-nav .ant-menu-item,
+  html[data-panel-brand='salihost'] .drawer-menu .ant-menu-item {
+    transition: none;
+  }
+}

@@ -338,3 +338,142 @@ body.dark .ant-drawer-body .drawer-menu .ant-menu-item-group-list {
   background-color: color-mix(in srgb, var(--ant-color-primary) 10%, transparent) !important;
   color: var(--ant-color-primary) !important;
 }
+
+// SaliHost: compact identity works in pinned, hover-expanded and mobile menus.
+.sider-brand {
+  height: 70px;
+  padding-inline: 14px 10px;
+  background: linear-gradient(115deg, rgba(7, 123, 145, 0.14), transparent 70%);
+}
+
+.salihost-identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  color: var(--ant-color-text);
+  direction: ltr;
+  text-align: start;
+}
+
+.salihost-symbol {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #087f91, #12b7a3);
+  box-shadow: 0 5px 16px rgba(8, 127, 145, 0.24);
+  font-size: 24px;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1;
+  color: #fff;
+}
+
+.salihost-wordmark {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.salihost-wordmark strong {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.65px;
+}
+
+.salihost-wordmark strong span {
+  color: #0bb8ae;
+}
+
+.salihost-wordmark small {
+  color: var(--ant-color-text-secondary);
+  font-size: 10px;
+  font-weight: 550;
+  letter-spacing: 1px;
+}
+
+.ant-layout-sider-collapsed .sider-brand {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.drawer-header .salihost-symbol {
+  flex-basis: 40px;
+  height: 40px;
+}
+
+@media (max-width: 768px) {
+  .drawer-header {
+    background: linear-gradient(105deg, rgba(7, 123, 145, 0.13), transparent);
+  }
+}
+
+.salihost-accent-toggle {
+  display: flex;
+  width: 100%;
+  min-height: 38px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  margin-block-end: 3px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--ant-color-text-secondary);
+  cursor: pointer;
+  text-align: start;
+  font: inherit;
+  font-size: 12px;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
+}
+
+.salihost-accent-toggle:hover,
+.salihost-accent-toggle:focus-visible {
+  background: color-mix(in srgb, var(--ant-color-primary) 12%, transparent);
+  color: var(--ant-color-primary);
+}
+
+.salihost-accent-toggle:focus-visible {
+  outline: 2px solid var(--ant-color-primary);
+  outline-offset: 2px;
+}
+
+.salihost-accent-toggle.is-collapsed {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.salihost-current-accent {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-inline-start: auto;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 15%, transparent);
+}
+
+.salihost-accent-toggle.is-collapsed .salihost-current-accent {
+  display: none;
+}
+
+.salihost-accent-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 120px;
+}
+
+.salihost-accent-swatch {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
