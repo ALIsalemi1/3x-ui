@@ -1,0 +1,38 @@
+name: SaliHost CSS release formatting (temporary)
+
+on:
+  push:
+    branches:
+      - fix-salihost-css-build-2026-11-14
+    paths:
+      - .github/workflows/salihost-release-format-fix-temp.yml
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Format all changed SaliHost frontend files
+        working-directory: frontend
+        run: |
+          npm ci
+          npx oxfmt             src/hooks/useTheme.tsx             src/layouts/AppSidebar.tsx             src/pages/index/IndexPage.tsx             src/pages/login/LoginPage.css             src/pages/login/LoginPage.tsx             src/styles/salihost-theme.css             src/styles/salihost-universal.css             src/test/salihost-universal.test.ts
+      - name: Commit formatted styles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add frontend/src
+          if ! git diff --cached --quiet; then
+            git commit -m "Run oxfmt on SaliHost panel theme"
+            git push
+          fi
