@@ -1,4 +1,3 @@
-import SaliHostSectionHeader from '@/components/ui/SaliHostSectionHeader';
 import { lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useLocation, useSearchParams } from 'react-router';
@@ -1333,7 +1332,6 @@ export default function ClientsPage() {
 
         <Layout className="content-shell">
           <Layout.Content id="content-layout" className="content-area">
-            <SaliHostSectionHeader section="clients" />
             <Spin
               spinning={!fetched || !hostsFetched}
               delay={200}

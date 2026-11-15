@@ -1,16 +1,10 @@
 import { lazy, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
 import { Button, ConfigProvider, Layout, Modal, Result, Spin, message } from 'antd';
 import {
   CopyOutlined,
   CloudDownloadOutlined,
-  CloudServerOutlined,
   DashboardOutlined,
-  ArrowRightOutlined,
-  ShopOutlined,
-  TeamOutlined,
-  SettingOutlined,
   DatabaseOutlined,
   HddOutlined,
   SwapOutlined,
@@ -48,9 +42,7 @@ const VersionModal = lazy(() => import('./VersionModal'));
 import './IndexPage.css';
 
 export default function IndexPage() {
-  const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
-  const persian = i18n.language.startsWith('fa');
+  const { t } = useTranslation();
   const { isDark, isUltra, antdThemeConfig } = useTheme();
   const { status, fetched, fetchError, refresh } = useStatusQuery();
   const { isMobile } = useMediaQuery();
@@ -154,41 +146,6 @@ export default function IndexPage() {
     FileManager.downloadTextFile(configText, 'config.json');
   }
 
-  const quickLinks = [
-    {
-      key: 'services',
-      route: '/inbounds',
-      icon: <CloudServerOutlined />,
-      title: t('menu.inbounds'),
-      caption: persian ? 'مدیریت سرویس‌ها' : 'Connection services',
-    },
-    {
-      key: 'customers',
-      route: '/clients',
-      icon: <TeamOutlined />,
-      title: t('menu.clients'),
-      caption: persian ? 'کاربران و اشتراک‌ها' : 'Users & subscriptions',
-    },
-    {
-      key: 'commerce',
-      route: '/reseller',
-      icon: <ShopOutlined />,
-      title: t('pages.reseller.title', 'VPN SHOP'),
-      caption: persian ? 'فروش و سفارش‌ها' : 'Sales & orders',
-    },
-    ...(isAdmin
-      ? [
-          {
-            key: 'settings',
-            route: '/settings',
-            icon: <SettingOutlined />,
-            title: t('menu.settings'),
-            caption: persian ? 'تنظیمات و امنیت' : 'Settings & security',
-          },
-        ]
-      : []),
-  ];
-
   const pageClass = `index-page ${isDark ? 'is-dark' : ''} ${isUltra ? 'is-ultra' : ''}`.trim();
   const totalDisk = status.disk.total;
   const freeDisk = Math.max(0, totalDisk - status.disk.current);
@@ -242,48 +199,6 @@ export default function IndexPage() {
                 />
               ) : (
                 <div className="ov-page">
-                  <header className="salihost-overview-banner">
-                    <div className="salihost-overview-icon" aria-hidden="true">
-                      S
-                    </div>
-                    <div className="salihost-overview-copy">
-                      <span className="salihost-overview-eyebrow">
-                        SALIHOST.IR / OPERATIONS WORKSPACE
-                      </span>
-                      <h1>
-                        SaliHost <span>Control Cloud</span>
-                      </h1>
-                      <p>
-                        {persian
-                          ? 'مدیریت یکپارچه زیرساخت، مشتریان و فروش'
-                          : 'One workspace for infrastructure, customers and sales'}
-                      </p>
-                    </div>
-                    <span className="salihost-overview-indicator" aria-label="SaliHost">
-                      SALIHOST
-                    </span>
-                  </header>
-                  <nav
-                    className="salihost-quicknav"
-                    aria-label={persian ? 'دسترسی سریع' : 'Quick navigation'}
-                  >
-                    {quickLinks.map((link) => (
-                      <button
-                        type="button"
-                        key={link.key}
-                        className="salihost-quicklink"
-                        onClick={() => navigate(link.route)}
-                        aria-label={link.title}
-                      >
-                        <span className="salihost-quicklink-icon">{link.icon}</span>
-                        <span className="salihost-quicklink-text">
-                          <strong>{link.title}</strong>
-                          <small>{link.caption}</small>
-                        </span>
-                        <ArrowRightOutlined className="salihost-quicklink-arrow" />
-                      </button>
-                    ))}
-                  </nav>
                   <OverviewActionBar
                     status={status}
                     isMobile={isMobile}

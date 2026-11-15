@@ -1,4 +1,3 @@
-import SaliHostSectionHeader from '@/components/ui/SaliHostSectionHeader';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
@@ -242,7 +241,6 @@ export default function SettingsPage() {
 
         <Layout className="content-shell">
           <Layout.Content id="content-layout" className="content-area">
-            <SaliHostSectionHeader section="settings" />
             <Spin
               spinning={spinning || !fetched}
               delay={200}

@@ -14,10 +14,6 @@ const TITLE_KEYS: Record<string, string> = {
   '/outbound': 'menu.outbounds',
   '/routing': 'menu.routing',
   '/api-docs': 'menu.apiDocs',
-  '/reseller': 'pages.reseller.title',
-  '/telegram-bot': 'menu.telegramBot',
-  '/admins': 'menu.admins',
-  '/multiply': 'menu.multiply',
 };
 
 export function usePageTitle() {
@@ -26,8 +22,8 @@ export function usePageTitle() {
 
   useEffect(() => {
     const key = TITLE_KEYS[pathname];
-    const title = key ? t(key) : 'Control Center';
+    const title = key ? t(key) : '3X-UI';
     const host = window.location.hostname;
-    document.title = host ? `${title} · SaliHost (${host})` : `${title} · SaliHost`;
+    document.title = host ? `${host} - ${title}` : title;
   }, [pathname, t]);
 }

@@ -2,11 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentType, CSSProperties } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { Drawer, Dropdown, Layout, Menu, Modal, Tooltip } from 'antd';
+import { Drawer, Layout, Menu, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import {
   ApiOutlined,
-  BgColorsOutlined,
   ApartmentOutlined,
   CloseOutlined,
   CloudServerOutlined,
@@ -16,8 +15,8 @@ import {
   DatabaseOutlined,
   DiscordOutlined,
   ExportOutlined,
+  GithubOutlined,
   GlobalOutlined,
-  InfoCircleOutlined,
   ImportOutlined,
   LogoutOutlined,
   MailOutlined,
@@ -41,8 +40,7 @@ import {
 
 import { HttpUtil } from '@/utils';
 import { formatPanelVersion } from '@/lib/panel-version';
-import { PANEL_ACCENTS, pauseAnimationsUntilLeave, useTheme } from '@/hooks/useTheme';
-import type { PanelAccent } from '@/hooks/useTheme';
+import { pauseAnimationsUntilLeave, useTheme } from '@/hooks/useTheme';
 import { useAllSettings } from '@/api/queries/useAllSettings';
 import { useCommandPalette } from '@/components/command-palette/useCommandPalette';
 import './AppSidebar.css';
@@ -50,11 +48,11 @@ import './AppSidebar.css';
 // The palette listens for Ctrl as well as Cmd, so the chip must not show a
 // Mac glyph to the Linux and Windows operators who are most of this panel's.
 const SHORTCUT_MODIFIER = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent) ? '⌘' : 'Ctrl';
-const REPO_URL = 'https://github.com/ALIsalemi1/3x-ui';
-const UPSTREAM_URL = 'https://github.com/MHSanaei/3x-ui';
+const DOCS_URL = 'https://docs.sanaei.dev/';
+const REPO_URL = 'https://github.com/MHSanaei/3x-ui';
 const LOGOUT_KEY = '__logout__';
 const RAIL_WIDTH = 72;
-const SIDER_WIDTH = 248;
+const SIDER_WIDTH = 220;
 const SIDEBAR_PINNED_KEY = 'sidebar-pinned';
 
 let hoveredAcrossRemounts = false;
@@ -90,136 +88,36 @@ const iconByName: Record<IconName, ComponentType> = {
   bot: RobotOutlined,
 };
 
-// Compact typographic identity avoids a remote logo dependency in the panel.
-function SaliHostBrand({ collapsed = false }: { collapsed?: boolean }) {
+function DocsButton({ ariaLabel }: { ariaLabel: string }) {
   return (
-    <span className="salihost-identity" aria-label="SaliHost.ir">
-      <span className="salihost-symbol" aria-hidden="true">
-        S
-      </span>
-      {!collapsed && (
-        <span className="salihost-wordmark">
-          <strong>
-            Sali<span>Host</span>
-          </strong>
-          <small>CONTROL CENTER · salihost.ir</small>
-        </span>
-      )}
-    </span>
-  );
-}
-
-const ACCENT_NAMES: Record<PanelAccent, string> = {
-  salihost: 'SaliHost',
-  ocean: 'Ocean',
-  lagoon: 'Lagoon',
-  violet: 'Violet',
-  rose: 'Rose',
-  amber: 'Amber',
-};
-
-function AccentPicker({ collapsed = false }: { collapsed?: boolean }) {
-  const { accent, setAccent } = useTheme();
-  const options = (Object.keys(PANEL_ACCENTS) as PanelAccent[]).map((key) => ({
-    key,
-    label: (
-      <span className="salihost-accent-option">
-        <span className="salihost-accent-swatch" style={{ background: PANEL_ACCENTS[key] }} />
-        {ACCENT_NAMES[key]}
-      </span>
-    ),
-  }));
-  return (
-    <Dropdown
-      trigger={['click']}
-      placement="topLeft"
-      menu={{
-        items: options,
-        selectedKeys: [accent],
-        onClick: ({ key }) => setAccent(key as PanelAccent),
-      }}
-    >
-      <button
-        type="button"
-        className={`salihost-accent-toggle${collapsed ? ' is-collapsed' : ''}`}
-        aria-label="رنگ پنل / Panel accent color"
-        title={`Panel accent: ${ACCENT_NAMES[accent]}`}
-      >
-        <BgColorsOutlined />
-        {!collapsed && <span>Theme · {ACCENT_NAMES[accent]}</span>}
-        <span className="salihost-current-accent" style={{ background: PANEL_ACCENTS[accent] }} />
-      </button>
-    </Dropdown>
-  );
-}
-
-function DocsButton({ ariaLabel, onClick }: { ariaLabel: string; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
+    <a
+      href={DOCS_URL}
+      target="_blank"
+      rel="noopener noreferrer"
       className="sidebar-docs"
       aria-label={ariaLabel}
       title={ariaLabel}
     >
       <ReadOutlined />
-    </button>
+    </a>
   );
 }
 
 function VersionBadge({ version, collapsed }: { version: string; collapsed?: boolean }) {
-  const [aboutOpen, setAboutOpen] = useState(false);
-  const label = version ? formatPanelVersion(version) : 'Beta';
+  if (!version) return null;
+  const label = formatPanelVersion(version);
   return (
-    <>
-      <button
-        type="button"
-        className="sider-version salihost-about-trigger"
-        aria-label="About SaliHost Control Center"
-        title="About SaliHost Control Center"
-        onClick={() => setAboutOpen(true)}
-      >
-        <InfoCircleOutlined />
-        {!collapsed && (
-          <span className="sider-version-text">
-            SaliHost <span className="salihost-build-label">{label}</span>
-          </span>
-        )}
-      </button>
-      <Modal
-        open={aboutOpen}
-        title="SaliHost Control Center"
-        onCancel={() => setAboutOpen(false)}
-        footer={null}
-        width={500}
-        centered
-        destroyOnHidden
-      >
-        <div className="salihost-about">
-          <div className="salihost-about-kicker">SALIHOST.IR / NETWORK OPERATIONS</div>
-          <p>Integrated network operations, subscription management and customer sales.</p>
-          <div className="salihost-about-version">Build {label}</div>
-          <details className="salihost-legal-notice">
-            <summary>Open-source credits &amp; licenses</summary>
-            <p>
-              This modified distribution is based on 3X-UI by MHSanaei and distributed under the GNU
-              GPL version 3. Original copyright notices and license terms remain in effect.
-            </p>
-            <p className="salihost-legal-links">
-              <a href={UPSTREAM_URL} target="_blank" rel="noopener noreferrer">
-                Upstream project
-              </a>
-              <a href={REPO_URL} target="_blank" rel="noopener noreferrer">
-                SaliHost source
-              </a>
-              <a href={`${REPO_URL}/blob/main/LICENSE`} target="_blank" rel="noopener noreferrer">
-                GPL-3.0 license
-              </a>
-            </p>
-          </details>
-        </div>
-      </Modal>
-    </>
+    <a
+      href={REPO_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="sider-version"
+      aria-label={`GitHub ${label}`}
+      title={label}
+    >
+      <GithubOutlined />
+      {!collapsed && <span className="sider-version-text">{label}</span>}
+    </a>
   );
 }
 
@@ -266,7 +164,7 @@ function saveSidebarPinned(pinned: boolean) {
 }
 
 export default function AppSidebar() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { isDark, isUltra, toggleTheme, toggleUltra } = useTheme();
   const { open: openCommandPalette } = useCommandPalette();
   const navigate = useNavigate();
@@ -445,40 +343,6 @@ export default function AppSidebar() {
     [settingsChildren, xrayChildren],
   );
 
-  const groupedMenuItems = useMemo<MenuProps['items']>(() => {
-    const persian = i18n.language.startsWith('fa');
-    const groups = [
-      {
-        id: 'workspace',
-        title: persian ? 'فضای کاری' : 'WORKSPACE',
-        routes: ['/', '/inbounds', '/clients', '/groups'],
-      },
-      {
-        id: 'commerce',
-        title: persian ? 'فروش و مشتریان' : 'COMMERCE',
-        routes: ['/reseller', '/telegram-bot'],
-      },
-      {
-        id: 'infrastructure',
-        title: persian ? 'زیرساخت و شبکه' : 'INFRASTRUCTURE',
-        routes: ['/nodes', '/hosts', '/outbound', '/routing', '/xray', '/multiply'],
-      },
-      {
-        id: 'management',
-        title: persian ? 'مدیریت و ابزارها' : 'MANAGEMENT',
-        routes: ['/settings', '/admins', '/api-docs'],
-      },
-    ];
-    return groups
-      .map((group) => ({
-        type: 'group' as const,
-        key: `salihost-${group.id}`,
-        label: <span className="salihost-nav-heading">{group.title}</span>,
-        children: toMenuItems(navItems.filter((tab) => group.routes.includes(tab.key))) ?? [],
-      }))
-      .filter((group) => group.children.length > 0);
-  }, [i18n.language, navItems, toMenuItems]);
-
   const openLink = useCallback(
     async (key: string) => {
       if (key === LOGOUT_KEY) {
@@ -530,7 +394,7 @@ export default function AppSidebar() {
       >
         <div className="sider-brand">
           <div className="brand-block">
-            <SaliHostBrand collapsed={railCollapsed} />
+            <span className="brand-text">{railCollapsed ? '3X' : '3X-UI'}</span>
           </div>
           {!railCollapsed && (
             <div className="brand-actions">
@@ -544,10 +408,7 @@ export default function AppSidebar() {
               >
                 {pinned ? <PushpinFilled /> : <PushpinOutlined />}
               </button>
-              <DocsButton
-                ariaLabel={t('menu.docs') || 'Documentation'}
-                onClick={() => navigate('/api-docs')}
-              />
+              <DocsButton ariaLabel={t('menu.docs') || 'Documentation'} />
               <ThemeCycleButton
                 id="theme-cycle"
                 isDark={isDark}
@@ -589,7 +450,7 @@ export default function AppSidebar() {
           openKeys={railCollapsed ? undefined : openKeys}
           onOpenChange={(keys) => setOpenKeys(keys as string[])}
           className="sider-nav"
-          items={groupedMenuItems}
+          items={toMenuItems(navItems)}
           onClick={onMenuClick}
         />
         <Menu
@@ -601,7 +462,6 @@ export default function AppSidebar() {
           onClick={onMenuClick}
         />
         <div className="sider-footer">
-          <AccentPicker collapsed={railCollapsed} />
           <VersionBadge version={panelVersion} collapsed={railCollapsed} />
         </div>
       </Layout.Sider>
@@ -621,13 +481,10 @@ export default function AppSidebar() {
       >
         <div className="drawer-header">
           <div className="brand-block">
-            <SaliHostBrand />
+            <span className="drawer-brand">3X-UI</span>
           </div>
           <div className="drawer-header-actions">
-            <DocsButton
-              ariaLabel={t('menu.docs') || 'Documentation'}
-              onClick={() => navigate('/api-docs')}
-            />
+            <DocsButton ariaLabel={t('menu.docs') || 'Documentation'} />
             <ThemeCycleButton
               id="theme-cycle-drawer"
               isDark={isDark}
@@ -671,7 +528,7 @@ export default function AppSidebar() {
           openKeys={openKeys}
           onOpenChange={(keys) => setOpenKeys(keys as string[])}
           className="drawer-menu drawer-nav"
-          items={groupedMenuItems}
+          items={toMenuItems(navItems)}
           onClick={(info) => {
             onMenuClick(info);
             setDrawerOpen(false);
@@ -689,7 +546,6 @@ export default function AppSidebar() {
           }}
         />
         <div className="drawer-footer">
-          <AccentPicker />
           <VersionBadge version={panelVersion} />
         </div>
       </Drawer>

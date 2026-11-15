@@ -4,7 +4,6 @@ import { theme as antdTheme } from 'antd';
 import type { ThemeConfig } from 'antd';
 
 export const PANEL_ACCENTS = {
-  salihost: '#087f91',
   ocean: '#1675e8',
   lagoon: '#008b82',
   violet: '#7957d5',
@@ -12,9 +11,9 @@ export const PANEL_ACCENTS = {
   amber: '#ae6500',
 } as const;
 export type PanelAccent = keyof typeof PANEL_ACCENTS;
-const storedAccent = localStorage.getItem('panel-accent') || 'salihost';
+const storedAccent = localStorage.getItem('panel-accent') || 'ocean';
 const initialAccent: PanelAccent =
-  storedAccent in PANEL_ACCENTS ? (storedAccent as PanelAccent) : 'salihost';
+  storedAccent in PANEL_ACCENTS ? (storedAccent as PanelAccent) : 'ocean';
 
 const STORAGE_DARK = 'dark-mode';
 const STORAGE_ULTRA = 'isUltraDarkThemeEnabled';
@@ -26,19 +25,6 @@ function readBool(key: string, fallback: boolean): boolean {
 }
 
 function applyDom(isDark: boolean, isUltra: boolean) {
-  document.documentElement.setAttribute('data-panel-brand', 'salihost');
-  // Every entry point may be served beneath a custom webBasePath. Build the
-  // favicon path from that base instead of assuming the site lives at '/'.
-  let favicon = document.querySelector<HTMLLinkElement>('link[data-salihost-favicon]');
-  if (!favicon) {
-    favicon = document.createElement('link');
-    favicon.rel = 'icon';
-    favicon.type = 'image/svg+xml';
-    favicon.setAttribute('data-salihost-favicon', 'true');
-    document.head.appendChild(favicon);
-  }
-  const root = window.X_UI_BASE_PATH || '/';
-  favicon.href = `${root.endsWith('/') ? root : root + '/'}icons/salihost-mark.svg`;
   document.body.classList.remove('dark', 'light');
   document.body.classList.add(isDark ? 'dark' : 'light');
   // Native scrollbars read color-scheme, not the body class.
@@ -59,33 +45,6 @@ function applyDom(isDark: boolean, isUltra: boolean) {
 const initialDark = readBool(STORAGE_DARK, true);
 const initialUltra = readBool(STORAGE_ULTRA, false);
 applyDom(initialDark, initialUltra);
-
-const SALIHOST_LIGHT_TOKENS = {
-  colorBgBase: '#f3f8fb',
-  colorBgLayout: '#eef5f8',
-  colorBgContainer: '#ffffff',
-  colorBgElevated: '#ffffff',
-};
-const SALIHOST_DARK_TOKENS = {
-  colorBgBase: '#081522',
-  colorBgLayout: '#081522',
-  colorBgContainer: '#112437',
-  colorBgElevated: '#1a3045',
-};
-const SALIHOST_DARK_LAYOUT_TOKENS = {
-  bodyBg: '#081522',
-  headerBg: '#0b1b2c',
-  headerColor: '#f3fdff',
-  footerBg: '#081522',
-  siderBg: '#0b1b2c',
-  triggerBg: '#112437',
-  triggerColor: '#f3fdff',
-};
-const SALIHOST_DARK_MENU_TOKENS = {
-  darkItemBg: '#0b1b2c',
-  darkSubMenuItemBg: '#102337',
-  darkPopupBg: '#112437',
-};
 
 const DARK_TOKENS = {
   colorBgBase: '#17212b',
@@ -168,7 +127,7 @@ const SHARED_STYLE_CONFIG = {
 export function buildAntdThemeConfig(
   isDark: boolean,
   isUltra: boolean,
-  accent: PanelAccent = 'salihost',
+  accent: PanelAccent = 'ocean',
   compact = false,
 ): ThemeConfig {
   const sharedTokens = {
@@ -184,11 +143,7 @@ export function buildAntdThemeConfig(
     return {
       ...SHARED_STYLE_CONFIG,
       algorithm: antdTheme.defaultAlgorithm,
-      token: {
-        ...(accent === 'salihost' ? SALIHOST_LIGHT_TOKENS : {}),
-        ...LIGHT_CONTRAST_TOKENS,
-        ...sharedTokens,
-      },
+      token: { ...LIGHT_CONTRAST_TOKENS, ...sharedTokens },
       components: {
         Statistic: STATISTIC_TOKENS,
         Button: accent === 'ocean' ? LIGHT_BUTTON_TOKENS : {},
@@ -198,21 +153,10 @@ export function buildAntdThemeConfig(
   return {
     ...SHARED_STYLE_CONFIG,
     algorithm: antdTheme.darkAlgorithm,
-    token: {
-      ...(isUltra ? ULTRA_DARK_TOKENS : accent === 'salihost' ? SALIHOST_DARK_TOKENS : DARK_TOKENS),
-      ...sharedTokens,
-    },
+    token: { ...(isUltra ? ULTRA_DARK_TOKENS : DARK_TOKENS), ...sharedTokens },
     components: {
-      Layout: isUltra
-        ? ULTRA_DARK_LAYOUT_TOKENS
-        : accent === 'salihost'
-          ? SALIHOST_DARK_LAYOUT_TOKENS
-          : DARK_LAYOUT_TOKENS,
-      Menu: isUltra
-        ? ULTRA_DARK_MENU_TOKENS
-        : accent === 'salihost'
-          ? SALIHOST_DARK_MENU_TOKENS
-          : DARK_MENU_TOKENS,
+      Layout: isUltra ? ULTRA_DARK_LAYOUT_TOKENS : DARK_LAYOUT_TOKENS,
+      Menu: isUltra ? ULTRA_DARK_MENU_TOKENS : DARK_MENU_TOKENS,
       Card: isUltra ? ULTRA_DARK_CARD_TOKENS : DARK_CARD_TOKENS,
       Statistic: STATISTIC_TOKENS,
     },

@@ -1,4 +1,3 @@
-import SaliHostSectionHeader from '@/components/ui/SaliHostSectionHeader';
 import { lazy, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -496,7 +495,6 @@ export default function GroupsPage() {
         <AppSidebar />
         <Layout className="content-shell">
           <Layout.Content id="content-layout" className="content-area">
-            <SaliHostSectionHeader section="groups" />
             <Spin spinning={!fetched} delay={200} description={t('loading')} size="large">
               {!fetched ? (
                 <div className="loading-spacer" />
